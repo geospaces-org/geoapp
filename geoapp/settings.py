@@ -16,6 +16,7 @@ import os, sys
 sys.path.append(os.path.expanduser("~/.django") )
 import my_config
 from my_config import *
+import apps.settings
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -67,7 +68,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.github',
     #My apps
     'geoapp',
- ]
+ ] + apps.settings.INSTALLED_APPS
 
 SITE_ID = 1
 

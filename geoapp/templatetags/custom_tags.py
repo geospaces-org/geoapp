@@ -6,7 +6,7 @@ register = template.Library()
 @register.filter(name='has_group')
 def has_group(user, group_name):
     
-    print(f"Hello {user} {group_name} {user.is_superuser}")
+    print(f"(debug) From: custom_tags.has_group: User: {user} => Group: {group_name} isSuper=> {user.is_superuser}")
     
     if ( user.is_superuser ):
             return 1

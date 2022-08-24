@@ -4,6 +4,7 @@ from django.conf.urls import include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from . import views
 from mangorest import mango
+import apps.settings
 
 app_name = 'geoapp'
 
@@ -12,7 +13,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path(r'', views.index, name='index'),
     path(r'geoapp/', views.index, name='index'),
-
+] + apps.settings.INSTALLED_URLS + [
     url(r'^.*/$', mango.Common, name='catchall'),
 ]
 urlpatterns = staticfiles_urlpatterns() + urlpatterns

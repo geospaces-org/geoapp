@@ -1,0 +1,124 @@
+{% extends "common.html" %}
+{% block content %}
+
+<div class="center"
+     style='font-family: "Google Sans",Arial,Helvetica,sans-serif; padding: 20px; margin: 20px;'>
+
+    <br/>
+    <h1>&nbsp;Learn AI, Machine Learning &amp; Data Science</h1>
+<a href="/blogs/blogs.html/"><H4>Find resources to learn AI projects</H4></a>
+<br/>
+<br/>
+<!--
+    <span style='font-family: "Google Sans",Arial,Helvetica,sans-serif; font-size: x-large; padding: 50px; margin: 100px;'>
+        Our mission is to
+        <span style="color: red;"> organize </span>
+        the world’s
+        <span style="color: cornflowerblue;"> intelligent educational </span>
+        information and make it
+        <span style="color: green;"> universally accessible </span> and
+        <span style="color: orange;"> useful </span>
+        .
+    </span>
+    -->
+<br/>
+<br/>
+<br/>
+<br/>
+</div>
+<div class="container" >
+        <div class="row">
+            <div class="col-md-10">
+                
+                 <img src="https://cloud.google.com/images/products/ai/ai-hub_2x.png" width=240px align=right valign=top/>
+            
+
+AIMS is intended to provide AI/Machine Learning resources and services to educators and students.
+
+AIMS helps tens of thousands of customers accelerate their machine learning journey.
+Explore machine learning services and search clean blogs and articles.
+                
+AIMS provides resources to help
+
+<li> Deploy end-to-end AI pipelines and out-of-the-box algorithms,
+<li> Foster reuse and collaboration among internal developers and users.
+<li> Find AI components built by other teams and access AI content published partner
+<li> Resources to help easily deploy unique integrated services on hybrid infrastructures.
+           
+</div>
+</div>
+</div>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+<table width=100% class="our_menu" style="text-align:center;" border=0><tr>
+    <td><div class="card" style="width: 18rem;margin: 0px auto;">
+
+  <div class="card-body">
+    <h5 class="card-title">Machine Learning AI Services</h5>
+    <p class="card-text">
+        <img  width="240px" src="/static/imgs/video-ai_2x.png"/>     
+
+       Data Science, AI, Machine Learning are terms more often not implemented in the right Spirit
+Offer machine learning & AI pragmatic to your users
+      </p>
+    <a href="/geoapp/about.html" class="btn btn-primary">Learn More</a>
+  </div>
+        </div></td>
+    <td><div class="card" style="width: 18rem;margin: 0px auto;">
+
+  <div class="card-body">
+    <h5 class="card-title">Reduce Dark Data</h5>
+    <p class="card-text">
+        <img  width="240px" src="/static/imgs/vision-ai_2x.png"/>     
+
+        Analyze your current data.</p>
+    <p class="card-text">Turn your data into Information. Use it to drive business decisions</p>
+    <a href="#" class="btn btn-primary">Data to Information</a>
+  </div>
+    </div></td>
+
+    <td><div class="card" style="width: 18rem;margin: 0px auto;">
+
+  <div class="card-body">
+    <h5 class="card-title">Research & Innovation</h5>
+    <p class="card-text">
+        <img  width="240px" src="/static/imgs/research-ai.png"/>     
+
+        Our research groups are advancing the state of the art in computer science and 
+        making discoveries that empower billions of users every day.</p>
+    <a href="/geoapp/about.html" class="btn btn-primary">Turn Key</a>
+
+  </div>
+        </div></td>
+    <td><div style="height:390px;">.</div></td>
+</tr>
+</table>
+<br/>
+{% include "footer.html" %}
+<script>
+function setbg() {
+    var sun = {   "#day" : "sunday",
+            "background-image":    'url("/static/media/bgimg1.png")',
+            "background-repeat":   'no-repeat',
+            "background-position": '0 -400px'
+        }
+    var styles = [
+        {}, {}, {}, {}, {}, {}, {}
+    ];
+    s = styles[(new Date().getDay() % styles.length)]
+    for (k in s){
+        if (k.startsWith('#'))
+            continue;
+        $('body').css(k, s[k])
+
+    }
+}
+setbg();
+
+</script>
+{% endblock %}

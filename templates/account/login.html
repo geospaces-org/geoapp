@@ -10,7 +10,7 @@
 }
 .fc{
     max-width: 800px;
-    padding: 50px;
+    padding: 0px;
     border-radius: 6px;
 }
 input{
@@ -27,14 +27,16 @@ label{
 <div class="container-fluid" style="z-index: 3000;">
 
 <div class="container-fluid text-center fc"    >
+    <br/><br/>
 <h2 id="head_banner">{% trans "Sign In" %}</h2>
+    <br/><br/>
     
 <form class="container-fluid text-center fc" id="login_form" method="POST" 
       action="{% url 'account_login' %}">
     
 {% csrf_token %}
   
-    <div class="" style=" width: 400px;display: inline-table;">
+    <div class="" style="max-width: 400px;display: inline-table;">
     {% for field in form %}
         <div class="fieldWrapper fw1" style="text-align: left; width: 100%;">
             {{ field.errors }}

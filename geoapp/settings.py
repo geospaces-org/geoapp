@@ -105,10 +105,20 @@ TEMPLATES = [
 ]
 WSGI_APPLICATION = 'geoapp.wsgi.application'
 
+def SQLLITE3DB():
+    optdb= "/opt/data/geoapp/db/db.sqlite3"
+    
+    if not os.path.exists(optdb):
+        optdb = os.path.join(BASE_DIR, 'db.sqlite3')
+    
+    return optdb
+        
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        #'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': SQLLITE3DB(),
     }
 }
 

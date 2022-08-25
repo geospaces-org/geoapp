@@ -135,7 +135,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 db.sqlite3
-installedapps
 /static/articles*
 a.tar.gz
 fisher-puns-5ep-ckpt-1900/*

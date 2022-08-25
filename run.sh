@@ -1,6 +1,10 @@
 export PORT=7003
 
-if [ $# -eq 0 ]
+if [ $# -gt 0 ]; then
+	export PORT=$1
+fi
+
+if [ $# -lt 2 ]
 then
     echo "RUNNING LOCAL server at ${PORT}"
     python manage.py runserver 0:${PORT}

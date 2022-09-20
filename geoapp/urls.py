@@ -1,9 +1,9 @@
 from django.contrib import admin
-from django.urls import path, include
-from django.conf.urls import include, url
+from django.urls import path, include, re_path
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from . import views
 from mangorest import mango
+import apps.settings
 
 app_name = 'geoapp'
 
@@ -11,8 +11,18 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path(r'', views.index, name='index'),
-    path(r'geoapp/', views.index, name='index'),
-
-    url(r'^.*/$', mango.Common, name='catchall'),
+] + apps.settings.INSTALLED_URLS + [
+    path('oidc/', include('mozilla_django_oidc.urls')),
+    re_path(r'^.*/$', mango.Common, name='catchall'),
 ]
 urlpatterns = staticfiles_urlpatterns() + urlpatterns
+
+
+'''
+To enable single sign on: 
+
+Step 1: Add following line to urlpatterns:
+    path('oidc/', include('mozilla_django_oidc.urls')),
+
+Step 2: 
+'''

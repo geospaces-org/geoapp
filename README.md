@@ -6,6 +6,10 @@ Once done add it to
 
 ## Basic setup
 
+
+* Link tseries directory to /opt/data/tseries
+> ln -s /opt/LMCO/git/notebooks/DS/tseries/db/ /opt/data/tseries/db
+
 You must create a ~/.myconfig with collowing contents - 
 replace with meaningful results:
 

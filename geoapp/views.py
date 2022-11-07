@@ -5,11 +5,20 @@ APPNAME   ='geoapp'
 
 # -----------------------------------------------------------------------
 def index(request):
-    if (not apps.settings.DEFAULT_APP ):
+    
+    try:
+        def_app = apps.settings.DEFAULT_APP
+    except:
+        print("No default app - using index.html")
+        def_app = None
+        
+    if (not def_app ):
         return render(request, 'index.html')
         
     app = f'{apps.settings.DEFAULT_APP}'
-    return render(request, f'{app}/index.html/' )
+    template = f'{app}/index.html/'
+    
+    return render(request, template )
 
 # -----------------------------------------------------------------------
 import allauth.account.views

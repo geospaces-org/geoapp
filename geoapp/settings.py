@@ -75,7 +75,7 @@ INSTALLED_APPS = [
     'geoapp',
  ] + apps.settings.INSTALLED_APPS
 
-SITE_ID = 2
+SITE_ID = 1
 
 # Provider specific settings
 DEFAULT_AUTO_FIELD='django.db.models.BigAutoField'

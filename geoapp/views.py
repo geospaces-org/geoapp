@@ -65,7 +65,6 @@ class myPasswordResetView(PasswordResetView):
     form_class = MyResetPasswordForm
 
 allauth.account.views.password_reset = myPasswordResetView.as_view()
+print( f"===> {allauth.account.views.password_reset}")
 
-        
 # -----------------------------------------------------------------------
-

@@ -39,11 +39,15 @@ ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT=86400000000
 ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_USERNAME_MIN_LENGTH = 3
 ACCOUNT_EMAIL_SUBJECT_PREFIX="Geospaces: "
+ACCOUNT_DEFAULT_HTTP_PROTOCOL="https"
+
 
 STRIPE_PUBLIC = my_config.STRIPE_PUBLIC
 STRIPE_SECRET = my_config.STRIPE_SECRET
 
 AUTHENTICATION_BACKENDS = [
+    'mozilla_django_oidc.auth.OIDCAuthenticationBackend',
+    
     # Needed to login by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
 
@@ -60,6 +64,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'oauth2_provider',
     #'corsheaders',
     'allauth',
     'allauth.account',
@@ -70,7 +75,7 @@ INSTALLED_APPS = [
     'geoapp',
  ] + apps.settings.INSTALLED_APPS
 
-SITE_ID = 1
+SITE_ID = 2
 
 # Provider specific settings
 DEFAULT_AUTO_FIELD='django.db.models.BigAutoField'
@@ -84,6 +89,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'oauth2_provider.middleware.OAuth2TokenMiddleware',
 ]
 
 ROOT_URLCONF = 'geoapp.urls'

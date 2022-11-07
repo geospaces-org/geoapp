@@ -28,3 +28,6 @@ pandasql
 elasticsearch
 tika
 textract
+sqlalchemy
+tailer
+mozilla_django_oidc

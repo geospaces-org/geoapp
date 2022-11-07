@@ -14,7 +14,6 @@ urlpatterns = [
 ] + apps.settings.INSTALLED_URLS + [
     path('oidc/', include('mozilla_django_oidc.urls')),
     re_path(r'^.*/$', mango.Common, name='catchall'),
->>>>>>> master
 ]
 urlpatterns = staticfiles_urlpatterns() + urlpatterns
 

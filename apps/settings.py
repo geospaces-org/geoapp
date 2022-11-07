@@ -1,5 +1,4 @@
-from django.urls import path, include
-from django.conf.urls import include, url
+from django.urls import path, include, re_path
 
 
 DEFAULT_APP = 'tseries'

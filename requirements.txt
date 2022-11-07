@@ -28,3 +28,5 @@ pandasql
 elasticsearch
 tika
 textract
+sqlalchemy
+tailer

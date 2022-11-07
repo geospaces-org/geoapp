@@ -16,6 +16,7 @@ import os, sys
 sys.path.append(os.path.expanduser("~/.django") )
 import my_config
 from my_config import *
+import apps.settings
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -38,6 +39,8 @@ ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT=86400000000
 ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_USERNAME_MIN_LENGTH = 3
 ACCOUNT_EMAIL_SUBJECT_PREFIX="Geospaces: "
+ACCOUNT_DEFAULT_HTTP_PROTOCOL="https"
+
 
 STRIPE_PUBLIC = my_config.STRIPE_PUBLIC
 STRIPE_SECRET = my_config.STRIPE_SECRET
@@ -67,9 +70,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.github',
     #My apps
     'geoapp',
- ]
+ ] + apps.settings.INSTALLED_APPS
 
-SITE_ID = 1
+SITE_ID = 2
 
 # Provider specific settings
 DEFAULT_AUTO_FIELD='django.db.models.BigAutoField'

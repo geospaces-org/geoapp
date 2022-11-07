@@ -1,13 +1,13 @@
 from django.urls import path, include, re_path
 
 
-DEFAULT_APP = 'tseries'
+DEFAULT_APP = 'scribe'
 
 INSTALLED_APPS = [
-    'tseries',
+    'scribe',
 ]
 
 INSTALLED_URLS = [
-    path('tseries/', include('tseries.urls'), name="tseries"),
+    path('scribe/', include('scribe.urls'), name="scribe"),
 ]
 

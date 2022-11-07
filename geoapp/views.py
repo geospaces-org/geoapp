@@ -67,6 +67,5 @@ class myPasswordResetView(PasswordResetView):
 allauth.account.views.password_reset = myPasswordResetView.as_view()
 print( f"===> {allauth.account.views.password_reset}")
 
-        
 # -----------------------------------------------------------------------
 

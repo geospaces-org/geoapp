@@ -12,6 +12,17 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path(r'', views.index, name='index'),
 ] + apps.settings.INSTALLED_URLS + [
+    path('oidc/', include('mozilla_django_oidc.urls')),
     re_path(r'^.*/$', mango.Common, name='catchall'),
 ]
 urlpatterns = staticfiles_urlpatterns() + urlpatterns
+
+
+'''
+To enable single sign on: 
+
+Step 1: Add following line to urlpatterns:
+    path('oidc/', include('mozilla_django_oidc.urls')),
+
+Step 2: 
+'''

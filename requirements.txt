@@ -31,3 +31,5 @@ textract
 sqlalchemy
 tailer
 mozilla_django_oidc
+django-oauth2-provider
+django-oauth-toolkit

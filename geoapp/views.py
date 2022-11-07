@@ -8,8 +8,15 @@ def index(request):
     if (not apps.settings.DEFAULT_APP ):
         return render(request, 'index.html')
         
-    app = f'{apps.settings.DEFAULT_APP}'
-    return render(request, f'{app}/index.html/' )
+    template = f'index.html/'
+    try:
+        app = f'{apps.settings.DEFAULT_APP}'
+        template = f'{app}/index.html/'
+    except:
+        print("No default app - using index.html")
+    
+    
+    return render(request, template )
 
 # -----------------------------------------------------------------------
 import allauth.account.views

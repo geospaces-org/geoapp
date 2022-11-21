@@ -254,7 +254,34 @@ style="border-bottom: 1px solid #eee; height: 48px; background-color: aliceblue;
 
 <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
     
-{% include "mymenu.html" %}    
+<li class="nav-item mr-4 mb-2 mb-lg-0"><a class="nav-link" href="/geoapp/solutions.html"> 
+        <i class="fas fa-network-wired"></i> <span class="our_menu">Services</span></a></li>
+
+
+<!--- APPLICATION MENU STARTS HRE ..... -->
+    
+<ul class="navbar-nav  mr-auto">
+<li class="nav-item dropdown">
+  <a class="nav-item nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" >
+  <i class="fas fa-blog"></i> <span class="our_menu">Apps</span></a>
+  <div  class="changetag dropdown-menu dropdown-menu-right"
+         style="z-index:2;width:300px; border-radius: 5px; padding: 0px; ">
+      
+  <div class="row" style="padding: 1; margin: 0;">
+  <div class="col-md-2" style="background-color: #fafafa" style="padding: 0; "></div>
+  <div class="col-md-8"  style="padding: 0; ">
+
+      {% include "appmenu.html" %}    
+
+  </div>
+  </div>
+  </div>
+</li>
+</ul>
+<!--- APPLICATION MENU ENDS HRE ..... -->
+
+      
+      
 <!-- 
     <li class="nav-item mr-4 mb-2 mb-lg-0"><a class="nav-link" href="/"><i class="fas fa-home"></i>
        <span class="our_menu">Home</span></a></li> 

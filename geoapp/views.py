@@ -15,8 +15,8 @@ def index(request):
     if (not def_app ):
         return render(request, 'index.html')
         
-    app = f'{apps.settings.DEFAULT_APP}'
-    template = f'{app}/index.html/'
+    #app = f'{apps.settings.DEFAULT_APP}'
+    template = f'{def_app}/index.html/'
     
     return render(request, template )
 

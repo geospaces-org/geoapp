@@ -55,7 +55,36 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend'
 ]
 
-CRISPY_TEMPLATE_PACK="bootstrap4"
+#CRISPY_TEMPLATE_PACK="bootstrap4"
+
+DETECT_INSTALLED_APPS = True
+DETECTED_APPS = []
+
+def detectInstalledApps():
+    if ( not DETECT_INSTALLED_APPS):
+        return DETECTED_APPS
+    
+    import glob, os
+    
+    appmenu = ""
+    print ("++ Searching for installed APPS ...")
+    for file in glob.glob("apps/**/apps.py"):
+        app = os.path.basename(os.path.dirname(file))
+        print("FOUND **", file, app)
+        DETECTED_APPS.append(app) 
+        
+        appmenu += f'''
+        <a class="dropdown-item" href="/{app}/{app}/index.html" > {app} </a>\n '''
+
+    with open("apps/templates/appmenu.html", "w+" ) as f:
+        f.write(appmenu)
+        
+    print (f"-- Detected {len(DETECTED_APPS)} apps: {DETECTED_APPS}")
+    return DETECTED_APPS;
+
+
+detectInstalledApps()
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -71,9 +100,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.github',
-    #My apps
+    ## => MY APPLICATIONS 
     'geoapp',
- ] + apps.settings.INSTALLED_APPS
+ ]  + DETECTED_APPS + apps.settings.INSTALLED_APPS
 
 SITE_ID = 1
 
@@ -97,7 +126,7 @@ ROOT_URLCONF = 'geoapp.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')] + [os.path.join(BASE_DIR, 'apps', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -105,7 +134,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                #'shop.cart.cartcontext'
+                'apps.appcontext.appcontext'
             ],
         },
     },

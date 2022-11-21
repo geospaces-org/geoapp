@@ -1,15 +1,16 @@
-from django.urls import path, include, re_path
-
-
-DEFAULT_APP = None
+# appcontext.py
+# Any context related to geoapp must be included here
 
 '''
 You can include this in your html pages and refer to these variables:
-For example:
 
-	{{ appname }}
+Fro example:
+
+{{ appcontext.appname }}
 
 '''
+
+
 #---------------------------------------------------------------------------------
 def appcontext(request):
     context = {
@@ -18,5 +19,3 @@ def appcontext(request):
     }
     
     return context
-
-

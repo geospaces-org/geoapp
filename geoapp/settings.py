@@ -59,9 +59,10 @@ AUTHENTICATION_BACKENDS = [
 
 DETECT_INSTALLED_APPS = True
 DETECTED_APPS = []
+DETECTED_URLS = []
 
 def detectInstalledApps():
-    if ( not DETECT_INSTALLED_APPS):
+    if ( not DETECT_INSTALLED_APPS or len(DETECTED_APPS) > 0 ):
         return DETECTED_APPS
     
     import glob, os
@@ -75,10 +76,13 @@ def detectInstalledApps():
         
         appmenu += f'''
         <a class="dropdown-item" href="/{app}/{app}/index.html" > {app} </a>\n '''
-
+        
+    DETECTED_URLS = [f"path('{a}/'), include('{a}.urls'), name='{a}')" for a in DETECTED_APPS]
+    
     with open("apps/templates/appmenu.html", "w+" ) as f:
         f.write(appmenu)
         
+    
     print (f"-- Detected {len(DETECTED_APPS)} apps: {DETECTED_APPS}")
     return DETECTED_APPS;
 
@@ -102,7 +106,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.github',
     ## => MY APPLICATIONS 
     'geoapp',
- ]  + DETECTED_APPS + apps.settings.INSTALLED_APPS
+ ]  + DETECTED_APPS 
 
 SITE_ID = 1
 
@@ -134,7 +138,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'apps.appcontext.appcontext'
+                'apps.settings.appcontext'
             ],
         },
     },

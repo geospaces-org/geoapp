@@ -1,4 +1,4 @@
-export PORT=7005
+export PORT=7004
 
 if [ $# -gt 0 ]; then
 	export PORT=$1

@@ -5,7 +5,6 @@ APPNAME   ='geoapp'
 
 # -----------------------------------------------------------------------
 def index(request):
-    
     try:
         def_app = apps.settings.DEFAULT_APP
     except:
@@ -19,6 +18,28 @@ def index(request):
     template = f'{def_app}/index.html/'
     
     return render(request, template )
+
+# -----------------------------------------------------------------------
+def uploadfile(request):
+    
+    par = dict(request.GET)
+    par.update(request.POST)
+
+    savedir =  par.get("savedir", "/");
+    if not savedir.endswith("/") or not savedir.endswith("\\"):
+        savedir += "/"
+    
+    ret = "Uploading Files:\n "
+    for f in request.FILES.getlist('file'):
+        content = f.read()
+        filename = f"/tmp/{savedir}/{str(f)}"
+        print(f"++ Save file {filename} Content: {len(content)} :")
+        with open(filename, "wb") as f:
+            f.write(content)
+        ret += filename + "\n"
+
+
+    return HttpResponse(ret)
 
 # -----------------------------------------------------------------------
 import allauth.account.views

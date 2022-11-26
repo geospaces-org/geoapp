@@ -105,6 +105,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.github',
     ## => MY APPLICATIONS 
+    'django_extensions',
     'geoapp',
  ]  + DETECTED_APPS 
 

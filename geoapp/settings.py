@@ -12,17 +12,20 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'pr75j7t*r!j=oac!798tazlecdo0%k0rasre@!f_&0u%2(=nty'
-import os, sys
+
+import os, sys, glob
+from django.urls import path, include
+
 sys.path.append(os.path.expanduser("~/.django") )
-import my_config
-from my_config import *
-import apps.settings
+if (os.path.exists(os.path.expanduser("~/.django/my_config.py"))):
+    import my_config
+    from my_config import *
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 ALLOWED_HOSTS = ['*', 'localhost']
 
 AUTO_LOGOUT_DELAY=30000
@@ -41,7 +44,6 @@ ACCOUNT_USERNAME_MIN_LENGTH = 3
 ACCOUNT_EMAIL_SUBJECT_PREFIX="Geospaces: "
 ACCOUNT_DEFAULT_HTTP_PROTOCOL="https"
 
-
 STRIPE_PUBLIC = my_config.STRIPE_PUBLIC
 STRIPE_SECRET = my_config.STRIPE_SECRET
 
@@ -54,40 +56,6 @@ AUTHENTICATION_BACKENDS = [
     # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend'
 ]
-
-#CRISPY_TEMPLATE_PACK="bootstrap4"
-
-DETECT_INSTALLED_APPS = True
-DETECTED_APPS = []
-DETECTED_URLS = []
-
-def detectInstalledApps():
-    if ( not DETECT_INSTALLED_APPS or len(DETECTED_APPS) > 0 ):
-        return DETECTED_APPS
-    
-    import glob, os
-    
-    appmenu = ""
-    print ("++ Searching for installed APPS ...")
-    for file in glob.glob("apps/**/apps.py"):
-        app = os.path.basename(os.path.dirname(file))
-        print("FOUND **", file, app)
-        DETECTED_APPS.append(app) 
-        
-        appmenu += f'''
-        <a class="dropdown-item" href="/{app}/{app}/index.html" > {app} </a>\n '''
-        
-    DETECTED_URLS = [f"path('{a}/'), include('{a}.urls'), name='{a}')" for a in DETECTED_APPS]
-    
-    with open("apps/templates/appmenu.html", "w+" ) as f:
-        f.write(appmenu)
-        
-    
-    print (f"-- Detected {len(DETECTED_APPS)} apps: {DETECTED_APPS}")
-    return DETECTED_APPS;
-
-
-detectInstalledApps()
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -107,7 +75,41 @@ INSTALLED_APPS = [
     ## => MY APPLICATIONS 
     'django_extensions',
     'geoapp',
- ]  + DETECTED_APPS 
+ ]  
+
+DETECT_INSTALLED_APPS = True
+DETECTED_APPS = []
+DETECTED_URLS = []
+
+def detectInstalledApps(appslist):
+    global DETECTED_URLS
+
+    print ("++ Searching for installed APPS ...", len(DETECTED_APPS), " PID:", os.getpid())
+    appmenu = ""
+    for file in glob.glob("**/apps.py"):
+        app = os.path.basename(os.path.dirname(file))
+        if app in appslist:
+            continue
+
+        print("FOUND **", file, app)
+        DETECTED_APPS.append(app) 
+        
+        appmenu += f'''
+        <a class="dropdown-item" href="/{app}/{app}/index.html" > {app} </a>\n '''
+        
+    DETECTED_URLS = [ path(f'{a}/', include(f'{a}.urls'), name=a) for a in DETECTED_APPS ]
+    
+    with open("apps/templates/appmenu.html", "w+" ) as f:
+        f.write(appmenu)
+    
+    print (f"-- Detected {len(DETECTED_APPS)} apps: {DETECTED_APPS}")
+    return DETECTED_APPS;
+
+if ( DETECT_INSTALLED_APPS ):
+    detectInstalledApps(INSTALLED_APPS)
+# -----------------------------------------------------------------------------------------
+INSTALLED_APPS = INSTALLED_APPS + DETECTED_APPS 
+
 
 SITE_ID = 1
 

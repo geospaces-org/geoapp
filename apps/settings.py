@@ -1,7 +1,7 @@
 from django.urls import path, include, re_path
 
 
-DEFAULT_APP = None
+DEFAULT_APP = "tseries"
 
 '''
 You can include this in your html pages and refer to these variables:

@@ -180,9 +180,9 @@ function getHighChart(tit, sdata, i=0, funcToCall=null){
         yAxis: { title: { text: null } },
           min: null,
           tooltip: {
-                ppositioner: function (labelWidth, labelHeight, point) {
+                positioner: function (labelWidth, labelHeight, point) {
                     //console.log(chart.plotTop)
-                    return { x: point.plotX > 100? point.plotX-70:point.plotX, y: (chart)? chart.plotTop - 25: 0};
+                    return { x: point.plotX > 100? point.plotX-labelWidth:point.plotX, y: 0};
                 },
                 useHTML: true,
                 split: false,
@@ -209,7 +209,7 @@ function getHighChart(tit, sdata, i=0, funcToCall=null){
             headerFormat: '',
             shadow: false,
             style: {
-                fontSize: '14px'
+                fontSize: '10px'
             },
             valueDecimals: valueDecimals
         },

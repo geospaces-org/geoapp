@@ -52,7 +52,7 @@ function callws_getIDs(formName="", ignore = callws_ignore) {
 This will get Formdata
 --------------------------------------------------------------------------------*/
 var fd
-function callws_getform(formName="", context={} ) {
+function callws_getform(formName="" , context={}, getIDS=true) {
     var formObj = null
     var formData= null
     if (formName) {
@@ -71,12 +71,16 @@ function callws_getform(formName="", context={} ) {
         formData.append(k, context[k]);
     }
 
-    var vals = callws_getIDs(formName)
-    for (k in vals) {
-        if ( !formData.get(k))
-            formData.append(k, vals[k]);
+    // get all elements with out name attribute and add them to formdata
+    if (!getIDS) {
+        var vals = callws_getIDs(formName)
+        for (k in vals) {
+            if ( !formData.get(k))
+                formData.append(k, vals[k]);
+        }
     }
 
+    // Add standard params
     params =  GET_POSTDATA({})
     for(var k in params) {
         formData.append(k, params[k]);
@@ -88,10 +92,12 @@ function callws_getform(formName="", context={} ) {
 /*--------------------------------------------------------------------------------
 This will call WS service
 --------------------------------------------------------------------------------*/
-async function callws(url="/ui/test/", formName="", callbacks=null, context={} ) {
+async function callws(url="/ui/test/", formName="", callbacks=null, context={}, getIDS=true, opts={}) {
+
+
     var start    = new Date()
 
-    var formData = callws_getform(formName)
+    var formData = callws_getform(formName, context)
     if (!formData)
         return;
 

@@ -51,7 +51,6 @@ function callws_getIDs(formName="", ignore = callws_ignore) {
 /*--------------------------------------------------------------------------------
 This will get Formdata
 --------------------------------------------------------------------------------*/
-var fd
 function callws_getform(formName="" , context={}, getIDS=true) {
     var formObj = null
     var formData= null
@@ -92,16 +91,28 @@ function callws_getform(formName="" , context={}, getIDS=true) {
 /*--------------------------------------------------------------------------------
 This will call WS service
 --------------------------------------------------------------------------------*/
-async function callws(url="/ui/test/", formName="", callbacks=null, context={}, getIDS=true, opts={}) {
-
+var callws_default_opts= {
+    getIDS: false,
+}
+async function callws(  url="/ui/test/", formName="", callbacks=null, context={}, 
+                        opts=callws_default_opts) {
 
     var start    = new Date()
+    var getIDS   = false
+
+    if ( Object.keys(opts).length > 0) {
+        if (opts["url"])        url        = opts["url"]
+        if (opts["formName"])   formName   = opts["formName"]
+        if (opts["callbacks"])  callbacks  = opts["callbacks"]
+        if (opts["context"])    context    = opts["context"]
+        if (opts["getIDS"])     getIDS     = opts["getIDS"]
+    }
 
     var formData = callws_getform(formName, context)
     if (!formData)
         return;
 
-    console.log("+ Calling url ...", url, formData)
+    //console.log("+ Calling url ...", url, formData)
     for (var p of formData.entries()) {
         //console.log(p[0],  ': =>' + p[1]);
     } 
@@ -118,25 +129,27 @@ async function callws(url="/ui/test/", formName="", callbacks=null, context={}, 
         if (JS_error( data, "success", null, true)) {
             console.log("ERROR: " + data)
         }
-        else if (callbacks) {
-            if ( Array.isArray(callbacks) )
-                for (var cb in callbacks)
-                    callbacks[cb](data, context);
-            else
-                callbacks(data)
-        } else {
+        if (!callbacks) {
             console.log("\tCB: " +url+ " =>:" + data.slice(0,1024))
         }
     })
     .catch(error => {
         console.log("ERROR; " , error)
-        JS_error("Error: " + error, error, null, true)
+        JS_error("Error: " + error, "error", null, true)
     }).finally( function() {
+        if (callbacks) {
+            if ( Array.isArray(callbacks) )
+                for (var cb in callbacks)
+                    callbacks[cb](data, context);
+            else
+                callbacks(data)
+        }
+
         var now = new Date()
         var elp = now.valueOf() - start.valueOf()
         var t1  = start.toTimeString().slice(0,8)
         var t2  = now.toTimeString().slice(0,8)
-        var log =  "\tCB: " +url+ " =>:" + t1 + " - " + t2 + " : " + elp/1000 + " ms; Data: " + data.slice(0,32)
+        var log =  url+ " =>:" + t1 + " - " + t2 + " : " + elp/1000 + " ms; =>" + data.slice(0,32)
         console.log( log )
     });
 }

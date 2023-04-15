@@ -216,6 +216,44 @@ function FillRemainingHeight(n = '#tabledd1'){
     $(n).height( ht )
     console.log(i, ht)
 }  
+
+// ---------------------------------------------------------------------------------
+// filename returns the filename 
+// Ex: input:  /tmp/hh/Dada.csv
+//     output: Dada.csv
+//
+function filename(str) {
+    if ( !str)
+        return ''
+        
+    var base = new String(str).substring(str.lastIndexOf('/') + 1);
+   return base;
+}
+
+// ---------------------------------------------------------------------------------
+// basename returns the filename without extension
+// Ex: input:  /tmp/hh/Dada.csv
+//     output: Dada
+
+function basename(str) {
+    var base = filename(str)
+    if(base.lastIndexOf(".") != -1)
+        base = base.substring(0, base.lastIndexOf("."));
+   return base;
+}
+
+// ---------------------------------------------------------------------------------
+// dirname returns the directory name
+// Ex: input:  /tmp/hh/Dada.csv
+//     output: /tmp/hh
+function dirname(str) {
+    if ( !str)
+        return ''
+        
+    var base = new String(str).substring(0, str.lastIndexOf('/') );
+    return base;
+}
+
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 /*
 var WTEMP = `

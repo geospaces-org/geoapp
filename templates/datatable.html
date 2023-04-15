@@ -1,0 +1,618 @@
+<!--
+Need to create a good data table
+
+OPTIONS: 
+    simple table
+    search globally
+    search within the column
+    paginate locally/globally
+    ability adjust width of columns => alos saving the config
+    Excel kind of calculations
+    sort columns (by one or more)
+    Editable (with types - choice box, datetime etc.)
+    Rearranging columns 
+    Works on all browsers, iphone, ipad, android
+
+    Allows styling
+    ADD/DELETE/EDIT => show modified rows (and save the results back woth key column)
+
+    SHOW row and columns header
+ 
+show images 
+
+Allow hide and show columns
+-->
+
+<style>
+[contenteditable]:focus {
+    outline: 2px solid black;
+}
+
+.table-resizable th {
+    position: relative;
+    
+}
+.resizer {
+    /* Displayed at the right side of column */
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 5px;
+    cursor: col-resize;
+    user-select: none;
+}
+  
+.resizer:hover,
+.resizing {
+    border-right: 2px #fcfcfc
+}
+
+.thtd {
+    font-family: Roboto, 'Open Sans', Arial, sans-serif;
+    font-size: small;
+    vertical-align: middle;
+    line-height:1.6em;
+    color:#000000;
+    min-width: 25px;
+    max-width: 200px;
+    overflow-wrap: 0;
+    overflow: hidden;
+}
+    
+/* Table Header */
+.tth {
+    font-family: Roboto, 'Open Sans', Arial, sans-serif;
+    font-size: small;
+    vertical-align: middle;
+    line-height:1.6em;
+    color:#000000;
+    min-width: 25px;
+    max-width: 1250px;
+    overflow-wrap: 0;
+    overflow: hidden;
+
+    font-weight: 450;
+    background: #ececec;
+    text-align: center;
+    vertical-align: initial;
+}
+    
+.thRowsticky {
+  padding: 3px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+    vertical-align: initial;
+}
+    
+.thCol1sticky {
+  position: sticky;
+  left: 0;
+  top: 0;
+  z-index: 2;
+}
+    
+.thColNsticky {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+
+.dt_trSelected {
+    border-top: 2px solid rgba(0, 0, 0, 0.5);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+}
+</style>
+<!-- ----------------------------------------------------------------------------- ------------------
+// SCRIPT
+----------------------------------------------------------------------------- -------------------- -->
+<script>
+function datatable_rec2Json(ds, i){
+    var v = ds.values[i]
+    var j = {}
+    for (var k=0; k < ds.columns.length; k++){
+        j[ds.columns[k]] = v[k]
+    }
+    return j
+}
+
+function ProcessColumnData(table, title, data ) {
+    if (typeof addSeriesToChart != "function")
+        return;
+    console.log(`${title} - ${data.length} : ${data.slice(0, 3)} `)
+    addSeriesToChart(data, title)
+}
+
+function HeaderDoubleClicked(firstColumnIsXaxis=1) {
+    
+    var i = parseInt( $(this).parent().index() );
+    var j = parseInt( $(this).index() );
+
+    console.log(i, j);
+    
+    if ( j < 1) return;
+
+    var opt  = $(this).parent().parent().parent().data("opt")
+    var file = opt.filename
+    if ( file ){
+        title = $(`#${opt.id} tr`).eq(0).find('th').eq(j).text().trim();
+        title = title.substr(0, title.indexOf("\n") )
+        HeaderDoubleClickedFF(file, title, null)
+        return
+    }
+
+    var ttab  = $(this).parent().parent();
+    var data  = []
+    var title = ''
+    var parse = 1;
+    ttab.find('tr').each(function (i, el) {
+        if ( i> 0) {
+            var eltX = firstColumnIsXaxis ? el.cells[1].innerText : i
+            var eltY = el.cells[j].innerText
+            try{
+                if ( parse )
+                    eltY = parseFloat(eltY)
+            } catch (e) {
+                parse = 0
+            }
+            data.push([eltX, eltY])
+        }
+    });
+    ProcessColumnData(this, title, data);
+}
+// ---------------------------------------------------------------------------------
+function HeaderDoubleClickedFFCB(responseTxt, statusTxt, xhr) {
+    if (JS_error(responseTxt, statusTxt, xhr, true)) {
+        return;
+    }
+    NaN = 0
+    var ret = JSON.parse(responseTxt);
+    var col = ret.columns[1]
+    var dat = ret.values
+    ProcessColumnData(this, col, dat);
+}
+function HeaderDoubleClickedFF(file, cols='', nrows=100, cb=null){
+    var data= {user: '{{user.username}}', cols: cols, file: file, nrows: nrows, std:1}
+    var data1 = GET_POSTDATA(data)
+    $.get(`/tseries/getfiledata/`, data1, cb || HeaderDoubleClickedFFCB)
+}// ---------------------------------------------------------------------------------
+function add(a1){
+    var tr = a1.parentElement.parentElement;
+
+    if ( tr.deleted > 0 ) {
+        toggleDelete(null, tr)
+        return
+    }
+    var $clone = $(tr).clone();
+    $(tr).after($clone);
+    $clone[0].new = 1;
+    $($clone).css('background', 'rgba(0, 255, 0, 0.5)')
+};
+// ---------------------------------------------------------------------------------
+function toggleDelete(a1 , tr){
+    var tr = tr || a1.parentElement.parentElement;
+
+    // console.log($(td).text(),"?", a1.deleted, tr.deleted  );
+    if ( tr.deleted > 0 ) {
+        tr.deleted = 0;
+        if (tr.new && tr.new > 0 )
+            $(tr).css('background', 'rgba(0, 178, 0, 0.5)' )
+            //$(tr).css('border', '2px solid rgba(178, 0, 0, 0.5)' )
+        else
+            $(tr).css('background', '')
+    } else {
+        tr.deleted = 1;
+        //$(tr).css('border', '2px solid rgba(178, 0, 0, 0.5)' )
+        $(tr).css('background', 'rgba(178,0, 0, 0.5)')
+    }
+}
+// ---------------------------------------------------------------------------------
+function toggleSelect(cell, type="tr"){
+    var table = $(cell.parentElement.parentElement)
+    var opt   = $(table).data('opt');
+    var data  = $(table).data('data');
+    var tr    = cell
+    var cindx = parseInt( $(tr).index());  // clicked or selected index
+    var indx  = cindx + 1;
+
+    // TODO: Handle Multiselect
+    console.log("toggleSelect=>", indx, );
+
+    // if single select => we must unselect a row that was selected;
+    // if this was the row that was seleted - we just unslect the current row
+
+    var curSelected = $(table).get(0).singleSelected
+
+    if ( $(table).get(0).singleSelected == indx ) {
+        indx = - 1
+        $(table).get(0).singleSelected = indx;
+        //$(tr).css('border', '')    
+        $(tr).removeClass('dt_trSelected')    
+    } else {
+        var ttr = (curSelected > 0 ) ? $(table).get(0).rows[curSelected] : null
+        if (ttr) {
+            $(ttr).removeClass('dt_trSelected')    
+            //$(ttr).css('border', '')
+        }
+        $(table).get(0).singleSelected = indx
+        //$(tr).css('border', '2px solid rgba(0, 0, 0, 0.5)')
+        $(tr).addClass('dt_trSelected')    
+    }
+    if ( opt.rowSelectCB ) {
+        var vals = datatable_rec2Json(data, cindx)
+        opt.rowSelectCB(table, tr, indx, curSelected, vals)
+    }
+}
+// ---------------------------------------------------------------------------------
+function  edit(td) {
+    $('[data-toggle=popover]').popover({
+       content: $('#myPopoverContent').html(),
+       html: true
+    }).hover(function() {
+       $(td).popover('show');
+    });
+}
+// ---------------------------------------------------------------------------------
+var TD, TR, A1
+function tdfocus(td){
+    TD = td
+    if ( !td.original) {
+        td.original = $(td).text()
+    }
+    //console.log("Entered", td.original, $(td).text());
+}
+// ---------------------------------------------------------------------------------
+function tdblur(td){
+    // console.log("Exited", td.original, $(td).text());
+    if ( td.original != $(td).text() ) {
+        $(td).css("border", "2px solid firebrick")
+    } else {
+        $(td).css("border", "")
+    }
+}
+// ---------------------------------------------------------------------------------
+const createResizableColumn = function (col, resizer) {
+    // Track the current position of mouse
+    let x = 0;
+    let w = 0;
+
+    const mouseDownHandler = function (e) {
+        // Get the current mouse position
+        x = e.clientX;
+
+        // Calculate the current width of column
+        const styles = window.getComputedStyle(col);
+        w = parseInt(styles.width, 10);
+
+        // Attach listeners for document's events
+        document.addEventListener('mousemove', mouseMoveHandler);
+        document.addEventListener('mouseup', mouseUpHandler);
+    };
+
+    const mouseMoveHandler = function (e) {
+        // Determine how far the mouse has been moved
+        const dx = e.clientX - x;
+
+        // Update the width of column
+        col.style.width = `${w + dx}px`;
+    };
+
+    // When user releases the mouse, remove the existing event listeners
+    const mouseUpHandler = function () {
+        document.removeEventListener('mousemove', mouseMoveHandler);
+        document.removeEventListener('mouseup', mouseUpHandler);
+    };
+
+    resizer.addEventListener('mousedown', mouseDownHandler);
+};
+
+function addresizecolumn(name='tabledd') {
+
+    const table = document.getElementById(name);
+
+    if ( !table) {
+        return
+    }
+
+    // Query all headers
+    const cols = table.querySelectorAll('th');
+
+    // Loop over them
+    [].forEach.call(cols, function (col) {
+        // Create a resizer element
+        const resizer = document.createElement('div');
+        resizer.classList.add('resizer');
+
+        // Set the height
+        //resizer.style.height = `${table.offsetHeight}px`;
+        resizer.style.height = '100%';
+
+        // Add a resizer element to the column
+        col.appendChild(resizer);
+
+        // Will be implemented in the next section
+        createResizableColumn(col, resizer);
+    });
+    const mouseDownHandler = function(e) {
+        resizer.classList.add('resizing');
+    };
+
+    const mouseUpHandler = function() {
+        resizer.classList.remove('resizing');
+    };
+}
+
+// ---------------------------------------------------------------------------------
+function getdatestr(n){
+    
+    n1 = parseInt(n)
+    n2 = ""+n;
+    
+    if (n2.length >=19)
+        d = new Date(n1/1000000)
+    else if (n2.length >=16)
+        d = new Date(n1/1000)
+    else if (n2.length >=13)
+        d = new Date(n1)
+    else if (n2.length < 13)
+        d = new Date(n1*1000)
+    
+    try {
+        return d.toISOString()
+    }catch(e) {
+        return n
+    }
+}
+// ---------------------------------------------------------------------------------
+// nSort = Sort as Numbers
+// table , n is the index
+function sortTable(table, n, nSort=1, asc=1) {
+    var  i, x, y, shouldSwitch, dir, switchcount = 0;
+  
+
+    var switching = true;
+    var tag = (n < 0 ) ? "TH" : "td"
+
+    //Check if numberSort makes sense
+    for (var i = 1; i < (table.rows.length - 1); i++) {
+        var x  = table.rows[i].getElementsByTagName(tag)[n];
+        x = x.innerHTML
+        if(isNaN(x)) {
+            nSort = 0
+            break;
+        }
+    }
+
+    while (switching) {
+        switching = false;
+        var rows = table.rows;
+        
+        for (i = 1; i < (rows.length - 1); i++) {
+            shouldSwitch = false;
+            var x  = rows[i].getElementsByTagName(tag)[n];
+            var y  = rows[i + 1].getElementsByTagName(tag)[n];
+            var xi = x.innerHTML
+            var yi = y.innerHTML
+
+            n1 = (nSort) ? Number(x.innerHTML) : x.innerHTML
+            n2 = (nSort) ? Number(y.innerHTML) : y.innerHTML
+            
+            if (asc) {
+                if (n1 > n2) {
+                  shouldSwitch = true;
+                  break;
+                }
+            } else {
+                if (n1 < n2) {
+                  shouldSwitch = true;
+                  break;
+                }
+            }
+        }
+        if (shouldSwitch) {
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+          switchcount ++;
+        } 
+    }
+}
+// ---------------------------------------------------------------------------------
+function sortUp(e, nSort=1) {
+    var n = parseInt( $(e).parent().index() ) -1;
+    console.log("Sorting", n, "th column");
+    var ttab  = $(e).parent().parent().parent().parent();
+    var table = ttab.get(0)
+
+
+    sortTable(table, n, nSort, asc=1);
+}
+function sortDown(e, nSort=1) {
+    var n = parseInt( $(e).parent().index() ) -1;
+    console.log("Sorting", n, "th column");
+    var ttab  = $(e).parent().parent().parent().parent();
+    var table = ttab.get(0)
+
+    sortTable(table, n, nSort, asc=0);
+}
+    
+let TABLE_OPTS = {
+    data:           null,
+    div:            "tabled",
+    id:             "tabledd1",
+    addDBLCLKEvent: 1,
+    maxcolumns:     1024*5,
+    maxitems:       null,
+    allowDelete:    1, 
+    allowAdd:       1, 
+    editable:       'contenteditable',
+    firstIstime:    1,
+    showTime:       1,
+    filename:       "",
+    fillHeight:     1 ,
+
+    colIndices:     null,
+    colNames:       null,
+    rowSelect:      1,
+    rowSelectCB:    null
+    
+}
+let TABLE_OPTS1 = {
+    data:           null,
+    div:            "tabled",
+    id:             "tabledd1",
+    addDBLCLKEvent: 1,
+    maxcolumns:     1024,
+    maxitems:       null,
+    allowDelete:    0, 
+    allowAdd:       0, 
+    editable:       '',
+    firstIstime:    0,     
+    showTime:       1,
+    filename:       "",
+
+    colIndices:     null,
+    colNames:       null,
+    rowSelect:      1,
+    rowSelectCB:    null
+}
+
+// ---------------------------------------------------------------------------------
+function showDataTable(ds, opt= {} ,def = TABLE_OPTS){
+    opt = Object.assign({}, def, opt)
+    var dsv= ds.values
+    var dims = `${dsv.length}x${ds.columns.length}`
+
+    tid      = '#'+opt.id
+    maxitems = opt.maxitems || $('#maxitems').val()
+
+    if ( opt.allowDelete)
+        ondel = `<a style="color: transparent;" href=# 
+                    onmouseover="this.style.color='red';"
+                    onmouseout ="this.style.color='transparent';"
+                             title="Delete this row" onclick="toggleDelete(this)"> - </a>`
+    else
+        ondel = ""
+    
+    if ( opt.allowAdd)
+        onadd = `<a href=# title="Insert/Duplicate row" onclick="add(this)"> + </a>`
+    else
+        onadd = ""
+
+
+    var clrSort  = "" //`<a class=ac href=# onclick="sortUp(this)"> - </a> `
+    var showSort = `<a style="color:lightgray;" href=# onclick="sortUp(this)">&#x25B2;</a> 
+                    <a style="color:lightgray;" href=# onclick="sortDown(this)">&#x25BC;</a>`
+    var showSearch = `
+            <div> 
+           <input  onKeyup="setTimeout(filterFunc('${tid}', this.value, $(this).parent().parent().index()), 500)"
+                style="width:100%;border: 0px; background: transparent; height:100%;" placeholder="">  
+            </div>`
+    
+    var list=`
+   <table id="${opt.id}" class="table table-striped table-bordered tresizable table-sm scroller" style="" >
+    <tbody ><thead>
+    <tr  aria-rowspan="2" ><th class="thtd tth thCol1sticky" nowrap style="width: 1px; padding: 4px;">${dims} ${clrSort} ${showSearch}</th>`;
+
+    var COLUMN_ORDER = null;
+    var i;
+    if (opt.colIndices) {
+        COLUMN_ORDER = opt.colIndices
+    } 
+    else if ( opt.colNames ) {
+        COLUMN_ORDER = []
+        var c = 0
+        for (i of opt.colNames){
+            COLUMN_ORDER.push(ds.columns.indexOf(i))
+            if( ++c >= opt.maxcolumns) 
+                break;
+        }
+    } else {
+        var nc = Math.min(ds.columns.length, opt.maxcolumns)
+        COLUMN_ORDER = Array.from(Array(nc).keys()) 
+    }
+
+    for (i in COLUMN_ORDER){
+        var col = ds.columns[ COLUMN_ORDER[i] ] 
+        
+        if (!col ) {
+            col = (opt.colNames) ? opt.colNames[i] : ""
+        } 
+
+        var wdt =  ""//"style='max-width: 750px;'"
+
+        list+= `<th class="tth thRowsticky"  ${wdt} nowrap title='${col}' >${col}
+                ${showSort} ${showSearch}</th>`
+                    
+
+    }
+    list += "</tr></thead>"
+
+    var ncells = dsv.length * ds.columns.length;
+    var items = 0;
+    var rowSelect = ""
+    if (opt.selectRows) {
+        rowSelect = `onclick='toggleSelect(this )'`
+    }
+    rowSelect = `onclick='toggleSelect(this )'`
+    for (var i=0; i < dsv.length; i++){
+        list += `<tr ${rowSelect}" >
+            <th class="thtd tth thColNsticky"  nowrap  > ${ondel}  ${onadd} ${i}</th>`
+        
+        for (var j1=0; j1 < COLUMN_ORDER.length; j1++){
+            var j = COLUMN_ORDER[j1]
+            items ++;
+            if (items >= maxitems)
+                break;
+            var v = ""+ dsv[i][j]
+            var v1= (v.length > 32)? v : "";
+            //v = `012345678910|012345678920|012345678930|012345678940|012345678950|012345678960|012345678970`
+            if (j == 0 && opt.firstIstime) {
+                var temp = getdatestr(v)
+                if (opt.showTime) {
+                    v1 = v
+                    v= temp
+                } else { 
+                    v1 = temp
+                }
+            }
+            
+            var focus_blur = opt.editable + ' onfocus="tdfocus(this)" onblur="tdblur(this)"'
+            //list += `<td nowrap style="max-width:200px; overflow: hidden;" ${focus_blur}  title='${v1}'>` + v + "</td>"
+            list += `<td nowrap class=thtd ${focus_blur}  title='${v1}'>` + v + "</td>"
+            if ( ncells > maxitems && j >= opt.maxcolumns-1) {
+                list += `<td nowrap class=thtd >Omitting ${dsv[i].length - opt.maxcolumns} columns</td>`
+                break;
+            }
+        }
+        list += "</tr>"
+        if (items >= maxitems)
+            break;
+    }
+    list += `</tbody></table>`
+
+    $(`#${opt.div}`).html(list)
+
+    $('[data-toggle="popover"]').popover({ html: true });
+    $('[data-toggle="tooltip"]').tooltip()
+
+    if (opt.addDBLCLKEvent)
+        $(`${tid} th`).dblclick(HeaderDoubleClicked);
+
+    if ($(`${tid}`).width() > window.innerWidth)
+        $(`${tid}`).width( $(`${tid}`).width() + 200)
+    addresizecolumn(opt.id)
+    
+    var dsCopy = structuredClone(ds)
+    
+    $(`${tid}`).data('data', dsCopy)
+    opt.data = dsCopy
+    $(`${tid}`).data('opt',  opt)
+
+    //$('#tableddDIM').html(`<div id=tableddDIM style="z-index: 4;position: sticky; top: -1; "> ${dims} </div>`)
+    //setupFilter('#filter', '#slist')
+    
+    if (opt.fillHeight)
+        FillRemainingHeight(opt.div)
+}
+
+</script>

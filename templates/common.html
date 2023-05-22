@@ -24,7 +24,11 @@
 </script>
 
 <link href="/static/bc/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" 
+integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+</script>
+
 <script src="/static/bc/bootstrap/dist/js/bootstrap.min.js"></script>
     
 <script src="/static/geoui/utils.js"></script>
@@ -36,6 +40,33 @@
 <script src="/static/js/jquery.rateyo.min.js"></script>
 
 <style>
+
+.input80{
+    width: 80%;
+    text-align: left;
+    min-height: 35px;
+    padding: 10px;
+    font-size: small;
+}
+
+.input100{
+    width: 100%;
+    text-align: left;
+    min-height: 35px;
+    padding: 10px;
+    font-size: small;
+}
+.lable100{
+    margin: 0;
+    font-size: smaller;
+    position: relative;
+    top: 12;
+    background: white;
+    padding: 2px;
+    left: 10;
+}
+
+
 input{
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
@@ -296,8 +327,10 @@ style="border-bottom: 1px solid #eee; height: 48px; background-color: aliceblue;
     
     <li class="nav-item mr-4 mb-2 mb-lg-0"><a class="nav-link" href="/stocks/stocks/stocks_index.html/">
         <i class="fa fa-chart-area"></i> <span class="our_menu">Stocks</span></a></li>
-    <li class="nav-item mr-4 mb-2 mb-lg-0"><a class="nav-link" href="/capstone/capstone/capstone_index.html"><i class="fas fa-graduation-cap"></i> <span class="our_menu">Capstones</span></a></li>
-    <li class="nav-item mr-4 mb-2 mb-lg-0"><a class="nav-link" href="/shop/shop.html"><i class="fas fa-tasks"></i> <span class="our_menu">Shop</span></a></li>
+    <li class="nav-item mr-4 mb-2 mb-lg-0"><a class="nav-link" href="/capstone/capstone/capstone_index.html">
+        <i class="fas fa-graduation-cap"></i> <span class="our_menu">Capstones</span></a></li>
+    <li class="nav-item mr-4 mb-2 mb-lg-0"><a class="nav-link" href="/shop/shop.html"><i class="fas fa-tasks"></i>
+         <span class="our_menu">Shop</span></a></li>
     -->
     <!--
     <ul class="navbar-nav  mr-auto">
@@ -507,3 +540,4 @@ $(document).ready(function() {
 })
 </script>
 
+{% include "datatable.html" %}

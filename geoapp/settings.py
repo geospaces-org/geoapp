@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.github',
     ## => MY APPLICATIONS 
     'django_extensions',
+    'users',
     'geoapp',
  ]  
 
@@ -164,6 +165,11 @@ DATABASES = {
         'NAME': SQLLITE3DB(),
     }
 }
+DB_CNX = DATABASES['default']['NAME']
+DB_CNX = DB_CNX.replace("/", "//")
+DB_CNX = f"sqllite://${DB_CNX}"
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators

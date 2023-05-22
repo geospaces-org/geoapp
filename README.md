@@ -3,6 +3,10 @@
 Use this as a generic template for the applications. To install you application, use a git repo to develop your application.
 Once done add it to
 
+RUN: 
+
+	#=> you dont need to do this: git submodule add https://github.com/mrdoob/three.js
+	git submodule init; git submodule update
 
 ## Basic setup
 

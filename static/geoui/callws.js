@@ -71,7 +71,7 @@ function callws_getform(formName="" , context={}, getIDS=true) {
     }
 
     // get all elements with out name attribute and add them to formdata
-    if (!getIDS) {
+    if (getIDS) {
         var vals = callws_getIDs(formName)
         for (k in vals) {
             if ( !formData.get(k))
@@ -113,10 +113,12 @@ async function callws(  url="/ui/test/", formName="", callbacks=null, context={}
         return;
 
     //console.log("+ Calling url ...", url, formData)
+    count =0 
     for (var p of formData.entries()) {
-        //console.log(p[0],  ': =>' + p[1]);
+        console.log(p[0],  ': =>' + p[1]);
+        count += 1        
     } 
-
+    console.log(': =>', count," entries found");
     var data = "?"
     let response=fetch(url, {
         method: "post",
@@ -149,7 +151,7 @@ async function callws(  url="/ui/test/", formName="", callbacks=null, context={}
         var elp = now.valueOf() - start.valueOf()
         var t1  = start.toTimeString().slice(0,8)
         var t2  = now.toTimeString().slice(0,8)
-        var log =  url+ " =>:" + t1 + " - " + t2 + " : " + elp/1000 + " ms; =>" + data.slice(0,32)
+        var log =  url+ " =>:" + t1 + " - " + t2 + " : " + elp/1000 + " ms; =>" + data.slice(0,48) + "..."
         console.log( log )
     });
 }

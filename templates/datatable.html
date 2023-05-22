@@ -2,11 +2,11 @@
 Need to create a good data table
 
 OPTIONS: 
-    simple table
-    search globally
-    search within the column
+    - simple table
+    - search globally
+    - search within the column
     paginate locally/globally
-    ability adjust width of columns => alos saving the config
+    - ability adjust width of columns => alos saving the config
     Excel kind of calculations
     sort columns (by one or more)
     Editable (with types - choice box, datetime etc.)
@@ -123,6 +123,7 @@ function ProcessColumnData(table, title, data ) {
     addSeriesToChart(data, title)
 }
 
+
 function HeaderDoubleClicked(firstColumnIsXaxis=1) {
     
     var i = parseInt( $(this).parent().index() );
@@ -175,8 +176,9 @@ function HeaderDoubleClickedFF(file, cols='', nrows=100, cb=null){
     var data= {user: '{{user.username}}', cols: cols, file: file, nrows: nrows, std:1}
     var data1 = GET_POSTDATA(data)
     $.get(`/tseries/getfiledata/`, data1, cb || HeaderDoubleClickedFFCB)
-}// ---------------------------------------------------------------------------------
-function add(a1){
+}
+// ---------------------------------------------------------------------------------
+function insertRow(a1){
     var tr = a1.parentElement.parentElement;
 
     if ( tr.deleted > 0 ) {
@@ -192,22 +194,29 @@ function add(a1){
 function toggleDelete(a1 , tr){
     var tr = tr || a1.parentElement.parentElement;
 
-    // console.log($(td).text(),"?", a1.deleted, tr.deleted  );
-    if ( tr.deleted > 0 ) {
+    console.log( tr.deleted, tr.new  );
+    if ( tr.new) {
+        $(tr).remove()                  //  if new => just remove it
+    }
+    else if ( tr.deleted > 0 ) {        //  undelete
         tr.deleted = 0;
-        if (tr.new && tr.new > 0 )
-            $(tr).css('background', 'rgba(0, 178, 0, 0.5)' )
-            //$(tr).css('border', '2px solid rgba(178, 0, 0, 0.5)' )
-        else
-            $(tr).css('background', '')
+        $(tr).css('background', '')
+        //if (tr.new && tr.new > 0 )
+        //    $(tr).css('background', 'rgba(0, 178, 0, 0.5)' )
+        //$(tr).css('border', '2px solid rgba(178, 0, 0, 0.5)' )
     } else {
         tr.deleted = 1;
-        //$(tr).css('border', '2px solid rgba(178, 0, 0, 0.5)' )
         $(tr).css('background', 'rgba(178,0, 0, 0.5)')
+        //$(tr).css('border', '2px solid rgba(178, 0, 0, 0.5)' )
     }
 }
 // ---------------------------------------------------------------------------------
 function toggleSelect(cell, type="tr"){
+    var table = $(cell.parentElement)
+    
+    if (!table || table.length <= 1)
+        return
+
     var table = $(cell.parentElement.parentElement)
     var opt   = $(table).data('opt');
     var data  = $(table).data('data');
@@ -266,6 +275,9 @@ function tdblur(td){
     // console.log("Exited", td.original, $(td).text());
     if ( td.original != $(td).text() ) {
         $(td).css("border", "2px solid firebrick")
+        var tr = td.parentElement;
+        if ( !tr.deleted || !tr.new)
+            tr.updated = 1
     } else {
         $(td).css("border", "")
     }
@@ -364,12 +376,93 @@ function getdatestr(n){
     }
 }
 // ---------------------------------------------------------------------------------
+// Call Update to update the source
+function datatable_getdata(tr) {
+    var td = tr.querySelectorAll('td')
+    var r = ""
+    for (var i=0 ; i < td.length; i++){
+        r += "'"+td[i].innerText + "',"
+    }
+    return r.substring(0,r.length-1);
+}
+function datatable_IDs( table, tr, ids=[0]) {
+    var sql= ''
+    var th = tr.querySelectorAll('th')
+    var td = tr.querySelectorAll('td')
+
+    for (j=0; j < ids.length; j++) {
+        var iv= ids[j]
+        var id= datatable_columntitle(table, iv+1)
+        sql += (j>0?" AND ":"") + `${id} = "${td[iv].innerText}"`
+    }
+    return sql
+}
+function datatable_columntitle(table, j=0) {
+    var title=""
+    if (typeof(table) == 'string' ) {
+        title = $(`#${table} tr`).eq(0).find('th').eq(j).text().trim();
+    } else {
+        title = $(table).find('tr').eq(0).find('th').eq(j).text().trim();
+    }
+    title = title.substr(0, title.indexOf("\n") )
+    return title
+}
+
+function datatable_getAllTitle( table) {
+    var cols = ""
+    var ths = $(table).find('tr').eq(0).find('th')
+    for (var i=1; i< ths.length; i++){
+        cols += datatable_columntitle(table, i) + ","
+    }
+    return cols.substring(0, cols.length-1);;
+}
+function datatable_getUpdates(table, tr){
+    var sql= ''
+    var tds  = tr.querySelectorAll('td')
+
+    for (j=0; j < tds.length; j++) {
+        var td = tds[j]
+        if (td.original && td.original != td.innerText) {
+            var id= datatable_columntitle(table, j+1)
+            sql += (sql.length > 0?", ":"") + `${id} = "${td.innerText}"`
+        }
+    }
+    return sql
+}
+// Not too smart - simple updates
+//
+function datatable_updatesSQL(table, tablename='', ids=[0]) {
+    if (typeof(table) == "string"){
+        table = $('#'+table)
+    }
+    if( !table || !table.get(0))
+        return;
+    var sql = "";
+    for (var i = 1; i < $(table).get(0).rows.length; i++) {
+        var tr  = $(table).get(0).rows[i]
+        if (tr.deleted && tr.new) {
+            ; 
+        }  // nothing to do
+        else if (tr.deleted) {
+            sql += `DELETE FROM ${tablename} WHERE ` + datatable_IDs(table, tr, ids) + ";\n---\n"
+        }
+        else if (tr.new) {
+            var s = datatable_getAllTitle(table)
+            var v = datatable_getdata(tr)
+            sql += `INSERT INTO ${tablename} (${s}) VALUES (${v});\n---\n`
+        } else if ( tr.updated) {
+            var s= datatable_getUpdates(table, tr)
+            if (s)
+                sql += `UPDATE ${tablename} SET ${s} WHERE `+ datatable_IDs(table, tr, ids) + ";\n---\n"
+        }
+    }
+    return sql
+}
+// ---------------------------------------------------------------------------------
 // nSort = Sort as Numbers
 // table , n is the index
 function sortTable(table, n, nSort=1, asc=1) {
     var  i, x, y, shouldSwitch, dir, switchcount = 0;
-  
-
     var switching = true;
     var tag = (n < 0 ) ? "TH" : "td"
 
@@ -479,7 +572,13 @@ let TABLE_OPTS1 = {
 // ---------------------------------------------------------------------------------
 function showDataTable(ds, opt= {} ,def = TABLE_OPTS){
     opt = Object.assign({}, def, opt)
-    var dsv= ds.values
+    var dsv = null
+    if (typeof(ds) == "string"){
+        ds   = JSON.parse(ds);
+        if (ds instanceof Array)
+            ds = ds[0]
+    }
+    dsv= ds.values
     var dims = `${dsv.length}x${ds.columns.length}`
 
     tid      = '#'+opt.id
@@ -494,7 +593,7 @@ function showDataTable(ds, opt= {} ,def = TABLE_OPTS){
         ondel = ""
     
     if ( opt.allowAdd)
-        onadd = `<a href=# title="Insert/Duplicate row" onclick="add(this)"> + </a>`
+        onadd = `<a href=# title="Insert/Duplicate row" onclick="insertRow(this)"> + </a>`
     else
         onadd = ""
 

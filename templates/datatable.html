@@ -283,7 +283,7 @@ function tdblur(td){
     }
 }
 // ---------------------------------------------------------------------------------
-const createResizableColumn = function (col, resizer) {
+var createResizableColumn = function (col, resizer) {
     // Track the current position of mouse
     let x = 0;
     let w = 0;
@@ -528,7 +528,7 @@ function sortDown(e, nSort=1) {
     sortTable(table, n, nSort, asc=0);
 }
     
-let TABLE_OPTS = {
+var TABLE_OPTS = {
     data:           null,
     div:            "tabled",
     id:             "tabledd1",
@@ -549,7 +549,7 @@ let TABLE_OPTS = {
     rowSelectCB:    null
     
 }
-let TABLE_OPTS1 = {
+var TABLE_OPTS1 = {
     data:           null,
     div:            "tabled",
     id:             "tabledd1",

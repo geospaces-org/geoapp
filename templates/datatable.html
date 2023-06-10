@@ -214,7 +214,7 @@ function toggleDelete(a1 , tr){
 function toggleSelect(cell, type="tr"){
     var table = $(cell.parentElement)
     
-    if (!table || table.length <= 1)
+    if (!table ) //|| table.length <= 1)
         return
 
     var table = $(cell.parentElement.parentElement)
@@ -253,6 +253,7 @@ function toggleSelect(cell, type="tr"){
     }
 }
 // ---------------------------------------------------------------------------------
+/*
 function  edit(td) {
     $('[data-toggle=popover]').popover({
        content: $('#myPopoverContent').html(),
@@ -261,6 +262,7 @@ function  edit(td) {
        $(td).popover('show');
     });
 }
+*/
 // ---------------------------------------------------------------------------------
 var TD, TR, A1
 function tdfocus(td){
@@ -541,7 +543,7 @@ var TABLE_OPTS = {
     firstIstime:    1,
     showTime:       1,
     filename:       "",
-    fillHeight:     1 ,
+    fillHeight:     1,
 
     colIndices:     null,
     colNames:       null,
@@ -649,9 +651,9 @@ function showDataTable(ds, opt= {} ,def = TABLE_OPTS){
     var ncells = dsv.length * ds.columns.length;
     var items = 0;
     var rowSelect = ""
-    if (opt.selectRows) {
-        rowSelect = `onclick='toggleSelect(this )'`
-    }
+    //if (opt.selectRows) {
+    //    rowSelect = `onclick='toggleSelect(this )'`
+    //}
     rowSelect = `onclick='toggleSelect(this )'`
     for (var i=0; i < dsv.length; i++){
         list += `<tr ${rowSelect}" >
@@ -691,9 +693,6 @@ function showDataTable(ds, opt= {} ,def = TABLE_OPTS){
 
     $(`#${opt.div}`).html(list)
 
-    $('[data-toggle="popover"]').popover({ html: true });
-    $('[data-toggle="tooltip"]').tooltip()
-
     if (opt.addDBLCLKEvent)
         $(`${tid} th`).dblclick(HeaderDoubleClicked);
 
@@ -712,6 +711,9 @@ function showDataTable(ds, opt= {} ,def = TABLE_OPTS){
     
     if (opt.fillHeight)
         FillRemainingHeight(opt.div)
+
+    //$('[data-toggle="popover"]').popover({ html: true });
+    //$('[data-toggle="tooltip"]').tooltip()
 }
 
 </script>

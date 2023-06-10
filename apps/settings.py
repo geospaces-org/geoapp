@@ -1,6 +1,3 @@
-from django.urls import path, include, re_path
-
-
 DEFAULT_APP = "tseries"
 
 '''
@@ -13,8 +10,9 @@ For example:
 #---------------------------------------------------------------------------------
 def appcontext(request):
     context = {
-        "appname": "GEOSPACE APPLICATION",
-        "weburl" : "https://www.geospaces.org/"
+        "appname": "Stream",
+        "weburl" : "https://www.geospaces.org/",
+        "top_url": "topbar.html"
     }
     
     return context

@@ -3,7 +3,6 @@ from django.urls import path, include, re_path
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from . import views
 from mangorest import mango
-import apps.settings 
 from . import settings
 
 app_name = 'geoapp'

@@ -1,5 +1,6 @@
+from django.http import HttpResponse
 from django.shortcuts import render
-import apps.settings
+import apps
 
 APPNAME   ='geoapp'
 
@@ -14,7 +15,6 @@ def index(request):
     if (not def_app ):
         return render(request, 'index.html')
         
-    #app = f'{apps.settings.DEFAULT_APP}'
     template = f'{def_app}/index.html/'
     
     return render(request, template )

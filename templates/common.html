@@ -149,8 +149,8 @@ td {
 }
 .navbar-nav .nav-link {
     font-family: 'Roboto';
-    font-weight: 450;
-    font-size: medium;
+    font-weight: 400;
+    font-size: small;
     flex-direction: row;
 }
 .navbar a {
@@ -206,72 +206,6 @@ function POST(url,  data, callback){
 }
 
 
-/*
-ALL THE BELOW MUST BE OBSOLETED USE AONLY ABOVE NEW APIS
-*/
-/*
-AUTH= GET_POSTDATA([]);
-var APIBASE=`http://localhost:9000`;
-if (window.location.hostname.indexOf("geospaces.org") >=0 )
-    APIBASE= `http://www.geospaces.org/api`
-
-var value=""
-for(var k in AUTH) {
-    value += `${k}=${AUTH[k]}&`;
-}
-const AUTH_STR  = value
-
-const URL1 = `http://localhost:9000`;
-function API_POSTDATA(params){
-    data = {
-            csrfmiddlewaretoken: '{{csrf_token }}',
-            'X-CSRFToken' : '{{ csrf_token  }}',
-            //url: URL1,
-            auth: '{{request.session.session_key}}',
-            user:'{{user.username}}'
-    }
-    for(var k in params) {
-        data[k] = params[k]
-    }
-    return data
-}
-
-const API_POST_URL1  = `${window.location.origin}/proxy/`
-function MYPOST(url, data, callback){
-    dfr = $.Deferred();
-    data1 = API_POSTDATA(data)
-    data1.url  = url
-    return $.post(API_POST_URL1, data1, callback);
-}
-
-const API_GET_URL1  = `${window.location.origin}/proxy/?auth=${AUTH_STR}&url=`
-function MYGET(url,  callback){
-    //data1 = API_POSTDATA(data)
-    url1  = API_GET_URL1 + url
-    $.get(url1, callback);
-}
-
-function GET(url,  callback){
-    data1 = API_POSTDATA(data)
-    url1  = `${window.location.origin}${url}`
-    $.get(url1, data, callback);
-}
-
-function POST(url,  data, callback){
-    data1 = API_POSTDATA(data)
-    url1  = `${window.location.origin}${url}`
-    $.post(url1, data1, callback);
-}
-*/
-/* **** USAGE *** Use it like this:
-   url = `${API_URL1}/essearch&q=${st}&d1=${d[0].trim()}&d2=${d[1].trim()}`
-   $.post(ur, callbackFucntion)
-OR
-   url  = `${API_URL1}/essearch
-   data =  API_POSTDATA( {q: st } )
-   $.post(ur, data, cb);
-
- */
 </script>
 </head>
 <body>
@@ -279,22 +213,29 @@ OR
 <!----------------------------------------BEGIN MENU end header -->
 <nav id=mainnavbar class="navbar navbar-expand-sm navbar-light bg-light"
 style="border-bottom: 1px solid #eee; height: 48px; background-color: aliceblue;display: -webkit-box1">
-  <a class="navbar-brand" href="/">
-        <img src="/static/imgs/logo5.png" height=28 alt="logo"/></a>
-   <span class="our_menu" style="color: #003478 !important;font-weight: 500;"> AI Navigator </span>
-   <span id="common_status" class="" style="width: 50px; text-align:right; display: hidden; white-space: nowrap;"></span>
 
-<ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+{% if top_url %}
+    
+    {% include top_url %}    
 
-<li class="nav-item mr-4 mb-2 mb-lg-0"><a class="nav-link" href=# style="font-weight: bold;"> 
-    <i class="fa fa-phone"></i> <span class="our_menu">Support: 1-800.966.5151 </span></a></li>
+{% else %}
+    <a class="navbar-brand" href="/">
+        <img src="/static/imgs/logo5.png" height=28 alt="logo"/ >
+    <span class="our_menu" style="color: #003478 !important;font-weight: 600; font-size: small;"> STREAM </span>
+    <span id="common_status" class="" style="width: 50px; text-align:right; display: hidden; white-space: nowrap;"></span>
 
-<li class="nav-item mr-4 mb-2 mb-lg-0"><a class="nav-link" href=# style="font-weight: bold;"> 
-    <span class="our_menu">Request Demo</span></a></li>
+    <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+
+    <li class="nav-item mr-4 mb-2 mb-lg-0"><a class="nav-link" href=# style="font-weight: bold;"> 
+    <i class="fa fa-phone"></i> <span class="our_menu">Support: 1-800.966.5151 </span></a></li >
+
+    <li class="nav-item mr-4 mb-2 mb-lg-0"><a class="nav-link" href=# > 
+    <span class="our_menu">About</span></a></li>
         
-<li class="nav-item mr-4 mb-2 mb-lg-0"><a class="nav-link" href="/geoapp/solutions.html"> 
+    <li class="nav-item mr-4 mb-2 mb-lg-0"><a class="nav-link" href="/geoapp/solutions.html"> 
         <i class="fas fa-network-wired"></i> <span class="our_menu">Product</span></a></li>
 
+{% endif %}
     
 <!--- APPLICATION MENU STARTS HRE ..... -->
     

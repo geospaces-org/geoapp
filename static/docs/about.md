@@ -63,6 +63,9 @@
     border: 1px solid #ddd;
 
 }
+.row{
+    align-items: center;
+}
 </style>
 
 
@@ -73,7 +76,7 @@
 </center>
 ---
 <div >
-<div class="row" style="align-items: center;">
+<div class="row" >
     <div class="col-md-6" s1tyle="width: 100%; background: #efefef;" >
         <p>
 Our simulation-driven approach to innovation is powered by our integrated suite of software which optimizes design performance across multiple disciplines encompassing structures, motion, fluids, thermal management, electromagnetics, system modeling and embedded systems, while also providing data analytics and true-to-life visualization and rendering. As a leading provider of enterprise-class engineering software enabling innovation, we deliver reduced development times and lower costs throughout the entire product lifecycle from concept design to in-service operation.</p>
@@ -130,6 +133,5 @@ Our simulation-driven approach to innovation is powered by our integrated suite 
             <a class="btn btn-primary dbut" href="/tseries/secured/EXPLORE_data1.html">Learn More ... </a>
         </div>
         <div class="col-md-5" style="background-color: #e0e0e0;border-radius: 6px; padding: 0px;">
-                <iframe style="background-color: #e0e0e0;border-radius: 6px; width:100%; height: 100%;" src="https://www.youtube.com/embed/4jmsHaJ7xEA" title="Artificial Intelligence | What is AI | Introduction to Artificial Intelligence | Edureka" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; " ></iframe>
-            </div>
+        </div>
 </div>

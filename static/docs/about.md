@@ -84,43 +84,41 @@ Our simulation-driven approach to innovation is powered by our integrated suite 
 </div></div></div>
 <hr/>
 <h3>Leading the culture </h3>
-
-
-<div class="row"><div id="items" class="col-md-12" >
+<div class="row"><div class="col-md-12" >
 <div class="item"><a href=#><img class=img1 src="/static/apps/tseries/static/imgs/megana.jpeg" align="center"></a>
         <span class=otitle1>Megana Gowda</span><br/>
         <span class=otitle> Founder/Chief of Opertions</span>
-    </div>
+</div>
 
 <div class="item"><a href=#><img class=img1 src="/static/apps/tseries/static/imgs/shayma.jpeg" align="center"></a>
         <span class=otitle1>Shayma Alkobaisi, PhD</span><br/>
         <span class=otitle>Advisements</span>
-    </div>
+</div>
 
 <div class="item"><a href=#><img class=img1 src="/static/apps/tseries/static/imgs/pavleen1.jpeg" align="center"></a>
         <span class=otitle1>Pavleen Kaur</span><br/>
         <span class=otitle>Data Operations</span>
-    </div>
+</div>
 
 <div class="item"><a href=#><img class=img1 src="/static/apps/tseries/static/imgs/wan.jpeg"  align="center"></a>
         <span class=otitle1>Wan Bae, PhD</span><br/>
         <span class=otitle>Research</span>
-    </div>
+</div>
 
 <div class="item"><a href=#><img class=img1 src="/static/apps/tseries/static/imgs/amanda.jpeg"  align="center"></a>
         <span class=otitle1>Amanda Aarogon (PhD) </span><br/>
         <span class=otitle>Geo-spatial</span>
-    </div>
+</div>
 
 <div class="item"><a href=#><img class=img1 src="/static/apps/tseries/static/imgs/matt.jpeg"  align="center"></a>
         <span class=otitle1>Matt Horak, PhD</span><br/>
         <span class=otitle>AI research</span>
-    </div>
+</div>
 
 <div class="item"><a href=#><img class=img1 src="/static/apps/tseries/static/imgs/pavleen.jpeg" align="center"></a>
         <span class=otitle1>Pavleen Kaur</span><br/>
         <span class=otitle>Customer service</span>
-    </div>
+</div>
 
 </div>
 </div>

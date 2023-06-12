@@ -50,7 +50,7 @@ function viewCB(responseTxt, statusTxt, xhr){
     md2html(val, '', '#viewcontent' )
     setTimeout(geoui_scrollTo, 50);
 }
-function view(viewid){
+function view(viewid, type="md|text|elastic|capstone"){
     const URL1  = "/static/docs/"+viewid
     $.get(URL1, viewCB )
 }
@@ -58,10 +58,13 @@ function view(viewid){
 $(document).ready(function() {
     var urlp   = new URL(window.location.href)
     var viewid =  urlp.searchParams.get('viewid')  || ""
+    var type   =  urlp.searchParams.get('type')    || "md"
 
     $('#viewid').val(viewid)
+    $('#type')  .val(type)
+
     if (viewid)
-        view(viewid)
+        view(viewid, type)
 })
 </script>
 {% endblock %}

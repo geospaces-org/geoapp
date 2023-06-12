@@ -115,9 +115,9 @@ Our simulation-driven approach to innovation is powered by our integrated suite 
         <span class=otitle>AI research</span>
 </div>
 
-<div class="item"><a href=#><img class=img1 src="/static/apps/tseries/static/imgs/pavleen.jpeg" align="center"></a>
-        <span class=otitle1>Pavleen Kaur</span><br/>
-        <span class=otitle>Customer service</span>
+<div class="item"><a href=#><img class=img1 src="/static/apps/tseries/static/imgs/brandon.jpeg" align="center"></a>
+        <span class=otitle1>Brandon Hanlein</span><br/>
+        <span class=otitle>Architecture</span>
 </div>
 
 </div>
@@ -125,11 +125,11 @@ Our simulation-driven approach to innovation is powered by our integrated suite 
 
 
 <div class="row">
-        <div class="col-md-7" style="padding: 10px;">
-            <h2> Digital Twin: Connect the Dots and Find your Path </h2>
+        <div class="col-md-7" style="padding: 5px;border-right: 2px solid #ccc; ">
             Everything has a number. A consumer. A product. An action. All quantifiable. But what do you do with it all? What are you looking for? And what do you want to achieve? Altair data analytics is about bringing transformation, insights, and confidence to you and your team. It starts with revolutionizing how insight is generated, eliminating wasted time on repeated tasks or creating code. It’s about turning complex data into smart data and making insights actionable. And it’s about instilling confidence so you can make smarter decisions from accurate data you can trust. When you work with us, big data can unlock big opportunities. It’s a big pool. Let us know when you’re ready to jump in.
             <a class="btn btn-primary dbut" href="/tseries/secured/EXPLORE_data1.html">Learn More ... </a>
         </div>
-        <div class="col-md-5" style="background-color: #e0e0e0;border-radius: 6px; padding: 0px;">
+        <div class="col-md-5" style=" padding: 10px; ">
+            <center><h2> Connect the Dots and Find your Path </h2></center>
         </div>
 </div>

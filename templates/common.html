@@ -71,6 +71,28 @@ input{
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
 }
+.input1{
+    width: 100%;
+    text-align: left;
+    height: 45px;
+    padding: 3 0 3 3;
+    font-size: small;
+    background: #fefefe;
+}
+.input1:disabled{
+    background: rgb(170, 170, 170);
+}
+
+.label1{
+    margin: 0;
+    font-size: smaller;
+    position: relative;
+    top: 12;
+    background: #ffffff;
+    padding: 2 10 2 10;
+    left: 10;
+    border-radius: 4px;;
+}
 
 .center{
         text-align: center;
@@ -480,5 +502,5 @@ $(document).ready(function() {
     $('[data-toggle="tooltip"]').tooltip()
 })
 </script>
-
+<link href="/static/geoui/jquery-tabs.css" rel="stylesheet" />
 {% include "datatable.html" %}

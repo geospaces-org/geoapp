@@ -70,7 +70,7 @@
 
 
 <center>
-<h5 class=hfont4> About Stream. </h5>
+<h5 class=hfont4> About Stream </h5>
 <h1 class=hfont1> Make work meaningful for everyone, everywhere. </h1>
 <h2 class=hfont2> Make work meaningful for everyone, everywhere. </h2>
 </center>
@@ -100,6 +100,27 @@ Our simulation-driven approach to innovation is powered by our integrated suite 
         <span class=otitle>Data Operations</span>
 </div>
 
+<!-- 
+<div class="item"><a href=#><img class=img1 src="/static/apps/tseries/static/imgs/wan.jpeg"  align="center"></a>
+        <span class=otitle1>Wan Bae, PhD</span><br/>
+        <span class=otitle>Research</span>
+</div>
+
+<div class="item"><a href=#><img class=img1 src="/static/apps/tseries/static/imgs/amanda.jpeg"  align="center"></a>
+        <span class=otitle1>Amanda Aarogon (PhD) </span><br/>
+        <span class=otitle>Geo-spatial</span>
+</div>
+
+<div class="item"><a href=#><img class=img1 src="/static/apps/tseries/static/imgs/matt.jpeg"  align="center"></a>
+        <span class=otitle1>Matt Horak, PhD</span><br/>
+        <span class=otitle>AI research</span>
+</div>
+
+<div class="item"><a href=#><img class=img1 src="/static/apps/tseries/static/imgs/brandon.jpeg" align="center"></a>
+        <span class=otitle1>Brandon Hanlein</span><br/>
+        <span class=otitle>Architecture</span>
+</div>
+-->
 
 </div>
 </div>

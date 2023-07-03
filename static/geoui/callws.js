@@ -48,6 +48,15 @@ function callws_getIDs(formName="", ignore = callws_ignore) {
     }
     return ret;
 }
+//--------------------------------------------------------------------------------*/
+function dumpformdata(formData) {
+    count =0 
+    for (var p of formData.entries()) {
+        console.log(p[0],  ': =>' + p[1]);
+        count += 1        
+    } 
+    console.log(': =>', count," entries found");
+}
 /*--------------------------------------------------------------------------------
 This will get Formdata
 --------------------------------------------------------------------------------*/
@@ -108,17 +117,12 @@ async function callws(  url="/ui/test/", formName="", callbacks=null, context={}
         if (opts["getIDS"])     getIDS     = opts["getIDS"]
     }
 
-    var formData = callws_getform(formName, context)
+    var formData = callws_getform(formName, context, getIDS)
     if (!formData)
         return;
 
     //console.log("+ Calling url ...", url, formData)
-    count =0 
-    for (var p of formData.entries()) {
-        console.log(p[0],  ': =>' + p[1]);
-        count += 1        
-    } 
-    console.log(': =>', count," entries found");
+    dumpformdata(formData)
     var data = "?"
     let response=fetch(url, {
         method: "post",

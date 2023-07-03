@@ -540,7 +540,8 @@ var TABLE_OPTS = {
     allowDelete:    1, 
     allowAdd:       1, 
     editable:       'contenteditable',
-    firstIstime:    1,
+    firstIstime:    0,
+    timecolumns:    ['time'],     
     showTime:       1,
     filename:       "",
     fillHeight:     1,
@@ -562,6 +563,7 @@ var TABLE_OPTS1 = {
     allowAdd:       0, 
     editable:       '',
     firstIstime:    0,     
+    timecolumns:    ['time'],     
     showTime:       1,
     filename:       "",
 
@@ -667,7 +669,7 @@ function showDataTable(ds, opt= {} ,def = TABLE_OPTS){
             var v = ""+ dsv[i][j]
             var v1= (v.length > 32)? v : "";
             //v = `012345678910|012345678920|012345678930|012345678940|012345678950|012345678960|012345678970`
-            if (j == 0 && opt.firstIstime) {
+            if ( (j == 0 && opt.firstIstime) || opt.timecolumns.includes(ds.columns[j]) ) {
                 var temp = getdatestr(v)
                 if (opt.showTime) {
                     v1 = v

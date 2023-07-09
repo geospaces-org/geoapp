@@ -173,9 +173,10 @@ function HeaderDoubleClickedFFCB(responseTxt, statusTxt, xhr) {
     ProcessColumnData(this, col, dat);
 }
 function HeaderDoubleClickedFF(file, cols='', nrows=100, cb=null){
-    var data= {user: '{{user.username}}', cols: cols, file: file, nrows: nrows, std:1}
+    var data= { cols: cols, jcfg: file, nrows: nrows || '', std:1}
     var data1 = GET_POSTDATA(data)
-    $.get(`/tseries/getfiledata/`, data1, cb || HeaderDoubleClickedFFCB)
+    //$.get(`/tseries/getfiledata/`, data1, cb || HeaderDoubleClickedFFCB)
+    callws('/stream/getdatacfg/',null, HeaderDoubleClickedFFCB, data1)
 }
 // ---------------------------------------------------------------------------------
 function insertRow(a1){
@@ -541,7 +542,7 @@ var TABLE_OPTS = {
     allowAdd:       1, 
     editable:       'contenteditable',
     firstIstime:    0,
-    timecolumns:    ['time'],     
+    timecolumns:    ['time', 'date'],     
     showTime:       1,
     filename:       "",
     fillHeight:     1,
@@ -549,8 +550,8 @@ var TABLE_OPTS = {
     colIndices:     null,
     colNames:       null,
     rowSelect:      1,
-    rowSelectCB:    null
-    
+    rowSelectCB:    null,
+    getTitle:       null,
 }
 var TABLE_OPTS1 = {
     data:           null,
@@ -572,7 +573,6 @@ var TABLE_OPTS1 = {
     rowSelect:      1,
     rowSelectCB:    null
 }
-
 // ---------------------------------------------------------------------------------
 function showDataTable(ds, opt= {} ,def = TABLE_OPTS){
     opt = Object.assign({}, def, opt)
@@ -657,6 +657,8 @@ function showDataTable(ds, opt= {} ,def = TABLE_OPTS){
     //    rowSelect = `onclick='toggleSelect(this )'`
     //}
     rowSelect = `onclick='toggleSelect(this )'`
+
+    var lookUp = ""
     for (var i=0; i < dsv.length; i++){
         list += `<tr ${rowSelect}" >
             <th class="thtd tth thColNsticky"  nowrap  > ${ondel}  ${onadd} ${i}</th>`
@@ -667,7 +669,7 @@ function showDataTable(ds, opt= {} ,def = TABLE_OPTS){
             if (items >= maxitems)
                 break;
             var v = ""+ dsv[i][j]
-            var v1= (v.length > 32)? v : "";
+            var v1= (v.length > 32 && !v.trim().startsWith("<"))? v : "";
             //v = `012345678910|012345678920|012345678930|012345678940|012345678950|012345678960|012345678970`
             if ( (j == 0 && opt.firstIstime) || opt.timecolumns.includes(ds.columns[j]) ) {
                 var temp = getdatestr(v)
@@ -678,10 +680,14 @@ function showDataTable(ds, opt= {} ,def = TABLE_OPTS){
                     v1 = temp
                 }
             }
-            
+            if(opt.getTitle) {
+                var gt = opt.getTitle(v, "td", i, j, ds.columns[j])
+                if (gt) v1 = gt
+            }
+
             var focus_blur = opt.editable + ' onfocus="tdfocus(this)" onblur="tdblur(this)"'
             //list += `<td nowrap style="max-width:200px; overflow: hidden;" ${focus_blur}  title='${v1}'>` + v + "</td>"
-            list += `<td nowrap class=thtd ${focus_blur}  title='${v1}'>` + v + "</td>"
+            list += `<td nowrap class=thtd ${focus_blur}  data-toggle="tooltip" title='${v1}'>` + v + "</td>"
             if ( ncells > maxitems && j >= opt.maxcolumns-1) {
                 list += `<td nowrap class=thtd >Omitting ${dsv[i].length - opt.maxcolumns} columns</td>`
                 break;
@@ -693,7 +699,13 @@ function showDataTable(ds, opt= {} ,def = TABLE_OPTS){
     }
     list += `</tbody></table>`
 
-    $(`#${opt.div}`).html(list)
+    if ( typeof(opt.div) == "string" ){
+        var divn = (opt.div.startsWith("#")) ? opt.div : "#"+opt.div
+        $(divn).html(list)
+
+    } else {
+        $(opt.div).html(list)
+    }
 
     if (opt.addDBLCLKEvent)
         $(`${tid} th`).dblclick(HeaderDoubleClicked);

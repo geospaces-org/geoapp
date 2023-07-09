@@ -4,6 +4,18 @@ function mysplit(str) {
     var arr = str.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
     return arr;
 }
+/* ---------------------------------------------------------------------------------
+ Utilities should move to common place
+--------------------------------------------------------------------------------- */
+function rec2Json(ds, i){
+    var v = ds.values[i]
+    var j = {}
+    for (var k=0; k < ds.columns.length; k++){
+        j[ds.columns[k]] = v[k]
+    }
+    return j
+}
+
 /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 function geoui_setupMATHJAX(div){

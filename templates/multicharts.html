@@ -153,8 +153,7 @@ function chartClickedCB(e) {
     }
 }
 // --------------------------------------------------------------------------------------
-function showSynchedChart(activity, height=160, onechart=0, container="chartcontainer",
-                          clk=null, dclk=null) {
+function showSynchedChart(activity, height=160, onechart=0, container="chartcontainer", clk=null, dclk=null) {
     activity1 = typeof(activity) == "string" ? JSON.parse(activity): activity;
     id = -1;
     chart = null;
@@ -174,7 +173,13 @@ function showSynchedChart(activity, height=160, onechart=0, container="chartcont
         if ( onechart) {
             chartDiv.setAttribute("style", `height: 100%;`);
         }
-        document.getElementById(container).appendChild(chartDiv);
+        
+        if ( typeof(container) == "string" )
+            cont = document.getElementById(container)
+        else
+            cont = $(container)[0]
+        
+        cont.appendChild(chartDiv);
 
         bc = ['rgba(255, 255, 128, 0.1)', 'rgba(0, 255, 128, 0.1)', 'rgba(0, 0, 0,.9)', 'rgba(255, 255, 255, 0.1)']
         
@@ -211,15 +216,17 @@ function showSynchedChart(activity, height=160, onechart=0, container="chartcont
                     fillOpacity: 0.0,
                     tooltip: {valueSuffix: ' ' + dataset.unit},
                     allowPointSelect: false,
-                    point: { events: {
-                        click: chartClickedCB, click1: clk, dblclick1: dclk,
-                        mouseOut: function() {
-                            this.series.chart.tooltip.hide();
+                    point: { 
+                        events: {
+                            click: chartClickedCB, click1: clk, dblclick1: dclk,
+                            mouseOut: function() { this.series.chart.tooltip.hide();}
                         }
-                        }
-                    }
-                }],
+                    },
+                    events:{
+                        mouseOut: function (event) { chart.tooltip.hide() }
+                    }   
 
+                }],
             };
 
         if ( mcharts.length == 0 || !onechart) {

@@ -146,9 +146,9 @@ async function callws(  url="/ui/test/", formName="", callbacks=null, context={}
         if (callbacks) {
             if ( Array.isArray(callbacks) )
                 for (var cb in callbacks)
-                    callbacks[cb](data, context);
+                    callbacks[cb](data, null, null, context, formData);
             else
-                callbacks(data)
+                callbacks(data, null, null, context, formData)
         }
 
         var now = new Date()

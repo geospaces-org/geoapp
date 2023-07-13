@@ -121,7 +121,6 @@ async function callws(  url="/ui/test/", formName="", callbacks=null, context={}
     if (!formData)
         return;
 
-    //console.log("+ Calling url ...", url, formData)
     dumpformdata(formData)
     var data = "?"
     let response=fetch(url, {

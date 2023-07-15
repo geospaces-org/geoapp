@@ -177,9 +177,15 @@ function getHighChart(tit, sdata, i=0, funcToCall=null){
                 id: 'select'
           }]
         },
-        yAxis: { 
-            title: { text: null } 
-        },
+        yAxis: [{ 
+                    title:  {text: 'y-Axis'},
+                     top: '15%',
+                     height: '85%'
+                }, 
+                {
+                    height: '25%'
+                } 
+            ],
         min: null,
         tooltip: {
             positioner: function (labelWidth, labelHeight, point) {
@@ -189,7 +195,10 @@ function getHighChart(tit, sdata, i=0, funcToCall=null){
             formatter: function() {
                 var x = this.x
                 var y = this.y
-                var i = this.point.index
+                if ( ""+this.y === "undefined"){
+                    y = this.point.text
+                }
+
                 var r = Highcharts.dateFormat('%A %b %e, %Y %H:%M:%S', new Date(x));
                 r += " :(" + y +")";
                 return r;

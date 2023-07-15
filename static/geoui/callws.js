@@ -123,38 +123,48 @@ async function callws(  url="/ui/test/", formName="", callbacks=null, context={}
 
     dumpformdata(formData)
     var data = "?"
+    var RESPONSE=null
+
     let response=fetch(url, {
         method: "post",
         body: formData,
         headers: { "X-CSRFToken": '{{csrf_token }}' },
     })
-    .then(response => response.text())
+    .then(response =>  RESPONSE=response)
+    .then(response =>  response.text())
     .then(resp => {
         data = resp
-        if (JS_error( data, "success", null, true)) {
+
+        retcode = RESPONSE.status != 200 ? "error" : "success"
+        retcode = "success"
+        if (JS_error( data, retcode, null, true)) {
             console.log("ERROR: " + data)
         }
         if (!callbacks) {
-            console.log("\tCB: " +url+ " =>:" + data.slice(0,1024))
+            //console.log("\tCB: " +url+ " =>:" + data.slice(0,1024))
         }
     })
     .catch(error => {
         console.log("ERROR; " , error)
         JS_error("Error: " + error, "error", null, true)
     }).finally( function() {
-        if (callbacks) {
-            if ( Array.isArray(callbacks) )
-                for (var cb in callbacks)
-                    callbacks[cb](data, null, null, context, formData);
-            else
-                callbacks(data, null, null, context, formData)
+        nbusy()
+        if ( RESPONSE.status == 200 ) {
+            if (callbacks) {
+                if ( Array.isArray(callbacks) )
+                    for (var cb in callbacks)
+                        callbacks[cb](data, null, null, context, formData);
+                else
+                    callbacks(data, null, null, context, formData)
+            }
+
+            var now = new Date()
+            var elp = now.valueOf() - start.valueOf()
+            var t1  = start.toTimeString().slice(0,8)
+            var t2  = now.toTimeString().slice(0,8)
+            var log =  url+ " =>:" + t1 + " - " + t2 + " : " + elp/1000 + " ms; =>" + data.slice(0,48) + "..."
+            console.log( log )
         }
 
-        var now = new Date()
-        var elp = now.valueOf() - start.valueOf()
-        var t1  = start.toTimeString().slice(0,8)
-        var t2  = now.toTimeString().slice(0,8)
-        var log =  url+ " =>:" + t1 + " - " + t2 + " : " + elp/1000 + " ms; =>" + data.slice(0,48) + "..."
-        console.log( log )
     });
 }

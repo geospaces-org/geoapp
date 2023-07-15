@@ -159,7 +159,7 @@ function HeaderDoubleClicked(firstColumnIsXaxis=1) {
             data.push([eltX, eltY])
         }
     });
-    ProcessColumnData(this, title, data);
+    ProcessColumnData(this, title, data.length);
 }
 // ---------------------------------------------------------------------------------
 function HeaderDoubleClickedFFCB(responseTxt, statusTxt, xhr) {
@@ -173,7 +173,7 @@ function HeaderDoubleClickedFFCB(responseTxt, statusTxt, xhr) {
     ProcessColumnData(this, col, dat);
 }
 function HeaderDoubleClickedFF(file, cols='', nrows=100, cb=null){
-    var data= { cols: cols, jcfg: file, nrows: nrows || '', std:1}
+    var data= { cols: "time," + cols, jcfg: file, nrows: nrows || '', std:1}
     var data1 = GET_POSTDATA(data)
     //$.get(`/tseries/getfiledata/`, data1, cb || HeaderDoubleClickedFFCB)
     callws('/stream/getdatacfg/',null, HeaderDoubleClickedFFCB, data1)
@@ -370,7 +370,7 @@ function getdatestr(n){
     else if (n2.length >=13)
         d = new Date(n1)
     else if (n2.length < 13)
-        d = new Date(n1*1000)
+        d = new Date(n1)
     
     try {
         return d.toISOString()
@@ -642,8 +642,12 @@ function showDataTable(ds, opt= {} ,def = TABLE_OPTS){
         } 
 
         var wdt =  ""//"style='max-width: 750px;'"
-
-        list+= `<th class="tth thRowsticky"  ${wdt} nowrap title='${col}' >${col}
+        var tit = col
+        if(opt.getTitle) {
+            var gt = opt.getTitle(tit, "tr", i, j, ds.columns[j])
+            if (gt) tit = gt
+        }
+        list+= `<th class="tth thRowsticky"  ${wdt} nowrap title='${tit}' >${col}
                 ${showSort} ${showSearch}</th>`
                     
 
@@ -660,8 +664,11 @@ function showDataTable(ds, opt= {} ,def = TABLE_OPTS){
 
     var lookUp = ""
     for (var i=0; i < dsv.length; i++){
+
+        var index = ds['index'] ? ds['index'][i] : i;
+
         list += `<tr ${rowSelect}" >
-            <th class="thtd tth thColNsticky"  nowrap  > ${ondel}  ${onadd} ${i}</th>`
+            <th class="thtd tth thColNsticky"  nowrap  > ${ondel}  ${onadd} ${index}</th>`
         
         for (var j1=0; j1 < COLUMN_ORDER.length; j1++){
             var j = COLUMN_ORDER[j1]

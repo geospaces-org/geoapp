@@ -135,13 +135,13 @@ async function callws(  url="/ui/test/", formName="", callbacks=null, context={}
     .then(resp => {
         data = resp
 
-        retcode = RESPONSE.status != 200 ? "error" : "success"
-        retcode = "success"
-        if (JS_error( data, retcode, null, true)) {
+        if ( RESPONSE.status != 200) {
             console.log("ERROR: " + data)
-        }
-        if (!callbacks) {
-            //console.log("\tCB: " +url+ " =>:" + data.slice(0,1024))
+            JS_error( "" + RESPONSE.status + " Check logs", "error", null, true)
+        } else {
+            if (JS_error( data, "success", null, true)) {
+                console.log("ERROR: " + data)
+            }
         }
     })
     .catch(error => {

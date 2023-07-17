@@ -16,6 +16,8 @@
  */
 function sync(e){
     var chart, point, i, event;
+    //var mcharts1 = Highcharts.charts;
+    //mcharts1 = mcharts
     for (i in mcharts) {
         chart = mcharts[i];
         event = chart.pointer.normalize(e); // Find coordinates within the chart
@@ -26,7 +28,10 @@ function sync(e){
 }
 function Addsync(id){
     ['mousemove', 'touchmove', 'touchstart'].forEach(function (eventType) {
-        document.getElementById(id).addEventListener( eventType,
+        var ele = $(id)[0]
+        if ( typeof(id) == "string")
+            ele = document.getElementById(id);
+        ele.addEventListener( eventType,
             function (e) {
                 var chart, point, i, event;
                     if ( mcharts.length <= 1)
@@ -171,7 +176,7 @@ function getHighChart(tit, sdata, i=0, funcToCall=null){
             },
             type: 'datetime',
             plotLines: [{
-                color: '#49910D', width: 1, value: 1,
+                color: '#49910D', width: 0, value: 1,
                 dashStyle: 'Dash',
                 label: { text: '' },
                 id: 'select'

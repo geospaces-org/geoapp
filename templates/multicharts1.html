@@ -20,6 +20,8 @@ function sync(e){
     //mcharts1 = mcharts
     for (i in mcharts) {
         chart = mcharts[i];
+        if ( !chart || !chart.pointer)
+            continue
         event = chart.pointer.normalize(e); // Find coordinates within the chart
         point = chart.series[0].searchPoint(event, true); // Get the hovered point
 
@@ -131,7 +133,6 @@ let SEL_OPTS = {
 
 // dataset.name
 function getHighChart(tit, sdata, i=0, funcToCall=null){
-
     valueDecimals = 6
 
     seriesdata= $.extend ({

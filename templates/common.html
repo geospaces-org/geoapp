@@ -10,6 +10,7 @@
 <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
 <link rel="stylesheet" type="text/css" href="/static/css/styles1.css">
 <link rel="stylesheet" type="text/css" href="/static/bc/Font-Awesome/css/all.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="/static/bc/jquery-ui/themes/base/jquery-ui.min.css">
 <script src="/static/bc/jquery-ui/jquery-ui.js"></script>
 <script src="/static/bc/jquery-form/src/jquery.form.js"></script>
@@ -85,7 +86,11 @@ input{
     background: #fefefe;
 }
 .input1:disabled{
-    background: rgb(170, 170, 170);
+    background: #ececec;
+    border-bottom: 3px solid #ccc;
+}
+.input1:readonly{
+    background: rgb(222, 58, 58);
 }
 
 .label1{
@@ -235,7 +240,7 @@ function POST(url,  data, callback){
 
 </script>
 </head>
-<body>
+<body style="overflow: hidden;hheight:100%;">
 <header>
 <!----------------------------------------BEGIN MENU end header -->
 <nav id=mainnavbar class="navbar navbar-expand-sm navbar-light bg-light"
@@ -360,8 +365,17 @@ style="border-bottom: 1px solid #eee; height: 48px; background-color: aliceblue;
 </ul>
 </nav>
 </header>
+<style>
+.pagecontent{
+    width: 100%; 
+    position: relative;
+    padding-left: 0px; 
+    overflow: auto;
+    height: 100%;
+}
+</style>
 <!-- End Header ------------------------------------------END MENU end header -->
-<div id="pagecontent" style="width: 100%; position: relative;padding-left: 0px; overflow: hidden;">
+<div class="pagecontent" >
 {% block messages %}{% endblock %}
 {% block content %}{% endblock %}
 {% block content_extra %}{% endblock %}

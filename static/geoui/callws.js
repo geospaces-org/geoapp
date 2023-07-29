@@ -105,7 +105,6 @@ var callws_default_opts= {
 }
 async function callws(  url="/ui/test/", formName="", callbacks=null, context={}, 
                         opts=callws_default_opts) {
-
     var start    = new Date()
     var getIDS   = false
 
@@ -121,6 +120,7 @@ async function callws(  url="/ui/test/", formName="", callbacks=null, context={}
     if (!formData)
         return;
 
+    busy() // defined in common.html - sjhould move it here
     dumpformdata(formData)
     var data = "?"
     var RESPONSE=null

@@ -1,5 +1,6 @@
 # Byte-compiled / optimized / DLL files
 apps/templates/appmenu.html
+temp
 .ipynb_checkpoints
 apps
 pretrained_models

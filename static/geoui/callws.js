@@ -105,7 +105,6 @@ var callws_default_opts= {
 }
 async function callws(  url="/ui/test/", formName="", callbacks=null, context={}, 
                         opts=callws_default_opts) {
-
     var start    = new Date()
     var getIDS   = false
 
@@ -121,41 +120,51 @@ async function callws(  url="/ui/test/", formName="", callbacks=null, context={}
     if (!formData)
         return;
 
-    //console.log("+ Calling url ...", url, formData)
+    busy() // defined in common.html - sjhould move it here
     dumpformdata(formData)
     var data = "?"
+    var RESPONSE=null
+
     let response=fetch(url, {
         method: "post",
         body: formData,
         headers: { "X-CSRFToken": '{{csrf_token }}' },
     })
-    .then(response => response.text())
+    .then(response =>  RESPONSE=response)
+    .then(response =>  response.text())
     .then(resp => {
         data = resp
-        if (JS_error( data, "success", null, true)) {
+
+        if ( RESPONSE.status != 200) {
             console.log("ERROR: " + data)
-        }
-        if (!callbacks) {
-            console.log("\tCB: " +url+ " =>:" + data.slice(0,1024))
+            JS_error( "" + RESPONSE.status + " Check logs", "error", null, true)
+        } else {
+            if (JS_error( data, "success", null, true)) {
+                console.log("ERROR: " + data)
+            }
         }
     })
     .catch(error => {
         console.log("ERROR; " , error)
         JS_error("Error: " + error, "error", null, true)
     }).finally( function() {
-        if (callbacks) {
-            if ( Array.isArray(callbacks) )
-                for (var cb in callbacks)
-                    callbacks[cb](data, null, null, context, formData);
-            else
-                callbacks(data, null, null, context, formData)
+        nbusy()
+        if ( RESPONSE.status == 200 ) {
+            if (callbacks) {
+                if ( Array.isArray(callbacks) )
+                    for (var cb in callbacks)
+                        callbacks[cb](data, null, null, context, formData);
+                else
+                    callbacks(data, null, null, context, formData)
+            }
+
+            var now = new Date()
+            var elp = now.valueOf() - start.valueOf()
+            var t1  = start.toTimeString().slice(0,8)
+            var t2  = now.toTimeString().slice(0,8)
+            var log =  url+ " =>:" + t1 + " - " + t2 + " : " + elp/1000 + " ms; =>" + data.slice(0,48) + "..."
+            console.log( log )
         }
 
-        var now = new Date()
-        var elp = now.valueOf() - start.valueOf()
-        var t1  = start.toTimeString().slice(0,8)
-        var t2  = now.toTimeString().slice(0,8)
-        var log =  url+ " =>:" + t1 + " - " + t2 + " : " + elp/1000 + " ms; =>" + data.slice(0,48) + "..."
-        console.log( log )
     });
 }

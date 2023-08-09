@@ -61,7 +61,7 @@ logging.config.dictConfig({
     'formatters': {
         'default': {
             # exact format is not important, this is the minimum information
-            'format': '%(levelname)s %(asctime)s %(filename)s:%(lineno)s:%(funcName)s: %(message)s',
+            'format': '%(levelname)s:%(name)s %(asctime)s %(filename)s:%(lineno)s:%(funcName)s: %(message)s',
         },
         'django.server': DEFAULT_LOGGING['formatters']['django.server'],
     },
@@ -82,6 +82,17 @@ logging.config.dictConfig({
         '': {
             'level': LOGLEVEL,
             'handlers': ['console'],
+            'propagate': False,
+        },
+        '.': {
+            'level': LOGLEVEL,
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'app': {
+            'level': LOGLEVEL,
+            'handlers': ['console'],
+            'propagate': False,
         },
         # Our application code
         'geoapp': {
@@ -94,6 +105,22 @@ logging.config.dictConfig({
         'django.server': DEFAULT_LOGGING['loggers']['django.server'],
     },
 })
+
+logger = logging.getLogger( "app")
+LOGLEVELS = os.environ.get('LOGLEVELS', '')
+logger.info(f'''
+    Reading LOGLEVELS : you can set it with semicolon seperated
+    ex: app.mango=DEBUG:app.tseries=WARNING;
+
+    FOUND=>: {LOGLEVELS}
+''')
+for l in LOGLEVELS.split(":"):
+    nv = l.split("=")
+    if ( len(nv) !=2):
+        continue
+    n, v = nv
+    gl = logging.getLogger(n)
+    gl.setLevel(v.upper())
 
 AUTHENTICATION_BACKENDS = [
     'mozilla_django_oidc.auth.OIDCAuthenticationBackend',

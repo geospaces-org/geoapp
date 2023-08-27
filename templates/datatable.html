@@ -140,7 +140,7 @@ function datatable_rec2Json(ds, i){
 function ProcessColumnData(table, title, data ) {
     if (typeof addSeriesToChart != "function")
         return;
-    console.log(`${title} - ${data.length} : ${data.slice(0, 3)} `)
+    console.log(`${title} `)
     addSeriesToChart(data, title)
 }
 
@@ -155,15 +155,15 @@ function HeaderDoubleClicked(firstColumnIsXaxis=1) {
     if ( j < 1) return;
 
     var opt  = $(this).parent().parent().parent().data("opt")
-    var datasrc = opt.datasrc
-    if ( datasrc ){
+    var data_src = opt.data_src
+    if ( data_src ){
         title = $(`#${opt.id} tr`).eq(0).find('th').eq(j).text().trim();
         title = title.substr(0, title.indexOf("\n") )
-        HeaderDoubleClickedFF(datasrc, title, null)
+        HeaderDoubleClickedFF(data_src, title, null)
         return
     }
 
-    var ttab  = $(this).parent().parent();
+    var ttab  = $(this).parent().parent().parent();
     var data  = []
     var title = ''
     var parse = 1;
@@ -193,8 +193,8 @@ function HeaderDoubleClickedFFCB(responseTxt, statusTxt, xhr) {
     var dat = ret.values
     ProcessColumnData(this, col, dat);
 }
-function HeaderDoubleClickedFF(datasrc, cols='', nrows=100, cb=null){
-    var data= { cols: "time," + cols, jcfg: datasrc, nrows: nrows || '', std:1}
+function HeaderDoubleClickedFF(data_src, cols='', nrows=100, cb=null){
+    var data= { cols: "time," + cols, data_src: data_src, nrows: nrows || '', std:1}
     var data1 = GET_POSTDATA(data)
     //$.get(`/tseries/getfiledata/`, data1, cb || HeaderDoubleClickedFFCB)
     callws('/stream/getdatacfg/',null, HeaderDoubleClickedFFCB, data1)
@@ -597,7 +597,7 @@ var TABLE_OPTS = {
     firstIstime:    0,
     timecolumns:    ['time', 'date'],     
     showTime:       1,
-    datasrc:       "",
+    data_src:       "",
     fillHeight:     1,
 
     colIndices:     null,
@@ -620,7 +620,7 @@ var TABLE_OPTS1 = {
     firstIstime:    0,     
     timecolumns:    ['time'],     
     showTime:       1,
-    datasrc:       "",
+    data_src:       "",
 
     colIndices:     null,
     colNames:       null,

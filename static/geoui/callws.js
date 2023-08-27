@@ -103,6 +103,14 @@ This will call WS service
 var callws_default_opts= {
     getIDS: false,
 }
+
+if (typeof busy !== 'function') { // if no one defined busy or nbusy - we make it empty
+    busy = function() {
+    }
+    nbusy = function() {
+    }
+}
+
 async function callws(  url="/ui/test/", formName="", callbacks=null, context={}, 
                         opts=callws_default_opts) {
     var start    = new Date()
@@ -120,7 +128,7 @@ async function callws(  url="/ui/test/", formName="", callbacks=null, context={}
     if (!formData)
         return;
 
-    busy() // defined in common.html - sjhould move it here
+    busy() // defined in common.html - should move it here
     dumpformdata(formData)
     var data = "?"
     var RESPONSE=null

@@ -28,6 +28,17 @@ Allow hide and show columns
     outline: 2px solid black;
 }
 
+.mydatatablecss{
+  td, th{
+    overflow: hidden;
+    white-space: nowrap;
+    -moz-text-overflow: ellipsis;        
+       -ms-text-overflow: ellipsis;
+        -o-text-overflow: ellipsis;
+           text-overflow: ellipsis;
+  }
+}
+
 .table-resizable th {
     position: relative;
     
@@ -44,9 +55,11 @@ Allow hide and show columns
   
 .resizer:hover,
 .resizing {
-    border-right: 2px #fcfcfc
+    border-right: 2px #fcfcfc;
+    border-right: 12px #d11616;
 }
 
+/* Table Header */
 .thtd {
     font-family: Roboto, 'Open Sans', Arial, sans-serif;
     font-size: small;
@@ -55,10 +68,10 @@ Allow hide and show columns
     color:#000000;
     min-width: 25px;
     max-width: 200px;
-    overflow-wrap: 0;
     overflow: hidden;
+    text-overflow: ellipsis;
 }
-    
+
 /* Table Header */
 .tth {
     font-family: Roboto, 'Open Sans', Arial, sans-serif;
@@ -68,15 +81,19 @@ Allow hide and show columns
     color:#000000;
     min-width: 25px;
     max-width: 1250px;
-    overflow-wrap: 0;
     overflow: hidden;
+    text-overflow: ellipsis;
+    white-space:nowrap;
 
     font-weight: 450;
     background: #ececec;
     text-align: center;
-    vertical-align: initial;
+    text-overflow: ellipsis;
 }
     
+.editmode {
+    white-space: break-spaces;
+}
 .thRowsticky {
   padding: 3px;
   position: sticky;
@@ -101,6 +118,10 @@ Allow hide and show columns
 .dt_trSelected {
     border-top: 2px solid rgba(0, 0, 0, 0.5);
     border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+}
+
+.table thead th {
+    vertical-align: inherit;
 }
 </style>
 <!-- ----------------------------------------------------------------------------- ------------------
@@ -134,11 +155,11 @@ function HeaderDoubleClicked(firstColumnIsXaxis=1) {
     if ( j < 1) return;
 
     var opt  = $(this).parent().parent().parent().data("opt")
-    var file = opt.filename
-    if ( file ){
+    var datasrc = opt.datasrc
+    if ( datasrc ){
         title = $(`#${opt.id} tr`).eq(0).find('th').eq(j).text().trim();
         title = title.substr(0, title.indexOf("\n") )
-        HeaderDoubleClickedFF(file, title, null)
+        HeaderDoubleClickedFF(datasrc, title, null)
         return
     }
 
@@ -172,8 +193,8 @@ function HeaderDoubleClickedFFCB(responseTxt, statusTxt, xhr) {
     var dat = ret.values
     ProcessColumnData(this, col, dat);
 }
-function HeaderDoubleClickedFF(file, cols='', nrows=100, cb=null){
-    var data= { cols: "time," + cols, jcfg: file, nrows: nrows || '', std:1}
+function HeaderDoubleClickedFF(datasrc, cols='', nrows=100, cb=null){
+    var data= { cols: "time," + cols, jcfg: datasrc, nrows: nrows || '', std:1}
     var data1 = GET_POSTDATA(data)
     //$.get(`/tseries/getfiledata/`, data1, cb || HeaderDoubleClickedFFCB)
     callws('/stream/getdatacfg/',null, HeaderDoubleClickedFFCB, data1)
@@ -226,7 +247,7 @@ function toggleSelect(cell, type="tr"){
     var indx  = cindx + 1;
 
     // TODO: Handle Multiselect
-    console.log("toggleSelect=>", indx, );
+    //console.log("toggleSelect=>", indx, );
 
     // if single select => we must unselect a row that was selected;
     // if this was the row that was seleted - we just unslect the current row
@@ -271,6 +292,7 @@ function tdfocus(td){
     if ( !td.original) {
         td.original = $(td).text()
     }
+    $(td).addClass("editmode")
     //console.log("Entered", td.original, $(td).text());
 }
 // ---------------------------------------------------------------------------------
@@ -284,81 +306,84 @@ function tdblur(td){
     } else {
         $(td).css("border", "")
     }
+    $(td).removeClass("editmode")
 }
 // ---------------------------------------------------------------------------------
-var createResizableColumn = function (col, resizer) {
-    // Track the current position of mouse
-    let x = 0;
-    let w = 0;
+// Track the current position of mouse
+var createResizableColumn = function (col, resizer, dir="x|y|both") {
+    let x = 0; let w = 0; let y=0; let h= 0;
 
     const mouseDownHandler = function (e) {
-        // Get the current mouse position
-        x = e.clientX;
-
-        // Calculate the current width of column
-        const styles = window.getComputedStyle(col);
-        w = parseInt(styles.width, 10);
+        x = e.clientX;   // Get the current mouse position
+        y = e.clientY;   // Get the current mouse position
+        const styles = window.getComputedStyle(col); // Calculate the current width of column
+        w = parseInt(styles.width,  10);
+        h = parseInt(styles.height, 30);
 
         // Attach listeners for document's events
         document.addEventListener('mousemove', mouseMoveHandler);
         document.addEventListener('mouseup', mouseUpHandler);
     };
-
     const mouseMoveHandler = function (e) {
-        // Determine how far the mouse has been moved
-        const dx = e.clientX - x;
+        const dx = e.clientX - x;         // Determine how far the mouse has been moved
+        const dy = e.clientY - y;         // Determine how far the mouse has been moved
 
-        // Update the width of column
-        col.style.width = `${w + dx}px`;
+        let nw = w+dx
+        let nh = h+dy
+
+        if ( (nh/h) > 2) { // dont allow drastic changes
+            nh = h + 1
+        }
+
+        //console.log("+++++++++++++++ ", nw, h, nh, nh/h)
+
+        if (dir.startsWith('x') || !dir ||  dir.startsWith('b'))
+            col.style.width = `${nw}px`;  // Update the width of column
+        if ( dir.startsWith('y') || dir.startsWith('b'))
+            col.style.height = `${nh}px`;  // Update the width of column
     };
-
     // When user releases the mouse, remove the existing event listeners
     const mouseUpHandler = function () {
         document.removeEventListener('mousemove', mouseMoveHandler);
         document.removeEventListener('mouseup', mouseUpHandler);
     };
-
     resizer.addEventListener('mousedown', mouseDownHandler);
 };
 
 function addresizecolumn(name='tabledd') {
-
     const table = document.getElementById(name);
+    if ( !table) {   return  table   }
 
-    if ( !table) {
-        return
-    }
-
-    // Query all headers
     const cols = table.querySelectorAll('th');
+    [].forEach.call(cols, function (col) {
+        $(col).resizable({handles: 'e, w, n, s'})
+    });
 
-    // Loop over them
+    return table
+}
+
+function addresizecolumnOLD(name='tabledd') {
+    const table = document.getElementById(name);
+    if ( !table) {   return     }
+
     [].forEach.call(cols, function (col) {
         // Create a resizer element
         const resizer = document.createElement('div');
         resizer.classList.add('resizer');
 
-        // Set the height
-        //resizer.style.height = `${table.offsetHeight}px`;
         resizer.style.height = '100%';
-
         // Add a resizer element to the column
         col.appendChild(resizer);
 
         // Will be implemented in the next section
-        createResizableColumn(col, resizer);
+        createResizableColumn(col, resizer, "x");
     });
-    const mouseDownHandler = function(e) {
-        resizer.classList.add('resizing');
-    };
-
-    const mouseUpHandler = function() {
-        resizer.classList.remove('resizing');
-    };
+    const mouseDownHandler = function(e) { resizer.classList.add('resizing');   };
+    const mouseUpHandler = function(e)   { resizer.classList.remove('resizing');};
 }
 
 // ---------------------------------------------------------------------------------
-function getdatestr(n){
+function _getdatestr(n){
     
     n1 = parseInt(n)
     n2 = ""+n;
@@ -378,15 +403,32 @@ function getdatestr(n){
         return n
     }
 }
+
+// ---------------------------------------------------------------------------------
+function getdatestr(n){
+    if (typeof n === "number"){
+        return _getdatestr(n)
+    }
+    else{
+        return _getdatestr(n)
+        var ntm = n.replace('T', ' ') + " GMT"
+        var d  = new Date(ntm)
+        d.toISOString()
+    }
+    
+}
 // ---------------------------------------------------------------------------------
 // Call Update to update the source
 function datatable_getdata(tr) {
     var td = tr.querySelectorAll('td')
     var r = ""
+    r = []
     for (var i=0 ; i < td.length; i++){
-        r += "'"+td[i].innerText + "',"
+        //r += "'"+td[i].innerText + "',"
+        r.push (td[i].innerHTML) 
     }
-    return r.substring(0,r.length-1);
+    //return r.substring(0,r.length-1);
+    return r;
 }
 function datatable_IDs( table, tr, ids=[0]) {
     var sql= ''
@@ -420,46 +462,56 @@ function datatable_getAllTitle( table) {
     return cols.substring(0, cols.length-1);;
 }
 function datatable_getUpdates(table, tr){
-    var sql= ''
+    var sql= {}
     var tds  = tr.querySelectorAll('td')
 
     for (j=0; j < tds.length; j++) {
         var td = tds[j]
-        if (td.original && td.original != td.innerText) {
+        if (td.original && td.original != td.innerHTML) {
             var id= datatable_columntitle(table, j+1)
-            sql += (sql.length > 0?", ":"") + `${id} = "${td.innerText}"`
+            sql[id] = td.innerHTML.trim()
         }
     }
     return sql
 }
-// Not too smart - simple updates
-//
-function datatable_updatesSQL(table, tablename='', ids=[0]) {
+
+function saveDataTable(table) {
     if (typeof(table) == "string"){
         table = $('#'+table)
+    } else {
+        table = $(table)
     }
     if( !table || !table.get(0))
-        return;
-    var sql = "";
+        return null;
+
+    var opt  = $(table).data("opt")
+    if (!opt)
+        return null
+    var od = opt.data
+    var changes = { deletes: [], updates: [], inserts: [], columns: od.columns }
+
     for (var i = 1; i < $(table).get(0).rows.length; i++) {
         var tr  = $(table).get(0).rows[i]
+        var di  = $(tr).attr('data_index')
+        var tri = (di) ? parseInt(di) : -1
+        var idx = (od.index) ? od.index[tri] : -1
+
         if (tr.deleted && tr.new) {
-            ; 
         }  // nothing to do
         else if (tr.deleted) {
-            sql += `DELETE FROM ${tablename} WHERE ` + datatable_IDs(table, tr, ids) + ";\n---\n"
+            changes.deletes.push([tri, idx, od.values[tri]])
         }
         else if (tr.new) {
             var s = datatable_getAllTitle(table)
             var v = datatable_getdata(tr)
-            sql += `INSERT INTO ${tablename} (${s}) VALUES (${v});\n---\n`
+            changes.inserts.push([tri, idx, s, v] )
         } else if ( tr.updated) {
             var s= datatable_getUpdates(table, tr)
             if (s)
-                sql += `UPDATE ${tablename} SET ${s} WHERE `+ datatable_IDs(table, tr, ids) + ";\n---\n"
+                changes.updates.push([tri, idx, s,  od.values[tri]])
         }
     }
-    return sql
+    return changes
 }
 // ---------------------------------------------------------------------------------
 // nSort = Sort as Numbers
@@ -536,7 +588,7 @@ var TABLE_OPTS = {
     div:            "tabled",
     id:             "tabledd1",
     addDBLCLKEvent: 1,
-    maxcolumns:     1024*5,
+    maxcolumns:     1024,
     maxitems:       null,
     maxrows:        null,
     allowDelete:    1, 
@@ -545,7 +597,7 @@ var TABLE_OPTS = {
     firstIstime:    0,
     timecolumns:    ['time', 'date'],     
     showTime:       1,
-    filename:       "",
+    datasrc:       "",
     fillHeight:     1,
 
     colIndices:     null,
@@ -568,20 +620,24 @@ var TABLE_OPTS1 = {
     firstIstime:    0,     
     timecolumns:    ['time'],     
     showTime:       1,
-    filename:       "",
+    datasrc:       "",
 
     colIndices:     null,
     colNames:       null,
     rowSelect:      1,
-    rowSelectCB:    null
+    rowSelectCB:    null,
+    getTitle:       null
 }
 // ---------------------------------------------------------------------------------
 function showDataTable(ds, opt= {} ,def = TABLE_OPTS){
     opt = Object.assign({}, def, opt)
     var dsv = null
+    var NaN = null
     if (typeof(ds) == "string"){
-        ds   = JSON.parse(ds);
-        if (ds instanceof Array)
+        let ds1 = ds.replace(/ NaN,/g, '"",')         // Annoying thing that happens reading Excel
+        //ds   = JSON.parse(ds1);
+        eval("ds=" + ds1);
+        if (ds instanceof Array)                    // If we sent more than one, we just use first table
             ds = ds[0]
     }
     dsv= ds.values
@@ -609,14 +665,14 @@ function showDataTable(ds, opt= {} ,def = TABLE_OPTS){
                     <a style="color:lightgray;" href=# onclick="sortDown(this)">&#x25BC;</a>`
     var showSearch = `
             <div> 
-           <input  onKeyup="setTimeout(filterFunc('${tid}', this.value, $(this).parent().parent().index()), 500)"
+           <input onKeyup="setTimeout(filterFunc('${tid}', this.value, $(this).parent().parent().index()), 500)"
                 style="width:100%;border: 0px; background: transparent; height:100%;" placeholder="">  
             </div>`
     
     var list=`
-   <table id="${opt.id}" class="table table-striped table-bordered tresizable table-sm scroller" style="" >
+   <table id="${opt.id}" class="mydatatablecss table table-striped table-bordered tresizable table-sm scroller" style="" >
     <tbody ><thead>
-    <tr  aria-rowspan="2" ><th class="thtd tth thCol1sticky" nowrap style="width: 1px; padding: 4px;">${dims} ${clrSort} ${showSearch}</th>`;
+    <tr  aria-rowspan="2" ><th class="tth thCol1sticky resizable" nowrap style="width: 1px; padding: 4px;">${dims} ${clrSort} ${showSearch}</th>`;
 
     var COLUMN_ORDER = null;
     var i;
@@ -669,8 +725,11 @@ function showDataTable(ds, opt= {} ,def = TABLE_OPTS){
 
         var index = ds['index'] ? ds['index'][i] : i;
 
-        list += `<tr ${rowSelect}" >
-            <th class="thtd tth thColNsticky"  nowrap  > ${ondel}  ${onadd} ${index}</th>`
+        list += `<tr ${rowSelect}  data_index=${i} >
+            <th class="thtd tth thColNsticky"  nowrap  > 
+                ${ondel}  ${onadd} ${index}
+            </th>
+                `
         
         for (var j1=0; j1 < COLUMN_ORDER.length; j1++){
             var j = COLUMN_ORDER[j1]
@@ -696,7 +755,7 @@ function showDataTable(ds, opt= {} ,def = TABLE_OPTS){
 
             var focus_blur = opt.editable + ' onfocus="tdfocus(this)" onblur="tdblur(this)"'
             //list += `<td nowrap style="max-width:200px; overflow: hidden;" ${focus_blur}  title='${v1}'>` + v + "</td>"
-            list += `<td nowrap class=thtd ${focus_blur}  data-toggle="tooltip" title='${v1}'>` + v + "</td>"
+            list += `<td nowrap class=thtd ${focus_blur}  ddata-toggle="tooltip" title='${v1}'>` + v + "</td>"
             if ( ncells > maxitems && j >= opt.maxcolumns-1) {
                 list += `<td nowrap class=thtd >Omitting ${dsv[i].length - opt.maxcolumns} columns</td>`
                 break;
@@ -721,7 +780,7 @@ function showDataTable(ds, opt= {} ,def = TABLE_OPTS){
 
     if ($(`${tid}`).width() > window.innerWidth)
         $(`${tid}`).width( $(`${tid}`).width() + 200)
-    addresizecolumn(opt.id)
+    table = addresizecolumn(opt.id)
     
     var dsCopy = structuredClone(ds)
     
@@ -737,6 +796,8 @@ function showDataTable(ds, opt= {} ,def = TABLE_OPTS){
 
     //$('[data-toggle="popover"]').popover({ html: true });
     //$('[data-toggle="tooltip"]').tooltip()
+
+    return table;
 }
 
 </script>

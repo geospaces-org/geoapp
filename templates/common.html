@@ -10,7 +10,9 @@
 <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
 <link rel="stylesheet" type="text/css" href="/static/css/styles1.css">
 <link rel="stylesheet" type="text/css" href="/static/bc/Font-Awesome/css/all.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!--
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+-->
 <link rel="stylesheet" type="text/css" href="/static/bc/jquery-ui/themes/base/jquery-ui.min.css">
 <script src="/static/bc/jquery-ui/jquery-ui.js"></script>
 <script src="/static/bc/jquery-form/src/jquery.form.js"></script>
@@ -41,6 +43,23 @@ integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0
 <script src="/static/js/jquery.rateyo.min.js"></script>
 
 <style>
+
+.fcontainer{
+    display: flex; flex-flow: column; height: 100%;
+}
+.fcontainer .header{
+    flex: 0 1 auto;
+    bbackground: #7e8aa0;
+}
+.fcontainer .content{
+    flex: 1 1 auto;
+    bbackground: #dbdfe7;
+    overflow: auto;
+}
+.fcontainer .footer{
+    flex: 0 1 70px;
+    background: #7e8aa0;
+}
 
 .input80{
     width: 80%;
@@ -74,13 +93,13 @@ input{
 }
 
 .div1{
-    display: inline;
+    display: inline-block;
 }
 
 .input1{
     width: 100%;
     text-align: left;
-    height: 45px;
+    height: 40px;
     padding: 3 0 3 3;
     font-size: small;
     background: #fefefe;
@@ -180,7 +199,7 @@ td {
     }
 }
 .navbar-nav .nav-link {
-    font-family: 'Roboto';
+    font-family: sans-serif, 'Roboto';
     font-weight: 400;
     font-size: small;
     flex-direction: row;
@@ -492,10 +511,11 @@ function JS_error(responseTxt, statusTxt, xhr, showAlert=1, errorCB=null){
 }
 
 var spin = "<i class='fa fa-spinner fa-spin' style='font-size: 32px;color:red;'></i>"
-function busy(msg)  { $('#common_status').html(spin + (msg||'')); }
-function nbusy(msg) { $('#common_status').html(''); }
+let BUSY_COUNT = 0
+function busy(msg)  { $('#common_status').html(spin + (msg||'')); BUSY_COUNT++}
+function nbusy(msg) { if (--BUSY_COUNT <= 0 ) {$('#common_status').html(''); BUSY_COUNT=0 } }
 
-$(document).ready(function() {
+function doClassbasedInit() {
     var x = document.getElementsByClassName("tabs");
     for (var i = 0; i < x.length; i++) {
         $(x[i]).tabs()
@@ -520,6 +540,10 @@ $(document).ready(function() {
 
     $('[data-toggle="popover"]').popover({ html: true });
     $('[data-toggle="tooltip"]').tooltip()
+}
+
+$(document).ready(function() {
+    doClassbasedInit()
 })
 </script>
 <link href="/static/geoui/jquery-tabs.css" rel="stylesheet" />

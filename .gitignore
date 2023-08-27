@@ -1,5 +1,6 @@
 # Byte-compiled / optimized / DLL files
 apps/templates/appmenu.html
+*appmenu.hml
 temp
 .ipynb_checkpoints
 apps

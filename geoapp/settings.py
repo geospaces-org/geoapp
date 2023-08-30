@@ -149,7 +149,7 @@ INSTALLED_APPS = [
     # MY_APPLICATIONS
     'django_extensions',
     'users',
-    'example_app'
+    'example_app',
     'geoapp'
  ]  
 

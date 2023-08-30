@@ -1,0 +1,19 @@
+Git setup for new projects
+--------------------------
+
+1. Clone the geoui repositry.
+	git clone https://sada-narayanappa@github.com/sada-narayanappa/geoapp.git
+
+2a) Fork the project 
+2b) create a branch for your project 
+	
+	git branch myproduct
+	git checkout myproduct
+	git branch --set-upstream-to=origin/master geoui
+
+Setting up python environment locally
+-------------------------------------
+
+
+Docker
+-----

@@ -1,4 +1,4 @@
-#DEFAULT_APP = "tseries"
+DEFAULT_APP = "geospaces"
 
 '''
 You can include this in your html pages and refer to these variables:
@@ -12,7 +12,7 @@ def appcontext(request):
     context = {
         "appname": "GeoSpaces",
         "weburl" : "https://www.geospaces.org/",
-        #"top_url": "topbar.html"
+        "top_url": "geospaces/topbar.html"
     }
     
     return context

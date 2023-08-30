@@ -1,15 +1,6 @@
 # Application Template
 
-Use this as a generic template for the applications. To install you application, use a git repo to develop your application.
-Once done add it to
-
-RUN: 
-
-	#=> you dont need to do this: git submodule add https://github.com/mrdoob/three.js
-	git submodule init; git submodule update
-
 ## Basic setup
-
 
 * Link tseries directory to /opt/data/tseries
 > ln -s /opt/LMCO/git/notebooks/DS/tseries/db/ /opt/data/tseries/db
@@ -37,7 +28,6 @@ CAPTCHA_SECRET = 'key'
 EXP_STRIPE_PUBLIC = STRIPE_PUBLIC_TEST
 EXP_STRIPE_SECRET = STRIPE_SECRET_TEST
 
-
 # -- SIngle Sign on below
 OIDC_RP_CLIENT_ID = 'your-oauth'
 OIDC_RP_CLIENT_SECRET = 'jkSIDbfvK7WFkyeSEEbB91Nk0vZf5uJl2aRnkuVy'
@@ -51,8 +41,6 @@ OIDC_RENEW_ID_TOKEN_EXPIRY_SECONDS = 15
 
 OIDC_CREATE_USER = True
 OIDC_VERIFY_SSL = True
-
-
 ---
 
 ## To install new application

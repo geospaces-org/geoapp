@@ -21,7 +21,6 @@ if (os.path.exists(os.path.expanduser("~/.django/my_config.py"))):
     import my_config
     from my_config import *
 
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -141,16 +140,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'oauth2_provider',
-    #'corsheaders',
+    # 'corsheaders',
     'allauth',
     'allauth.account',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.github',
-    ## => MY APPLICATIONS 
+    # MY_APPLICATIONS
     'django_extensions',
     'users',
-    'geoapp',
+    'geoapp'
  ]  
 
 DETECT_INSTALLED_APPS = True

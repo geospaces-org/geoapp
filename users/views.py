@@ -1,4 +1,3 @@
-import pandas as pd
 from django.http import HttpResponse
 import sys, os, json
 from mangorest import mango

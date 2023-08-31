@@ -273,9 +273,11 @@ USE_TZ    = True
 
 STATIC_URL = '/static/'
 
-#STATIC_INSTALL_DIRS = [c+"/static/"  for c in DETECTED_APPS if os.path.exists(c+"/static/")]
-STATICFILES_DIRS = [ os.path.join(BASE_DIR, 'static'), "/" ] 
-#print ("STATICFILES_DIRS:", STATICFILES_DIRS)
+STATIC_INSTALL_DIRS = [ f'{BASE_DIR}/{c}/static/'  for c in DETECTED_APPS 
+                            if os.path.exists(f'{BASE_DIR}/{c}/static/') ]
+
+STATICFILES_DIRS = [ os.path.join(BASE_DIR, 'static'), "/" ] + STATIC_INSTALL_DIRS
+print ("STATICFILES_DIRS:", STATICFILES_DIRS)
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 

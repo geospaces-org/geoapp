@@ -3,68 +3,51 @@
         color: #bdbdbd;
     }
 </style>
-<footer id="footer" class="our_menu1" style="background: #3c4043 !important;position: relative; bottom:10; width:100%;">
+ <footer id="footer" style="background: #3c4043 !important;position: relative; bottom:0; width:100%;">
     <br />
-    <div class="container">
-        <div class="row">
-
-            <div class="col-md-3">
-                <div class="widget1">
-                    <h5 class="widgetheading">Our Contact</h5>
-                    <!--
-                    <a href="/payment/stripepay/donate/"><h1><i class="fas fa-hand-holding-usd"></i>Donate For Cause</h1></a>
-                    -->
-                    <address>Denver Phone (303) 809-7566 </address>
-                    <i class="icon-phone"></i> <br>
-                    <i class="icon-envelope-alt"></i> admin AT @geospaces.org
-                </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="widget1">
+                <h5 class="widgetheading">Our Contact</h5>
+                <address>Denver Phone (303) 809-7566 </address>
+                <i class="icon-phone"></i> <br>
+                <i class="icon-envelope-alt"></i> admin AT @geospaces.org
             </div>
-            <div class="col-md-3">
-                <div class="widget">
-                    <h5 class="widgetheading">Quick Links</h5>
-                    <ul class="link-list">
-                        <li><a href="/geospaces/geospaces/terms.html">Terms and conditions</a>
-                        </li>
-                        <li><a href="/geospaces/geospaces/privacy.html">Privacy policy</a></li>
-                        <li><a href="/geospaces/geospaces/contact.html">Contact us</a></li>
-                    </ul>
-                </div>
+        </div>
+        <div class="col-md-3">
+            <div class="widget">
+                <h5 class="widgetheading">Quick Links</h5>
+                <ul class="link-list">
+                    <li><a href="/geospaces/geospaces/terms.html">Terms and conditions</a>
+                    </li>
+                    <li><a href="/geospaces/geospaces/privacy.html">Privacy policy</a></li>
+                    <li><a href="/geospaces/geospaces/contact.html">Contact us</a></li>
+                </ul>
             </div>
-            <div class="col-md-3">
-                <div class="widget">
-                    <h5 class="widgetheading">Latest posts</h5>
-                    <ul class="link-list">
-                        <li><a href="#">TBD</a></li>
-                        <!--                        
-                        <li><a href="http://www.msn.com">Capstones</a></li>
-                        <li><a href="/">PI</a></li>
-                        <li><a href="#">Career</a></li>
-                        -->
-                    </ul>
-                </div>
+        </div>
+        <div class="col-md-3">
+            <div class="widget">
+                <h5 class="widgetheading">Latest posts</h5>
+                <ul class="link-list">
+                    <li><a href="#">TBD</a></li>
+                </ul>
             </div>
-            <div class="col-md-3">
-                <div class="widget">
-                    <h5 class="widgetheading">Recent News</h5>
-                    <ul class="link-list">
-                        <li><a target="new" href="/static/docs/geospaces.pdf">Catalog</a></li>
-                    </ul>
-                </div>
+        </div>
+        <div class="col-md-3">
+            <div class="widget">
+                <h5 class="widgetheading">Recent News</h5>
+                <ul class="link-list">
+                    <li><a target="new" href="/static/docs/geospaces.pdf">Catalog</a></li>
+                </ul>
             </div>
         </div>
     </div>
-    <div id="sub-footer" style="background: #5c5c5c !important">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6">
+    <div id="sub-footer1" style="background: #5c5c5c !important">
                     <div class="copyright">
                         <span>&copy; All right reserved.</span>
                     </div>
-                </div>
-            </div>
-        </div>
     </div>
-</footer>
+ </footer>
 
 <script>
     function footerPosition() {
@@ -72,6 +55,7 @@
         //    $('#footer').css('position', 'absolute')
         //var ft = $('#footer').position().top + $('#footer').height()
         //if ( $('#pagecontent').height() + 150 > $(window).height() ){
+        console.log(document.body.clientHeight, $(window).height())
         if ((document.body.clientHeight) < $(window).height()) {
             $('#footer').css('position', 'fixed')
         } else {
@@ -79,5 +63,7 @@
         }
 
     }
-    $(document).ready(footerPosition);
+    $(document).ready(
+        //footerPosition
+    );
 </script>

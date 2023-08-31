@@ -1,4 +1,4 @@
-# Application Template TEST
+# Application Template
 
 ## Basic setup
 

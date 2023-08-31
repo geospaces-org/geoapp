@@ -64,8 +64,6 @@
             </div>
         </div>
     </div>
-    <br />
-    <br />
 </footer>
 
 <script>
@@ -75,9 +73,9 @@
         //var ft = $('#footer').position().top + $('#footer').height()
         //if ( $('#pagecontent').height() + 150 > $(window).height() ){
         if ((document.body.clientHeight) < $(window).height()) {
-            $('#footer').css('position', 'relative')
-        } else {
             $('#footer').css('position', 'fixed')
+        } else {
+            $('#footer').css('position', 'relative')
         }
 
     }

@@ -148,8 +148,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.github',
     # MY_APPLICATIONS
     'django_extensions',
-    'users',
-    'example_app',
+    #'users',
+    #'example_app',
     'geoapp'
  ]  
 
@@ -185,7 +185,6 @@ if ( DETECT_INSTALLED_APPS ):
     detectInstalledApps(INSTALLED_APPS)
 # -----------------------------------------------------------------------------------------
 INSTALLED_APPS = INSTALLED_APPS + DETECTED_APPS 
-
 
 SITE_ID = 1
 
@@ -273,7 +272,11 @@ USE_TZ    = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = ( os.path.join(BASE_DIR, 'static'), "/")
+
+#STATIC_INSTALL_DIRS = [c+"/static/"  for c in DETECTED_APPS if os.path.exists(c+"/static/")]
+#STATICFILES_DIRS = [ os.path.join(BASE_DIR, 'static'), "/" ] + STATIC_INSTALL_DIRS
+#print ("STATICFILES_DIRS:", STATICFILES_DIRS)
+
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 EXP_MEDIA_URL = '/media/'

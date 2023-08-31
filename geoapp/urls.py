@@ -18,7 +18,6 @@ urlpatterns = [
 ]
 urlpatterns = staticfiles_urlpatterns() + urlpatterns
 
-
 '''
 To enable single sign on: 
 

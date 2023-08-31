@@ -10,7 +10,7 @@ For example:
 #---------------------------------------------------------------------------------
 def appcontext(request):
     context = {
-        "appname": "GeoSpaces",
+        "appname": "Example Application",
         "weburl" : "https://www.geospaces.org/",
         "top_url": "geospaces/topbar.html"
     }

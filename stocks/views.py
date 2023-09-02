@@ -1,12 +1,7 @@
-import sys, os, json
-from django.http import HttpResponse
-from mangorest import mango
-sys.path.append("/opt/utils/")
+import os, json
 
-def index(request):
-    #Check if shopping cart has items
-    return HttpResponse("Hello")
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'''
 BASE         = "/opt/data/data/stocks/data"
 DEFAULT_LIST = None
 DEFAULT_FILE = f'{BASE}/stocks.csv'
@@ -65,4 +60,5 @@ def getDetails(request, **kwargs):
     ret['stats']= json.dumps(s2)
 
     return HttpResponse( json.dumps(ret))
+'''
 

@@ -75,7 +75,6 @@ td{
     <input id="filter"  type=text class="form-control border-right-0 inputhw" placeholder="filter " value="">
 </div>
 <div style="padding:4px;" >
-<a href="#" class="btn btn-danger" title="reset" onclick="resetList()"> <i class="fas fa-sync-alt"></i></a>
 </div>
 
     <table id="sort" style="width: 100%;">
@@ -86,7 +85,7 @@ td{
 
 </div>
 <div id="rightPane" style="padding: 0px; margin: 0px;">
-    <div id="tabs" class=tabs style=";border: 0px; border-left: 1px solid #f7f7f7">
+    <div id="tabs" class=tabs style="border: 0px; border-left: 1px solid #f7f7f7">
         <ul>
             <li><a href="#tabs-overview"  >Overview</a></li>
             <li><a href="#tabs-data"      >News</a></li>
@@ -129,7 +128,7 @@ td{
             <span id="Description" ></span>
             </div>
             <hr/>
-            <div class="scroller" style="hheight: 50vh" id="news"></div>
+            <div class="scroller" style="hheight: 50vh" id="news">NEWS</div>
             </div>
         </div>
     </div>
@@ -190,10 +189,9 @@ function sidebarCB(responseTxt, statusTxt, xhr){
     //console.log(tbody)
 }
 function getSidebar(){
-    const URL1  = `/stocks/getSymbols/?user={{user.get_username}}`
-    $.get(URL1, sidebarCB)
+    const URL1  = `/stocks/getsymbols/?user={{user.get_username}}`
+    callws(URL1, "", sidebarCB)
 }
-getSidebar();
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 chart = null;
 function showChartCB(ds,  trend=0, container="container"){
@@ -295,13 +293,7 @@ function showDetails(symbol, descr){
     $('#details_head').html(`<span class="bt">${symbol}</span> ${descr}` )
 
     const URL1  = `/stocks/getDetails/?q=${symbol}`
-    $.get(URL1, showDetailsCB )
-}
-function resetList() {
-    const URL1  = `/stocks/reload/`
-    $.get(URL1)
-    getSidebar()
-    showDetails();
+    callws(URL1, "", showDetailsCB )
 }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 $(function () {
@@ -319,8 +311,9 @@ $(function () {
 });
 $(document).ready(function() {
     $(window).resize()
+    getSidebar();
     var urlp = new URL(window.location.href)
-    showDetails( urlp.searchParams.get('q') )
+    //showDetails( urlp.searchParams.get('q') )
 })
 </script>
 {% endblock %}

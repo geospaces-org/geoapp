@@ -115,6 +115,7 @@ logger.info(f'''
 ''')
 for l in LOGLEVELS.split(":"):
     nv = l.split("=")
+
     if ( len(nv) !=2):
         continue
     n, v = nv
@@ -149,7 +150,7 @@ INSTALLED_APPS = [
     # MY_APPLICATIONS
     'django_extensions',
     #'users',
-    #'example_app',
+    'example_app',
     'geoapp'
  ]  
 

@@ -6,7 +6,6 @@
 <link href="/static/geoui/slidermenu.css" rel="stylesheet" />
 <script src="/static/geoui/slidermenu.js"></script>
 <script src="/static/bower_components/simplemde/debug/simplemde.js"></script>
-<script src="/static/bower_components/simplemde/debug/simplemde.js"></script>
 <!-- ---------------------------------------------------
     SIDEBAR STYLE
 ----------------------------------------------------- -->
@@ -95,13 +94,14 @@ function getcapstoneSidebarCB(responseTxt, statusTxt, xhr){
     getmenu(responseTxt, '#newmenu', "Capstones")
 }
 function getcapstoneSidebar(){
-    const URL1  = `${window.location.origin}/api1/capmenu/`
-    $.get(URL1, getcapstoneSidebarCB)
+    callws("/capstone/capmenu/", null, getcapstoneSidebarCB)
 }
-getcapstoneSidebar();
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-simplemde = new SimpleMDE({element: null });
+simplemde = null
 function md2html(val, ext, div){
+    if (!simplemde)
+        simplemde = new SimpleMDE({element: null });
+
     var html  = simplemde.markdown(val);
     if ( div )
         $(div).html(ext + html)
@@ -117,12 +117,14 @@ function showCapstoneProjectCB(responseTxt, statusTxt, xhr){
     f = $('#capid').val()
     var edito = editd = edits = editi = "";
     var href = "/blogs/secured/create_article.html/?file=/capstone/capstone/"+ f;
+    /*
     if ({{ request.user|has_group:"editcapstone"}}){
         edito = `<a style="float:right;color: #fff" class="btn btn-secondary" target="cap"href="${href}/README.md"    ><i class="fas fa-edit"></i> Edit</a>`
         editd = `<a style="float:right;color: #fff" class="btn btn-secondary" target="cap"href="${href}/data.md"      ><i class="fas fa-edit"></i> Edit</a>`
         edits = `<a style="float:right;color: #fff" class="btn btn-secondary" target="cap"href="${href}/solutions.md" ><i class="fas fa-edit"></i> Edit</a>`
         editi = `<a style="float:right;color: #fff" class="btn btn-secondary" target="cap"href="${href}/discuss.md"   ><i class="fas fa-edit"></i> Edit</a>`
     }
+    */
     //salert(`<i class='fa fa-spinner fa-spin' style='font-size: 48px;color:red;'></i> `, "btn-warning")
     md2html(ret.overview,    edito, '#tabs-overview')
     md2html(ret.data,        editd, '#tabs-data'    )
@@ -135,9 +137,8 @@ function showCapstoneProject(f){
         return;
     }
     $('#capid').val(f)
-    saveZZValues()
-    const URL1  = `/api1/getcapstone/?q=${f}`
-    $.get(URL1, showCapstoneProjectCB )
+    const URL1  = `/capstone/getcapstone/?q=${f}`
+    callws(URL1, null, showCapstoneProjectCB )
 }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 function myMenuItemClicked(f, a){
@@ -163,6 +164,7 @@ $(function () {
 $(document).ready(function() {
     $(window).resize()
     menuItemClicked = myMenuItemClicked
+    getcapstoneSidebar();
 
     var urlp = new URL(window.location.href)
     showCapstoneProject( urlp.searchParams.get('q') )

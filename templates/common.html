@@ -238,26 +238,26 @@ code::after, code::before {
 
 </style>
 
-<script>
-function GET_POSTDATA(params){
-    data = {
-            csrfmiddlewaretoken: '{{csrf_token }}',
-            auth: '{{request.session.session_key}}',
-            user:'{{user.username}}'
-    }
-    for(var k in params) {
-        data[k] = params[k]
-    }
-    return data
-}
-function POST(url,  data, callback){
-    data1 = GET_POSTDATA(data)
-    $.post(url, data1, callback).fail(callback);
-}
-
-
-</script>
 </head>
+<script>
+    function GET_POSTDATA(params){
+        data = {
+                csrfmiddlewaretoken: '{{csrf_token }}',
+                auth: '{{request.session.session_key}}',
+                user:'{{user.username}}'
+        }
+        for(var k in params) {
+            data[k] = params[k]
+        }
+        return data
+    }
+    function POST(url,  data, callback){
+        data1 = GET_POSTDATA(data)
+        $.post(url, data1, callback).fail(callback);
+    }
+    
+</script>
+
 <body style="overflow: hidden;hheight:100%;">
 <header>
 <!----------------------------------------BEGIN MENU end header -->

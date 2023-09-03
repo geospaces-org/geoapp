@@ -52,7 +52,7 @@ function callws_getIDs(formName="", ignore = callws_ignore) {
 function dumpformdata(formData) {
     count =0 
     for (var p of formData.entries()) {
-        if (p[0].startsWith("X_") || p[0].startsWith("csrf"))
+        if (p[0].startsWith("X_") || p[0].startsWith("csrf") || p[0].startsWith("auth"))
             continue;
         console.log(count, p[0],  ': =>' + p[1]);
         count += 1        

@@ -119,10 +119,8 @@ input:invalid {        border: 2px solid red;    }
     <div class="container" style="line-height: 2.0">
         <div class="center">
             <br/>
-            <br/>
             <input type="text"  id="stext" onkeypress="handle(event)"  placeholder="what is your search" value="" 
-                style="width: 60%; border-radius: 0.25rem;height: 50px; border-radius: 25px; padding: 10px;">
-            <br/>
+                style="width: 80%; border-radius: 0.25rem;height: 50px; border-radius: 25px; padding: 10px;">
         </div>
 <br/>
 <br/>
@@ -174,7 +172,7 @@ $('#stext').autocomplete({
         if (term.length < 4)
             term +='*';
 
-        u = `/blogs/suggest/?q=${term}&user={{user.username}}`
+        u = `/aiservices/suggest/?q=${term}&user={{user.username}}`
         $.get(u, function(d){
                 try{
                     var ret = JSON.parse(d)
@@ -203,13 +201,14 @@ function rateInternalDoc(rating, id) {
     //$.get(ur, null);
 }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-function searchCB(tabid, responseTxt, statusTxt, xhr){
-    if(statusTxt !== "success"){
+function searchCB(responseTxt, statusTxt, xhr, ctx, form){
+    var tabid = ctx.tabid
+    if(statusTxt && statusTxt !== "success"){
         //$('#tabs-1').html(results + " Error Loading results <br/>" + statusTxt +"<br/>" + responseTxt)
-        $(tabid).html(results + " Error Loading results <br/>" + statusTxt +"<br/>" + responseTxt)
+        $(tabid).html("<br/>" + statusTxt +"<br/>" + responseTxt)
         return  0;
     }
-    $( "#tabs" ).tabs({ active: 1 });
+    //$( "#tabs" ).tabs({ active: 1 });
     $(tabid).html( responseTxt)
 }
 function search() {
@@ -222,15 +221,15 @@ function search() {
 
     d=$("#time").text().split(':');
     var st = encodeURIComponent(stxt);
-    var pd = {q:st, tabid: '#tabs-search' }
-    callws(`/blogs/essearch/`, "", searchCB, pd, cb);
+    var ctx = {q:st, tabid: $('#tabs-search') }
+    callws(`/aiservices/essearch/`, "", searchCB, ctx);
 }
 //-----------------------------------------------------------------------------------------------
 var simplemde = null
 var d
 function vformat(d){
     if ( !simplemde )
-        simplemde =  SimpleMDE({ element: document.getElementById("") });
+        simplemde =  new SimpleMDE({ element: document.getElementById("") });
 
     if (d._source.type === 'mdd' || d._source.type === 'md'){
         html = simplemde.markdown(d._source.content);

@@ -5,7 +5,8 @@
 import os, json, sys
 from  mangorest.mango import webapi
 from geoapp.utils import read_csv, readfile
-import aiservices.suggestindex as suggestindex
+
+import aiservices
 
 BASE = "/opt/data/data/articles/"
 

@@ -15,8 +15,7 @@
 #viewcontent {
     max-width: 1024px;
     margin: auto;
-    margin-top: .75in;
-    margin-bottom: 1.5in;
+    margin-top: .25in;
     text-align: left;
     padding: 20px;
 }
@@ -51,8 +50,12 @@ function viewCB(responseTxt, statusTxt, xhr){
     setTimeout(geoui_scrollTo, 50);
 }
 function view(viewid, type="md|text|elastic|capstone"){
-    const URL1  = "/static/docs/"+viewid
-    $.get(URL1, viewCB )
+    var URL = viewid
+    
+    if (!URL.startsWith("/static")) {
+        URL = "/static/docs/"+ URL
+    }
+    $.get(URL, viewCB )
 }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
 $(document).ready(function() {

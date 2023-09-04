@@ -8,12 +8,14 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
+DEBUG = True
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'pr75j7t*r!j=oac!798tazlecdo0%k0rasre@!f_&0u%2(=nty'
 
-import os, sys, glob, mimetypes
+import os, sys, glob
 from django.urls import path, include
+
 
 sys.path.append(os.path.expanduser("~/.django") )
 if (os.path.exists(os.path.expanduser("~/.django/my_config.py"))):
@@ -23,7 +25,6 @@ if (os.path.exists(os.path.expanduser("~/.django/my_config.py"))):
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 ALLOWED_HOSTS = ['*', 'localhost']
 
 AUTO_LOGOUT_DELAY=30000
@@ -289,5 +290,3 @@ EXP_SESSION = {}
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-mimetypes.add_type("text/css", ".css", True) 
-mimetypes.add_type("text/js", ".js", True) 

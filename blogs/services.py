@@ -2,7 +2,8 @@
 
 #*** DO NOT EDIT - GENERATED FROM services.ipynb ****
 
-import os, json, sys, datetime, geoapp, aiservices, logging
+from django.conf import settings
+import os, json, sys, datetime, geoapp, logging
 from  mangorest.mango import webapi
 import aiservices
 
@@ -10,9 +11,10 @@ BASE = "/opt/data/data/articles/raw/"
 logger = logging.getLogger( "app.blogs")
 
 #--------------------------------------------------------------------------------------------------------
-DIRS = ("blogs/static/blogs/data/", "static/docs/", BASE)
+FILES_DIRS = ("blogs/static/blogs/data/", "static/docs/", BASE)
+UPLOADS_DIR = "blogs/static/blogs/uploads/"
 
-def find(file, dirs=DIRS):
+def find(file, dirs=FILES_DIRS):
     if os.path.exists(file):
         return file
     for d in dirs:
@@ -22,7 +24,7 @@ def find(file, dirs=DIRS):
     return None
 #--------------------------------------------------------------------------------------------------------
 @webapi("/blogs/getarticle")
-def getarticle(request, file="", viewid="", dirs=DIRS, **kwargs):
+def getarticle(request, file="", viewid="", dirs=FILES_DIRS, **kwargs):
     file = file or viewid
     f = find(file)
     if (not f):
@@ -35,22 +37,18 @@ def getarticle(request, file="", viewid="", dirs=DIRS, **kwargs):
     ret = { "title": title, "content": cont , "meta": meta, "dir": os.path.dirname(f) }
     return json.dumps(ret)
 #--------------------------------------------------------------------------------------------------------    
-@webapi("/blogs/createarticle")
-def article(request, user="noname", cfilename="", title="", contents="", **kwargs):
-    if (not cfilename):
-        cfilename = f"{user}-{datetime.datetime.now().strftime('%Y-%m-%dT%H-%M-%S')}.md"
-#--------------------------------------------------------------------------------------------------------    
 @webapi("/blogs/savearticle")
 def savearticle(request, user="noname", cfilename="", title="", contents="", **kwargs):
-    if (not contents):
-        return "No contents!!"
+    if (not contents or not cfilename):
+        return "No contents or cflename!!"
 
     file = find(cfilename)
     if (not file):
-        if (not cfilename):
-            file = f"{user}-{datetime.datetime.utcnow().replace(microsecond=0).isoformat()}.md"
+        #file = f"{user}-{datetime.datetime.utcnow().replace(microsecond=0).isoformat()}.md"
+        if (os.path.exists(FILES_DIRS[0])):   # First preference to blogs directory link if it exits
+            file = FILES_DIRS[0] + cfilename
         else:
-            file = DIRS[0] + cfilename
+            file = FILES_DIRS[1] + cfilename
 
     logger.info(f"===> Saving {file} ...")
     indexed = file+".mdd"
@@ -66,7 +64,7 @@ def savearticle(request, user="noname", cfilename="", title="", contents="", **k
         os.makedirs( dirn ) 
 
     # Upload file attachments if any
-    files = geoapp.utils.uploadFiles(request )
+    files = geoapp.utils.uploadFiles(request, UPLOADS_DIR )
     kwargs['files']    = files
     kwargs["filename"] = cfilename
     kwargs["title"]    = title
@@ -79,6 +77,6 @@ def savearticle(request, user="noname", cfilename="", title="", contents="", **k
     with open(cfilename, "wb") as f:
         f.write(contents.encode('utf-8'))
 
-    #os.system('/opt/utils/filestoes.py -d "/opt/data/data/articles/raw" -t "*.md" &')
+    #os.system(f'/opt/utils/filestoes.py -d {FILES_DIRS[0]} -t "*.md" &')
         
     return f'Saved: {json.dumps(kwargs, indent = 4)} '

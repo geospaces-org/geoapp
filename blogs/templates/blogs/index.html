@@ -290,7 +290,10 @@ function viewDoc(id) {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 function viewdetails(id, author, editors) {
     var lid = id.split("/").pop()
-    document.location=`/blogs/view_article1.html/?viewid=${lid}`
+    //document.location=`/blogs/blogs/view_article.html/?viewid=${lid}`
+    var share= `${window.location.origin.split('?')[0]}/blogs/blogs/view_article.html/?viewid=${lid}`
+    window.open(share, "SHARED")
+
 }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 function edit(id, author, editors) {

@@ -19,8 +19,7 @@
     text-align: left;
 }
 </style>
-{% if user.is_superuser %}
-<div class="btn-group" style="float:right">
+<div id='editdiv' class="btn-group" style="float:right; display: none;">
     <input name="viewid"  id="viewid"   hidden >
     <span  class="btn-group" style=" min-width: 100px;" >
         <button class="btn btn-secondary btn-sm" type="button" onclick="edit()">
@@ -28,7 +27,6 @@
         </button>
     </span>
 </div>
-{% endif %}
 
 <div id="second" style="height: 100vh; overflow: auto;"  >
     <div id="viewcontent"></div>
@@ -36,6 +34,12 @@
 <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     SCRIPTS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+{% if user.is_superuser %}
+<script>
+    $('#editdiv').show()
+</script>
+{% endif %}
+
 <script>
 simplemde = new SimpleMDE({element: null });
 function md2html(val, ext, div){

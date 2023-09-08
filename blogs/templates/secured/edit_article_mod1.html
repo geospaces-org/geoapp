@@ -107,31 +107,6 @@ function saveMDcontents( ){
     callws('/blogs/savearticle/', "fileupload", saveMDcontentsCB, data )
 }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-function getMDfilecontentsCB(responseTxt, statusTxt, xhr, ctx, formdata){
-    if (JS_error(responseTxt, statusTxt, xhr, true) ) {
-        return;
-    }
-    val = responseTxt;
-    tit = "";
-    if (responseTxt.trim().startsWith("{")) {
-        ret = JSON.parse(responseTxt);
-        val = ret.content
-        tit = ret.title
-        dir = ret.dir
-    }
-    $('#X_title').val(tit)
-    $('#X_dir').val(dir)
-    var cont = val || "Create Your content Here"
-    console.log(dir)
-
-    update(cont)
-}
-function getMDfilecontents(file){
-    const URL1  = `/blogs/getarticle/`
-    ctx ={ file: file}
-    callws(URL1, "", getMDfilecontentsCB, ctx )
-}
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 function restoreFromLocalStorage(){
     var data = localStorage.getItem("blog_content");
     if (data && data.trim().length > 10) {
@@ -139,16 +114,39 @@ function restoreFromLocalStorage(){
     }
 }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+function setupContentsCB(responseTxt, statusTxt, xhr, ctx, formdata){
+    if (JS_error(responseTxt, statusTxt, xhr, true) ) {
+        return;
+    }
+    console.log(responseTxt.slice(0,64))
+    if (!responseTxt.trim().startsWith("{")) {
+        salert(responseTxt)
+        update(responseTxt)
+        return
+    }
+
+    var ret = JSON.parse(responseTxt);
+
+    $('#X_title').val(ret.title)
+    $('#X_dir').val(ret.dir)
+    $('#X_filename').val(ctx.file)
+
+    var cont = ret.content || "Create Your content Here"
+    update(cont)
+}
 function setupContents(file){
     var urlp = new URL(window.location.href)
     file = file || urlp.searchParams.get('file') || urlp.searchParams.get('viewid')
 
     if (file){
-        getMDfilecontents(file)
+        ctx ={ file: file}
+        callws("/blogs/getarticle/", "", setupContentsCB, ctx )
     } else {
         var dttm = (new Date()).toISOString()
         dttm = dttm.substring(0,19) + "Z"
         var file = `{{user.username}}-${dttm}.md`
+        $('#X_filename').val(file)
+        $('#X_filename').prop('disabled', 0)
         update()
     }
     return file;

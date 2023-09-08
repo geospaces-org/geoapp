@@ -19,20 +19,12 @@
     text-align: left;
 }
 </style>
-{% if user.is_superuser %}
-<div class="btn-group" style="float:right">
-    <input name="viewid"  id="viewid"   hidden >
-    <span  class="btn-group" style=" min-width: 100px;" >
-        <button class="btn btn-secondary btn-sm" type="button" onclick="edit()">
-            {{  user.username }} : Edit
-        </button>
-    </span>
-</div>
-{% endif %}
-
 <div id="second" style="height: 100vh; overflow: auto;"  >
     <div id="viewcontent"></div>
 </div>
+<input name="viewid"  id="viewid"   hidden value="" >
+<input name="type"    id="type"     hidden value="" >
+<input name="edit"    id="edit"     hidden value="" >
 <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     SCRIPTS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
@@ -41,7 +33,7 @@ simplemde = new SimpleMDE({element: null });
 function md2html(val, ext, div){
     var html  = simplemde.markdown(val);
     if ( div ) {
-        $(div).html(html)
+        $(div).html(ext + html)
         geoui_setupMATHJAX(div.substring(1))
     }
     return html
@@ -61,15 +53,20 @@ function viewCB(responseTxt, statusTxt, xhr, ctx, form){
     md2html(val, $('#edit').val(), '#viewcontent' )
     setTimeout(geoui_scrollTo, 50);
 }
-function edit(viewid){
-    var v = $('#viewid').val()
-    var edit= `${window.location.origin.split('?')[0]}/blogs/secured/edit_article.html/?viewid=${v}`
-    window.open(edit, "EDIT")
-}
 function view(viewid){
+    /*
+    var href = "/blogs/secured/create_article1.html/?file="+ file;
+    //if ({{ request.user| has_group:"editcapstone"}}) {
+    //    var e= `<a style="float:right;color: #fff" class="btn btn-secondary" target="cap" href="${href}"><i class="fas fa-edit"></i></a>`
+    //    $('#edit').val(e)
+    //}
+    if ({{ request | can_edit:"viewid" }}) {
+        var e= `<a style="float:right;color: #fff" class="btn btn-secondary" target="cap" href="${href}"><i class="fas fa-edit"></i></a>`
+        $('#edit').val(e)
+    }
+    */
     const ctx = { viewid: viewid}
-    $('#viewid').val(viewid)
-    callws('/blogs/getarticle/', "", viewCB, ctx )
+    $callws('/blogs/getarticle/', viewCB, ctx )
 }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 $(document).ready(function() {
@@ -77,6 +74,7 @@ $(document).ready(function() {
     var viewid =  urlp.searchParams.get('viewid')  || urlp.searchParams.get('file') || ""
 
     $('#viewid').val(viewid)
+
     if (viewid)
         view(viewid)
 })

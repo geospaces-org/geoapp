@@ -47,23 +47,24 @@
 }
 </style>
 
-<div id="articles" class="splitter" style=";position:relative; overflow: auto; overflow-y: auto">
+<div id="articles" class="splitter" style="height:100%;position:relative; overflow: auto; overflow-y: auto">
     <div id="first" style="height: 100%;overflow: auto;">
-            <textarea name='content' id="editor"
-                      style="width:100%; height: 100%; resize: none;">{% include "samplemd.html" %}
-            </textarea>
+        <textarea name='content' id="editor" style="width:100%; height: 100%; resize: none;">{% include "samplemd.html" %}
+        </textarea>
     </div>
     <div id="separator2" class="separatorH" >.</div>
     <div id="second" style="height: 100%; overflow: auto;"  >
         <div id="second-content">
-        Hello
         </div>
     </div>
 </div>
 <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 <script>
-var simplemde = new SimpleMDE({ element: document.getElementById("useless") });
+var simplemde = null
 function update(val){
+    if (!simplemde) {
+        simplemde = new SimpleMDE({ element: document.getElementById("") });
+    }
     if (val)
         window.editor_markdown.setValue(val)
     val = val || window.editor_markdown.getValue()
@@ -73,18 +74,22 @@ function update(val){
     geoui_setupMATHJAX('vdoc')
 
     var data = localStorage.setItem("blog_content", val);
+    setTimeout(geoui_scrollTo, 50);
+
     return html
 }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-function saveMDcontentsCB(responseTxt, statusTxt, xhr){
+function saveMDcontentsCB(responseTxt, statusTxt, xhr, context, formdata){
     if (JS_error(responseTxt, statusTxt, xhr, true) ) {
         return;
     }
-    salert("Saved Filename: " + $('#X_filename').val(), 1000)
+    salert(responseTxt)
 }
 
-function saveMDcontents(file, cb, dataExt={}){
-     file = file || $('#X_filename').val()
+function saveMDcontents( ){
+    var dir  = $('#X_dir').val()
+    var file = dir +"/" + $('#X_filename').val()
+    var tit = $('#X_title').val()
 
     var val = window.editor_markdown.getValue()
     val  = val.replace(/‣/g, '')
@@ -97,13 +102,12 @@ function saveMDcontents(file, cb, dataExt={}){
         val = val.slice(0, nId) + `‣\n` + val.slice(nId+1)
     }
 
-    data = { contents: val, cfilename: file }
-    $.extend(data, dataExt )
-    var data1 = API_POSTDATA(data)
-    $.post('/blogs/putarticle/', data1, cb || saveMDcontentsCB )
+    console.log("SaveMDcontents", data)
+    data = { contents: val, cfilename: file , title: tit, savein: dir}
+    callws('/blogs/savearticle/', "fileupload", saveMDcontentsCB, data )
 }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-function getMDfilecontentsCB(responseTxt, statusTxt, xhr){
+function getMDfilecontentsCB(responseTxt, statusTxt, xhr, ctx, formdata){
     if (JS_error(responseTxt, statusTxt, xhr, true) ) {
         return;
     }
@@ -113,16 +117,19 @@ function getMDfilecontentsCB(responseTxt, statusTxt, xhr){
         ret = JSON.parse(responseTxt);
         val = ret.content
         tit = ret.title
+        dir = ret.dir
     }
     $('#X_title').val(tit)
+    $('#X_dir').val(dir)
     var cont = val || "Create Your content Here"
+    console.log(dir)
+
     update(cont)
 }
 function getMDfilecontents(file){
-    const URL1  = `/blogs/getarticle/?file=${file}`
-    $.get(URL1, getMDfilecontentsCB )
-
-    return file
+    const URL1  = `/blogs/getarticle/`
+    ctx ={ file: file}
+    callws(URL1, "", getMDfilecontentsCB, ctx )
 }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 function restoreFromLocalStorage(){
@@ -134,7 +141,7 @@ function restoreFromLocalStorage(){
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 function setupContents(file){
     var urlp = new URL(window.location.href)
-    file = file || urlp.searchParams.get('file')
+    file = file || urlp.searchParams.get('file') || urlp.searchParams.get('viewid')
 
     if (file){
         getMDfilecontents(file)
@@ -143,8 +150,6 @@ function setupContents(file){
         dttm = dttm.substring(0,19) + "Z"
         var file = `{{user.username}}-${dttm}.md`
         update()
-        //var data = "Create Your Article!!"
-        //update(data)
     }
     return file;
 }
@@ -177,6 +182,15 @@ window.editor_markdown.on("keyup", (function(cm, event) {
     }
 }));
 
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+document.addEventListener("keydown", function(e) {
+    if ((window.navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)  && e.keyCode == 83) {
+        e.preventDefault();
+        // Process the event here (such as click on submit button)
+        saveMDcontents()
+    }
+}, false);
+
 if(/iPhone|iPad|iPod/i.test(navigator.userAgent)){
     textareas = document.getElementsByTagName('textarea');
     for(var i = 0; i < textareas.length; i++){
@@ -185,6 +199,5 @@ if(/iPhone|iPad|iPod/i.test(navigator.userAgent)){
     }
 }
 $(document).ready(function() {
-    $('#myfilesMenu').css('height', '97%');
 })
 </script>

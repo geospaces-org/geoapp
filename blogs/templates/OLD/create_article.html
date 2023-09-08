@@ -99,23 +99,6 @@
 </div>
 <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 <script>
-$(document).ready(function() {
-    var f1 = document.getElementById("bmmenu");
-    var f2 = document.getElementById("articles");
-    var sp = document.getElementById("separator1");
-    dragElement(sp, "H", f1, f2);
-
-    //restoreZZValues()
-
-    // Side Menu Init
-    menuItemClicked = myMenuItemClicked
-    getMyArticles();
-    $('#bmmenu').width($('#bmwidth').val())
-
-    // Default Content for Editor from last saved.
-    file = setupContents()
-    $('#X_fname').val(file)
-});
 document.addEventListener("keydown", function(e) {
     if ((window.navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)  && e.keyCode == 83) {
         e.preventDefault();
@@ -188,5 +171,22 @@ function myMenuItemClicked(d){
     setupContents(d);
 }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+$(document).ready(function() {
+    var f1 = document.getElementById("bmmenu");
+    var f2 = document.getElementById("articles");
+    var sp = document.getElementById("separator1");
+    dragElement(sp, "H", f1, f2);
+
+    //restoreZZValues()
+
+    // Side Menu Init
+    menuItemClicked = myMenuItemClicked
+    getMyArticles();
+    $('#bmmenu').width($('#bmwidth').val())
+
+    // Default Content for Editor from last saved.
+    file = setupContents()
+    $('#X_fname').val(file)
+});
 </script>
 {% endblock %}

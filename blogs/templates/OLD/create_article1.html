@@ -56,7 +56,7 @@
     }
 }
 </style>
-<div id="editmenu" style="width:100%;min-height:65px; background: white;padding-left: 15px;vertical-align: middle; border-bottom: 1px solid #f0f0f0;">
+<div id="editmenu" style="width:100%;min-height:65px; padding-left: 15px; border-bottom: 1px solid #f0f0f0;">
 <div class="row">
     <div class="col-md-9">
         <a href=# onclick="toggleDiv('#bmmenu')"><i class="fas fa-bars"></i>&nbsp;&nbsp;</a>
@@ -70,9 +70,6 @@
         <input name="bmwidth" id="bmwidth" size=6  value="350" hidden />
 
         <span id="status"></span>
-<!--
-        <button title="Print"  type="button" onclick="print()" class="btn btn-danger"><i class="fa fa-print"></i></button>
--->
     </div>
 
     <div id="file_drop" class="col-md-3" class="input-group" style="">
@@ -86,8 +83,6 @@
                 class="btn btn-success"><i class="fa fa-upload"></i></button>
     </form>
     </div>
-
-
       </div>
     </div>
 </div>
@@ -106,22 +101,6 @@
 function handleUploadClick1(url='/blogs/upload') {
     handleUploadClick('/blogs/upload/')
 }
-$(document).ready(function() {
-    var f1 = document.getElementById("bmmenu");
-    var f2 = document.getElementById("articles");
-    var sp = document.getElementById("separator1");
-    dragElement(sp, "H", f1, f2);
-
-    // Side Menu Init
-    menuItemClicked = myMenuItemClicked
-    getMyArticles();
-    $('#bmmenu').width($('#bmwidth').val())
-    toggleDiv('#bmmenu') // Lets hide the menu
-
-    // Default Content for Editor from last saved.
-    file = setupContents()
-    $('#X_filename').val(file)
-});
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 function getMyArticlesCB(responseTxt, statusTxt, xhr){
     if (!responseTxt || JS_error(responseTxt, statusTxt, xhr, true) ) {
@@ -190,5 +169,22 @@ function myMenuItemClicked(d){
     setupContents(d);
 }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+$(document).ready(function() {
+    var f1 = document.getElementById("bmmenu");
+    var f2 = document.getElementById("articles");
+    var sp = document.getElementById("separator1");
+    dragElement(sp, "H", f1, f2);
+
+    // Side Menu Init
+    menuItemClicked = myMenuItemClicked
+    getMyArticles();
+    $('#bmmenu').width($('#bmwidth').val())
+    toggleDiv('#bmmenu') // Lets hide the menu
+
+    // Default Content for Editor from last saved.
+    file = setupContents()
+    $('#X_filename').val(file)
+    $('#myfilesMenu').css('height', '97%');
+});
 </script>
 {% endblock %}

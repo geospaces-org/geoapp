@@ -89,7 +89,8 @@ integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0
 
 input{
     border: 1px solid #ced4da;
-    border-radius: 0.25rem;
+    border-radius: 4px;
+    height: 40px;
 }
 
 .div1{
@@ -109,6 +110,21 @@ input{
     border-bottom: 3px solid #ccc;
 }
 .input1:readonly{
+    background: rgb(222, 58, 58);
+}
+
+.input11{
+    text-align: left;
+    height: 40px;
+    padding: 3 0 3 3;
+    font-size: small;
+    background: #fefefe;
+}
+.input11:disabled{
+    background: #ececec;
+    border-bottom: 3px solid #ccc;
+}
+.input11:readonly{
     background: rgb(222, 58, 58);
 }
 
@@ -238,26 +254,26 @@ code::after, code::before {
 
 </style>
 
-<script>
-function GET_POSTDATA(params){
-    data = {
-            csrfmiddlewaretoken: '{{csrf_token }}',
-            auth: '{{request.session.session_key}}',
-            user:'{{user.username}}'
-    }
-    for(var k in params) {
-        data[k] = params[k]
-    }
-    return data
-}
-function POST(url,  data, callback){
-    data1 = GET_POSTDATA(data)
-    $.post(url, data1, callback).fail(callback);
-}
-
-
-</script>
 </head>
+<script>
+    function GET_POSTDATA(params){
+        data = {
+                csrfmiddlewaretoken: '{{csrf_token }}',
+                auth: '{{request.session.session_key}}',
+                user:'{{user.username}}'
+        }
+        for(var k in params) {
+            data[k] = params[k]
+        }
+        return data
+    }
+    function POST(url,  data, callback){
+        data1 = GET_POSTDATA(data)
+        $.post(url, data1, callback).fail(callback);
+    }
+    
+</script>
+
 <body style="overflow: hidden;hheight:100%;">
 <header>
 <!----------------------------------------BEGIN MENU end header -->
@@ -513,7 +529,7 @@ function doClassbasedInit() {
     var x = document.getElementsByClassName("tabs");
     for (var i = 0; i < x.length; i++) {
         $(x[i]).tabs()
-        $( x[i] ).tabs( "option", "heightStyle", "fill" );
+        //$( x[i] ).tabs( "option", "heightStyle", "fill" );
     }
     x = document.getElementsByClassName("draggable");
     for (var i = 0; i < x.length; i++) {

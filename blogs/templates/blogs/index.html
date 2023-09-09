@@ -114,6 +114,7 @@ input:invalid {        border: 2px solid red;    }
     height: 100vh;
 }
 </style>
+{% include "blogs/top.html" %}
 <br/>
 <section id="content">
     <div class="container" style="line-height: 2.0">
@@ -187,7 +188,7 @@ $('#stext').autocomplete({
         if (term.length < 4)
             term +='*';
 
-        u = `/aiservices/suggest/?q=${term}&user={{user.username}}`
+        u = `/blogs/suggest/?q=${term}&user={{user.username}}`
         $.get(u, function(d){
                 try{
                     var ret = JSON.parse(d)
@@ -237,7 +238,7 @@ function search() {
     d=$("#time").text().split(':');
     var st = encodeURIComponent(stxt);
     var ctx = {q:st, tabid: $('#tabs-search') }
-    callws(`/aiservices/essearch/`, "", searchCB, ctx);
+    callws(`/blogs/essearch/`, "", searchCB, ctx);
 }
 //-----------------------------------------------------------------------------------------------
 var simplemde = null

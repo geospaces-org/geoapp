@@ -10,13 +10,13 @@ import requests
 #import filestoes, utils
 #from utils import Map
 from  mangorest.mango import webapi
-import map
+import blogs.map
 
 es         = Elasticsearch("http://localhost:9200")
 INDEX_NAME = "suggest_index"
 
 #--------------------------------------------------------------------------------
-@webapi("aiservices/suggest")
+@webapi("/blogs/suggest")
 def Suggest(q="", user="", prefs="", location="", **kwargs):
     r = es.search(index=INDEX_NAME, filter_path=[''], q=q, size=7)
     ret = [ f"{t['_source']['title']}" for t in r['hits']['hits'] ]

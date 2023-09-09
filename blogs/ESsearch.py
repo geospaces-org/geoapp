@@ -12,7 +12,7 @@ from elasticsearch import Elasticsearch
 
 #sys.path.append("/opt/utils")
 #import filestoes, utils
-from . import Map
+from blogs.map import Map
 
 es = Elasticsearch("http://localhost:9200/")
 

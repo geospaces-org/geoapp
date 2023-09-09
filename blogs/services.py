@@ -5,7 +5,7 @@
 from django.conf import settings
 import os, json, sys, datetime, geoapp, logging
 from  mangorest.mango import webapi
-import aiservices
+#import aiservices
 
 BASE = "/opt/data/data/articles/raw/"
 logger = logging.getLogger( "app.blogs")

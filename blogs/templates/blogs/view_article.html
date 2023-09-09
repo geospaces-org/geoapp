@@ -34,12 +34,6 @@
 <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     SCRIPTS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-{% if user.is_superuser %}
-<script>
-    $('#editdiv').show()
-</script>
-{% endif %}
-
 <script>
 simplemde = new SimpleMDE({element: null });
 function md2html(val, ext, div){
@@ -51,36 +45,49 @@ function md2html(val, ext, div){
     return html
 }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-function viewCB(responseTxt, statusTxt, xhr, ctx, form){
-    if (JS_error(responseTxt, statusTxt, xhr, true) ) {
-        return;
-    }
-    val = responseTxt;
-    tit = "";
-    if (responseTxt.trim().startsWith("{")) {
-        ret = JSON.parse(responseTxt);
-        val = ret.content
-        tit = ret.title
-    }
-    md2html(val, $('#edit').val(), '#viewcontent' )
-    setTimeout(geoui_scrollTo, 50);
-}
 function edit(viewid){
     var v = $('#viewid').val()
     var edit= `${window.location.origin.split('?')[0]}/blogs/secured/edit_article.html/?viewid=${v}`
     window.open(edit, "EDIT")
 }
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+function viewCB(responseTxt, statusTxt, xhr, ctx, form){
+    if (JS_error(responseTxt, statusTxt, xhr, true) ) {
+        return;
+    }
+
+    $('#viewid').val(ctx.viewid) 
+    var val = responseTxt;
+    var ret = {}
+    if (responseTxt.trim().startsWith("{")) {
+        ret = JSON.parse(responseTxt);
+        val = ret.content
+    }
+
+    md2html(val, $('#edit').val(), '#viewcontent' )
+    saveZZValues()
+    //setTimeout(geoui_scrollTo, 50);
+
+    var is_super = "{{ user.is_superuser }}" == "True" ? 1 : 0
+    var author   = (ret.meta) ? ret.meta.user : ""
+    var user     = "{{ user.username }}"
+
+    var can_edit = (is_super || (author && author == user)) ? 1 : 0
+
+    //console.log( "=========>", is_super, author, user, can_edit )
+    if ( can_edit)
+        $('#editdiv').show()
+
+}
 function view(viewid){
     const ctx = { viewid: viewid}
-    $('#viewid').val(viewid)
     callws('/blogs/getarticle/', "", viewCB, ctx )
 }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 $(document).ready(function() {
     var urlp   = new URL(window.location.href)
     var viewid =  urlp.searchParams.get('viewid')  || urlp.searchParams.get('file') || ""
-
-    $('#viewid').val(viewid)
+    restoreZZValues()
     if (viewid)
         view(viewid)
 })

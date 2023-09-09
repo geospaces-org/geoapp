@@ -48,13 +48,14 @@ function geoui_nthIndex(str, ch, n=0) {
 }
 
 function geoui_scrollTo(ch='‣'){
-    var st  = $(`*:contains(${ch}):last`).offset() || 0;
+    var lc = $(`*:contains(ch):last`).offset()
+    var st = lc || 0;
     if ( st) {
-        var stt = st.top - window.innerHeight/2;
+        var stt = st.top - window.innerHeight/2
         if ( st.top > window.innerHeight )
             $(window).scrollTop(stt);
     }
-
+    return st
 }
 /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  *

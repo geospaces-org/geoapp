@@ -10,9 +10,8 @@ app_name = 'geoapp'
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
-    path(r'uploadfile', views.uploadfile, name='uploadfile'),
     path(r'', views.index, name='index'),
-] + settings.DETECTED_URLS + [
+] + apps.settings.INSTALLED_URLS + [
     path('oidc/', include('mozilla_django_oidc.urls')),
     re_path(r'^.*/$', mango.Common, name='catchall'),
 ]

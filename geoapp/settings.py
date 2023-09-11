@@ -226,6 +226,7 @@ WSGI_APPLICATION = 'geoapp.wsgi.application'
 
 def SQLLITE3DB():
     optdb= "/opt/data/geoapp/db/db.sqlite3"
+    optdb= "/opt/utils/db.sqlite3"
     
     if not os.path.exists(optdb):
         optdb = os.path.join(BASE_DIR, 'db.sqlite3')

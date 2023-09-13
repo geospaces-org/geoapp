@@ -149,9 +149,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.github',
     # MY_APPLICATIONS
     'django_extensions',
-    'users',
     'example_app',
-    'geoapp'
+    'geoapp',
+    'users',
  ]  
 
 DETECT_INSTALLED_APPS = True
@@ -171,8 +171,17 @@ def detectInstalledApps(appslist):
         print("FOUND **", file, app)
         DETECTED_APPS.append(app) 
         
+        index_template = f'{app}/templates/{app}/index.html'
+        if ( not os.path.exists(index_template) ):
+            index_template = f'{app}/templates/index.html'
+        if ( not os.path.exists(index_template) ):
+            index_template = f'{app}/templates/{app}.html'
+        if ( not os.path.exists(index_template) ):
+            index_template = f'{app}/{app}/'
+
+        index = index_template.replace("/templates/", "/")
         appmenu += f'''
-        <a class="dropdown-item" href="/{app}/{app}/index.html" > {app} </a>\n '''
+        <a class="dropdown-item" href="/{index}" > {app} </a>\n '''
         
     DETECTED_URLS = [ path(f'{a}/', include(f'{a}.urls'), name=a) for a in DETECTED_APPS ]
     
@@ -187,6 +196,7 @@ if ( DETECT_INSTALLED_APPS ):
 # -----------------------------------------------------------------------------------------
 INSTALLED_APPS = INSTALLED_APPS + DETECTED_APPS 
 
+print ("INSTALLED_APPS:", INSTALLED_APPS)
 SITE_ID = 1
 
 # Provider specific settings

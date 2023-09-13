@@ -28,13 +28,15 @@
             <div class="widget">
                 <h5 class="widgetheading">External training</h5>
                 <ul class="link-list">
-                    <li><a href="#">External trainings</a></li>
+                    <li><a href="/blogs/blogs/view_article.html?viewid=terms.md">Terms and conditions</a></li>
+                    <li><a href="/blogs/blogs/view_article.html?viewid=privacy.md">Privacy policy</a></li>
                 </ul>
             </div>
         </div>
         <div class="col-md-3">
             <div class="widget">
                 <h5 class="widgetheading">Links</h5>
+                <li><a href="/users/secured/users/index.html">Privacy policy</a></li>
                 <ul class="link-list">
                 </ul>
             </div>
@@ -49,7 +51,7 @@
         //var ft = $('#footer').position().top + $('#footer').height()
         //if ( $('#pagecontent').height() + 150 > $(window).height() ){
         console.log(document.body.clientHeight, $(window).height())
-        if ((document.body.clientHeight) < $(window).height()) {
+        if ((document.body.clientHeight) <= $(window).height()) {
             $('#footer').css('position', 'fixed')
         } else {
             $('#footer').css('position', 'relative')

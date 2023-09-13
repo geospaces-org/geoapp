@@ -1,5 +1,4 @@
 import pandas as pd
-from django.http import HttpResponse
 from django.conf import settings
 from django.core.mail import send_mail
 import sys, os, json
@@ -60,3 +59,31 @@ def demail(subject="hello", msg="hello", to="sada@geospaces.org"):
 
     print(f'Sending Emails to {r} {ret}')
     return ret
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+def uploadFiles(request, savein="/tmp/myapp", maxsize=100*1024*1024, **kwargs):
+    files = []
+    ret = []
+    if(not os.path.exists(savein) ): 
+        os.makedirs( savein )
+
+    for f in request.FILES.getlist('file'):
+        filename =  str(f)
+        files.append(filename)
+                
+        if f.size > maxsize:
+            return (f"ERROR: File of size: {f.size} for '{filename}' too big! max is: {maxsize}")
+        content   = f.read()
+        sfilename = f"{savein}/{filename}"
+        
+        dirn = os.path.dirname(sfilename)
+        with open(sfilename, "wb") as f:
+            f.write(content)
+            
+        ret.append(sfilename)
+            
+    return ret
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+def getListOfFiles(dir="/tmp/myapp", pattern='*', maxlen=20*1024, **kwargs):
+    flist = glob.glob(dir + "/**/"+pattern, recursive=True)
+    return flist

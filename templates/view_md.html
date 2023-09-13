@@ -20,6 +20,19 @@
     padding: 20px;
 }
 </style>
+<!--
+{% if user.is_superuser %}
+<div class="btn-group" style="float:right">
+    <input name="viewid"  id="viewid"   hidden >
+    <span  class="btn-group" style=" min-width: 100px;" >
+        <button class="btn btn-secondary btn-sm" type="button" onclick="edit()">
+            {{  user.username }} : Edit
+        </button>
+    </span>
+</div>
+{% endif %}
+-->
+
 <div id="second" style="height: 100vh; overflow: auto;"  >
     <div id="viewcontent"></div>
 </div>
@@ -49,7 +62,14 @@ function viewCB(responseTxt, statusTxt, xhr){
     md2html(val, '', '#viewcontent' )
     setTimeout(geoui_scrollTo, 50);
 }
-function view(viewid, type="md|text|elastic|capstone"){
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+function edit(viewid){
+    var v = $('#viewid').val()
+    var edit= `${window.location.origin.split('?')[0]}/edit_md.html/?viewid=${$('#viewid').val()}`
+    window.open(edit, "EDIT")
+}
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+function view(viewid) {
     var URL = viewid
     
     if (!URL.startsWith("/static")) {
@@ -60,14 +80,11 @@ function view(viewid, type="md|text|elastic|capstone"){
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
 $(document).ready(function() {
     var urlp   = new URL(window.location.href)
-    var viewid =  urlp.searchParams.get('viewid')  || ""
-    var type   =  urlp.searchParams.get('type')    || "md"
+    var viewid =  urlp.searchParams.get('viewid')  || urlp.searchParams.get('file') || ""
 
     $('#viewid').val(viewid)
-    $('#type')  .val(type)
-
     if (viewid)
-        view(viewid, type)
+        view(viewid)
 })
 </script>
 {% endblock %}

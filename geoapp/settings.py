@@ -149,7 +149,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.github',
     # MY_APPLICATIONS
     'django_extensions',
-    #'users',
+    'users',
     'example_app',
     'geoapp'
  ]  

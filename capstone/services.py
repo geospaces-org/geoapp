@@ -45,7 +45,7 @@ def getcapstone(request, q, **kwargs):
     if (not os.path.exists(bq)):
         ret = f"ERROR: '{bq}' path does not exist!!"
         print(ret)
-        return HttpResponse( ret)
+        return ret
 
     descr = "<html>Not available here - run scripts!! </html>"
     overv = getFile(f'{bq}/README.md',    descr)

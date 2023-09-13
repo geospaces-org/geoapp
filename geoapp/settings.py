@@ -179,9 +179,10 @@ def detectInstalledApps(appslist):
         if ( not os.path.exists(index_template) ):
             index_template = f'{app}/{app}/'
 
-        index = index_template.replace("/templates/", "/")
-        appmenu += f'''
-        <a class="dropdown-item" href="/{index}" > {app} </a>\n '''
+        # ADD ONLY IF INDEX TEMPLATE EXISTS - OTHERWISE IT IS NOT A WEB APP
+        if ( os.path.exists(index_template) ):
+            index = index_template.replace("/templates/", "/")
+            appmenu += f'''<a class="dropdown-item" href="/{index}" > {app} </a>\n '''
         
     DETECTED_URLS = [ path(f'{a}/', include(f'{a}.urls'), name=a) for a in DETECTED_APPS ]
     

@@ -89,6 +89,7 @@ from allauth.account import app_settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse, reverse_lazy
 
+from django.conf import settings
 
 class MyResetPasswordForm(ResetPasswordForm):
     def save(self, request, **kwargs):
@@ -111,6 +112,7 @@ class MyResetPasswordForm(ResetPasswordForm):
             )
             url = build_absolute_uri(request, path)
             url1 = request.POST.get("DOMAIN") + path
+            url1 = settings.DEFAULT_DOMAIN + path
 
             context = {
                 "current_site": current_site,
@@ -118,8 +120,10 @@ class MyResetPasswordForm(ResetPasswordForm):
                 "password_reset_url": url,
                 "password_reset_url1": url1,
                 "request": request,
+                "domain": settings.DEFAULT_DOMAIN
             }
 
+            print(f"===> {context}")
             get_adapter(request).send_mail(
                 "account/email/password_reset_key", email, context
             )

@@ -45,12 +45,12 @@ def read_csv(file):
     }
     return df, ret
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-def demail(subject="hello", msg="hello", to="sada@geospaces.org"):
+def demail(subject="hello", msg="hello", to="sada@geospaces.org", dfrom="", **kwargs):
     r = [f.strip() for f in to.split(",")]
     try:
         ret = send_mail( subject=subject,
                    message=msg,
-                   from_email=settings.DEFAULT_FROM_EMAIL,
+                   from_email= dfrom or settings.DEFAULT_FROM_EMAIL,
                    recipient_list=r,
                    fail_silently = False)
     except Exception as e:

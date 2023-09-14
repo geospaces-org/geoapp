@@ -11,9 +11,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path(r'uploadfile', views.uploadfile, name='uploadfile'),
+    path(r'contactus', views.contactus, name='uploadfile'),
     path(r'', views.index, name='index'),
 ] + settings.DETECTED_URLS + [
     path('oidc/', include('mozilla_django_oidc.urls')),
+    path('users/', include('users.urls'), name=""),
     re_path(r'^.*/$', mango.Common, name='catchall'),
 ]
 

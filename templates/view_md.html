@@ -2,7 +2,8 @@
 {% block content %}
 {% load custom_tags %}
 <script type="text/javascript" src="/static/bower_components/simplemde/debug/simplemde.js"></script>
-<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"> </script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"> 
+</script>
 <style>
 #second {
     width: 100%;
@@ -20,9 +21,7 @@
     padding: 20px;
 }
 </style>
-<!--
-{% if user.is_superuser %}
-<div class="btn-group" style="float:right">
+<div id='editdiv' class="btn-group" style="float:right; display: none;">
     <input name="viewid"  id="viewid"   hidden >
     <span  class="btn-group" style=" min-width: 100px;" >
         <button class="btn btn-secondary btn-sm" type="button" onclick="edit()">
@@ -30,8 +29,6 @@
         </button>
     </span>
 </div>
-{% endif %}
--->
 
 <div id="second" style="height: 100vh; overflow: auto;"  >
     <div id="viewcontent"></div>
@@ -62,10 +59,37 @@ function viewCB(responseTxt, statusTxt, xhr){
     md2html(val, '', '#viewcontent' )
     setTimeout(geoui_scrollTo, 50);
 }
+function viewCB(responseTxt, statusTxt, xhr, ctx, form){
+    if (JS_error(responseTxt, statusTxt, xhr, true) ) {
+        return;
+    }
+
+    var val = responseTxt;
+    var ret = {}
+    if (responseTxt.trim().startsWith("{")) {
+        ret = JSON.parse(responseTxt);
+        val = ret.content
+    }
+
+    md2html(val, '', '#viewcontent' )
+    saveZZValues()
+    //setTimeout(geoui_scrollTo, 50);
+
+    console.log('SUPER ==> {{ user.is_superuser }}')
+    var is_super = "{{ user.is_superuser }}" == "True" ? 1 : 0
+    var author   = (ret.meta) ? ret.meta.user : ""
+    var user     = "{{ user.username }}"
+
+    var can_edit = (is_super || (author && author == user)) ? 1 : 0
+
+    if ( can_edit)
+        $('#editdiv').show()
+
+}
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 function edit(viewid){
     var v = $('#viewid').val()
-    var edit= `${window.location.origin.split('?')[0]}/edit_md.html/?viewid=${$('#viewid').val()}`
+    var edit= `${window.location.origin.split('?')[0]}/blogs/secured/edit_article.html/?viewid=${$('#viewid').val()}`
     window.open(edit, "EDIT")
 }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -76,11 +100,13 @@ function view(viewid) {
         URL = "/static/docs/"+ URL
     }
     $.get(URL, viewCB )
+    $('#viewid').val(viewid) 
 }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
 $(document).ready(function() {
     var urlp   = new URL(window.location.href)
-    var viewid =  urlp.searchParams.get('viewid')  || urlp.searchParams.get('file') || ""
+    console.log(urlp.searchParams.get('viewid'))
+    var viewid =  urlp.searchParams.get('viewid', '')  || urlp.searchParams.get('file', '') || ""
 
     $('#viewid').val(viewid)
     if (viewid)

@@ -27,7 +27,7 @@ transformers
 pandasql
 elasticsearch
 tika
-textract
+#textract
 sqlalchemy
 tailer
 mozilla_django_oidc
@@ -36,3 +36,4 @@ django-oauth-toolkit
 pydub
 ffmpeg
 django-extensions
+django-proxy

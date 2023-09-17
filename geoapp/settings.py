@@ -179,6 +179,8 @@ def detectInstalledApps(appslist):
         if ( not os.path.exists(index_template) ):
             index_template = f'{app}/templates/{app}.html'
         if ( not os.path.exists(index_template) ):
+            index_template = f'{app}/templates/secured/{app}/index.html'
+        if ( not os.path.exists(index_template) ):
             index_template = f'{app}/{app}/'
 
         # ADD ONLY IF INDEX TEMPLATE EXISTS - OTHERWISE IT IS NOT A WEB APP

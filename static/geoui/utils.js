@@ -48,7 +48,7 @@ function geoui_nthIndex(str, ch, n=0) {
 }
 
 function geoui_scrollTo(ch='‣'){
-    var lc = $(`*:contains(ch):last`).offset()
+    var lc = $(`*:contains(${ch}):last`).offset()
     var st = lc || 0;
     if ( st) {
         var stt = st.top - window.innerHeight/2

@@ -37,3 +37,6 @@ pydub
 ffmpeg
 django-extensions
 django-proxy
+IPython
+colabext
+pyarrow

@@ -12,7 +12,7 @@ def appcontext(request):
     context = {
         "appname": "Example Application",
         "weburl" : "https://www.geospaces.org/",
-        "top_url": "geospaces/topbar.html"
+        "top_url": "geospaces/topbar.html",
         "SSO": 0
     }
     

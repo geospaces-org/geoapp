@@ -406,14 +406,13 @@ function _getdatestr(n){
 
 // ---------------------------------------------------------------------------------
 function getdatestr(n){
-    if (typeof n === "number"){
+    if (!isNaN(n)){
         return _getdatestr(n)
     }
     else{
-        return _getdatestr(n)
-        var ntm = n.replace('T', ' ') + " GMT"
-        var d  = new Date(ntm)
-        d.toISOString()
+        //var ntm = n.replace('T', ' ') + " GMT"
+        var d  = new Date(n)
+        return d.toISOString()
     }
     
 }

@@ -4,7 +4,6 @@ from mangorest import mango
 sys.path.append("/opt/utils/")
 from services.gen.DBBase import DBBase
 from services.gen.DBSQLAlchemy import DBSQLAlchemy
-#from aiapp.utils import *
 
 def index(request):
     #Check if shopping cart has items

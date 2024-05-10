@@ -66,7 +66,7 @@ function restoreZZValues(dontset, setonly="") {
             else if (k == "input" || k == "textarea")
                 $('#'+k1).val(v1)
             else // must be select
-                $('#'+k1).empty().append(v1);
+                $('#'+k1).val(v1); //$('#'+k1).empty().append(v1);
         }
     }
     ZZvals = ret;

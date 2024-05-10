@@ -194,24 +194,26 @@ function getmenu(menu, div, title, showToogle) {
     return getmenu1(omenu, div, title, showToogle);
 }
 
-function getmenu1(omenu, div, title, showToogle, defIcon){
+function getmenu1(omenu, div, title='', showToogle=0, defIcon=''){
     DEFAULT_ICON = defIcon;
 
     var menus  = getSidebarHTML(omenu);
     title = title || '';
-    var toggl  = `<a
+    var toggle = '';
+    if (showToogle ) {
+        toggle  = `<a
         style="padding-left: 24px; padding-top: 15px; display: table; font-weight: bold; white-space: nowrap "
         onClick="toggleParentDiv(this)">
-        <i class="fas fa-bars"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${title}
+        <i class="fas fa-bars"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     </a>
     <hr/>`;
 
-    if (typeof showToogle !== "undefined" && !showToogle) {
-        toggl = '';
-    }
 
-    var out = `${toggl}
+    } 
+
+    var out = `${toggle}
         <nav id="sidebar">
+        ${title}
         <ul class="list-unstyled components">
         ${menus}
 </u></nav>`;

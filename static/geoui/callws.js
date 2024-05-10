@@ -49,12 +49,15 @@ function callws_getIDs(formName="", ignore = callws_ignore) {
     return ret;
 }
 //--------------------------------------------------------------------------------*/
+var CALLWS_LOG_EVENTS = 1
 function dumpformdata(formData) {
     count =0 
     for (var p of formData.entries()) {
         if (p[0].startsWith("X_") || p[0].startsWith("csrf") || p[0].startsWith("auth"))
             continue;
-        console.log(count, p[0],  ': =>' + p[1]);
+        if ( CALLWS_LOG_EVENTS ) {
+            console.log(count, p[0],  ': =>' + p[1]);
+        }
         count += 1        
     } 
     //console.log(': =>', count," entries found");
@@ -98,6 +101,48 @@ function callws_getform(formName="" , context={}, getIDS=true) {
 
     fd = formData
     return formData;
+}
+/*--------------------------------------------------------------------------------
+This will set Formdata
+--------------------------------------------------------------------------------*/
+function callws_setformVal(formObj=null, name="", id="", val="") {
+    var form = formObj
+    if ( typeof (form) === 'string' ) 
+        form = $('form#' + form)
+    if (!form)
+        return 
+    form = $(form)[0]
+
+    var k = form.elements[name]
+    if ( !k)
+        k = $(formObj)[0].elements[name]
+
+    console.log(name, id , formObj)
+    if ( !k){
+        console.log( " => !NOT found")
+        return
+    }
+    var tag = k.tagName.toLowerCase()
+
+    if (tag === "checkbox" ) {
+        $(k).prop('checked', val)
+    }
+    else if (tag === "select" || tag === "input" || tag === "textarea")
+        $(k).val(val)
+    else
+        console.log("Unknonw !!!! ", tag)
+
+}
+function callws_setform(formName="", context={}, formObj=null) {
+    if ( formName ) 
+        formObj = $('form#' + formName)
+
+    if (!formName && !formObj )
+        return
+    for (var k in context) {
+        callws_setformVal(formObj, k, k, context[k]);
+    }
+    return formObj;
 }
 /*--------------------------------------------------------------------------------
 This will call WS service

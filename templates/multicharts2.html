@@ -1,0 +1,48 @@
+<style>
+</style>
+<script>
+let _charts_defaults = {
+    type    :   "spline",
+    title   :   "",
+    data    :  [],
+    onclick : null
+}
+function _getChart( popt=_charts_defaults){
+
+    opts = $.extend( {}, _charts_defaults, popt );
+
+    var hopts={
+        chart:      {  type:  opts.type, zoomType: 'xy' },
+        title:      {  text:  opts.title, align: 'left'},
+        credits:    {  enabled: false },
+        legend:     {  enabled: false },
+        exporting:  {  enabled: true },
+        xAxis:      {  type: 'datetime' },
+        yAxis:  [
+
+        ],
+        tooltip: {
+            valueDecimals: 3
+        },
+        series: opts.data,
+
+        plotOptions: { 
+            showInLegend    : true,
+            series          : { point: { events: { click: opts.onclick } }},
+            series: {
+                borderRadius: 5,
+                dataLabels: [
+                    { enabled: true,  distance: 15,     format: '{point.name}'   },
+                    {
+                    enabled: true,  distance: '-30%', format: '{point.y:.1f}%',
+                    filter: { property: 'percentage',  operator: '>', value: 5   },
+                    style:  { fontSize: '0.9em',  textOutline: 'none'    }
+                    }
+                ]
+            }
+        }
+    };
+    return hopts;
+}
+
+</script>

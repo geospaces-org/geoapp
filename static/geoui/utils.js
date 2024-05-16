@@ -15,7 +15,16 @@ function rec2Json(ds, i){
     }
     return j
 }
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// parseDate
+function parseDate(d) {
+    if (typeof(d) == "string" && d.startsWith('#'))
+        d = $(d).val()
 
+    var ntm = (typeof(d) === "number") ? d : d.replace('T', ' ') + " GMT"
+    var ret = new Date( ntm ).getTime()
+    return ret
+}
 /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 function geoui_setupMATHJAX(div){

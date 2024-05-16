@@ -149,6 +149,7 @@ This will call WS service
 --------------------------------------------------------------------------------*/
 var callws_default_opts= {
     getIDS: false,
+    await:  0
 }
 
 if (typeof busy !== 'function') { // if no one defined busy or nbusy - we make it empty
@@ -158,10 +159,12 @@ if (typeof busy !== 'function') { // if no one defined busy or nbusy - we make i
     }
 }
 
-async function callws(  url="/ui/test/", formName="", callbacks=null, context={}, 
+async function callws( url="/ui/test/", formName="", callbacks=null, context={}, 
                         opts=callws_default_opts) {
     var start    = new Date()
     var getIDS   = false
+
+    opts = { ...callws_default_opts, ...opts}
 
     if ( Object.keys(opts).length > 0) {
         if (opts["url"])        url        = opts["url"]
@@ -180,12 +183,18 @@ async function callws(  url="/ui/test/", formName="", callbacks=null, context={}
     var data = "?"
     var RESPONSE=null
 
-    let response=fetch(url, {
-        method: "post",
-        body: formData,
-        headers: { "X-CSRFToken": '{{csrf_token }}' },
-    })
-    .then(response =>  RESPONSE=response)
+    let response=  fetch(url, 
+            {   method: "post", body: formData,
+                headers: { "X-CSRFToken": '{{csrf_token }}' } 
+            }
+    )
+    .then( (response) => {
+        RESPONSE=response
+        if (response.status >= 400 && response.status < 600) {
+            throw new Error("Bad response from server");
+        }
+        return response;
+    } )
     .then(response =>  response.text())
     .then(resp => {
         data = resp
@@ -222,4 +231,5 @@ async function callws(  url="/ui/test/", formName="", callbacks=null, context={}
         }
 
     });
+    return RESPONSE
 }

@@ -5,9 +5,10 @@
     height: 200px;
     margin: 0;
 }
+</style>
 
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-</style>
+
 
 <script>  
 /**
@@ -15,7 +16,9 @@
  * built-in events with handlers defined on the parent element.
  */
 ['mousemove', 'touchmove', 'touchstart'].forEach(function (eventType) {
-    document.getElementById('chartcontainer').addEventListener(
+    var divc = document.getElementById('chartcontainer')
+    if (!divc) return
+    divc.addEventListener(
         eventType,
         function (e) {
             var chart, point, i, event;

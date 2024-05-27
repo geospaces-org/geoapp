@@ -117,20 +117,23 @@ function callws_setformVal(formObj=null, name="", id="", val="") {
     if ( !k)
         k = $(formObj)[0].elements[name]
 
-    console.log(name, id , formObj)
+    console.log(name, id )
     if ( !k){
         console.log( " => !NOT found")
         return
     }
     var tag = k.tagName.toLowerCase()
+    var typ = k.type.toLowerCase()
 
-    if (tag === "checkbox" ) {
-        $(k).prop('checked', val)
+    if (typ === "checkbox" ) {
+        val = (val.trim()) 
+        val = isNaN (val) ? 0: parseInt(val)
+        $(k).prop('checked', val )
     }
     else if (tag === "select" || tag === "input" || tag === "textarea")
         $(k).val(val)
     else
-        console.log("Unknonw !!!! ", tag)
+        console.log("Unknown !!!! ", tag)
 
 }
 function callws_setform(formName="", context={}, formObj=null) {

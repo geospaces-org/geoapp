@@ -1,0 +1,35 @@
+<script>
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+let GEO_SOCKET;
+function showInChatWindow(url=window.location + "/chat/"){
+    window.open(url,'window','toolbar=no, menubar=no,resizable=yes');
+}
+
+function connectWebSocket(room="general") {
+    var url =  `ws://${window.location.host}/ws/chat/${room}/`
+    console.log("Websock Connecting to: ", url)
+    GEO_SOCKET = new WebSocket(url);
+
+    GEO_SOCKET.onmessage = function(e) {   // Handle incoming message
+        console.log(e.data)
+        salert(e.data)
+    };
+}
+function sendToWebSocket(message="Connect me: channel") {
+    if ( !GEO_SOCKET) {
+        console.log("Websock Not connected ")
+        return
+    }
+    try{
+        GEO_SOCKET.send(message);
+    } catch {
+        GEO_SOCKET = null;
+    }
+}
+$(document).ready(function() {
+    //connectWebSocket("room_name")
+    connectWebSocket("general")
+})
+</script>

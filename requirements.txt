@@ -38,3 +38,4 @@ django-oauth-toolkit
 django-extensions
 django-proxy
 pyarrow
+exchangelib

@@ -628,6 +628,19 @@ var TABLE_OPTS1 = {
     getTitle:       null
 }
 // ---------------------------------------------------------------------------------
+var isHTML = RegExp.prototype.test.bind(/(<([^>]+)>)/i);
+
+function escapeHtml(unsafe){
+    if ( !isHTML(unsfe) )
+        return
+    return unsafe
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+ }
+
 function showDataTable(ds, opt= {} ,def = TABLE_OPTS){
     opt = Object.assign({}, def, opt)
     var dsv = null
@@ -668,8 +681,11 @@ function showDataTable(ds, opt= {} ,def = TABLE_OPTS){
                 style="width:100%;border: 0px; background: transparent; height:100%;" placeholder="">  
             </div>`
     
+    //<table id="${opt.id}" class="mydatatablecss  scroller" style="" >
+    var tableclass = opt.tableclass || "table-striped table-bordered tresizable table-sm scroller"
+
     var list=`
-   <table id="${opt.id}" class="mydatatablecss table table-striped table-bordered tresizable table-sm scroller" style="" >
+   <table id="${opt.id}" class="table  ${tableclass} mydatatablecss" style="" >
     <tbody ><thead>
     <tr  aria-rowspan="2" ><th class="tth thCol1sticky resizable" nowrap style="width: 1px; padding: 4px;">${dims} ${clrSort} ${showSearch}</th>`;
 
@@ -681,8 +697,25 @@ function showDataTable(ds, opt= {} ,def = TABLE_OPTS){
     else if ( opt.colNames ) {
         COLUMN_ORDER = []
         var c = 0
+
         for (i of opt.colNames){
-            COLUMN_ORDER.push(ds.columns.indexOf(i))
+            i = i.trim()
+            if ( i === '*') {
+                var nc = Math.min(ds.columns.length, opt.maxcolumns)
+                allIndexes = Array.from(Array(nc).keys()) 
+
+                for (var j in COLUMN_ORDER){
+                    var index = allIndexes.indexOf(COLUMN_ORDER[j]);
+                    allIndexes.splice(index,1)
+                }
+                COLUMN_ORDER = COLUMN_ORDER.concat(allIndexes)
+                //TODO: fix max columns
+            }
+
+            var idx = ds.columns.indexOf(i)
+            if ( idx >= 0 ) {
+                COLUMN_ORDER.push(idx)
+            }
             if( ++c >= opt.maxcolumns) 
                 break;
         }
@@ -706,7 +739,6 @@ function showDataTable(ds, opt= {} ,def = TABLE_OPTS){
         }
         list+= `<th class="tth thRowsticky"  ${wdt} nowrap title='${tit}' >${col}
                 ${showSort} ${showSearch}</th>`
-                    
 
     }
     list += "</tr></thead>"
@@ -722,7 +754,7 @@ function showDataTable(ds, opt= {} ,def = TABLE_OPTS){
     var lookUp = ""
     for (var i=0; i < dsv.length; i++){
 
-        var index = ds['index'] ? ds['index'][i] : i;
+        var index = (opt.showIndex == 0) ? "" : ds['index'] ? ds['index'][i] : i;
 
         list += `<tr ${rowSelect}  data_index=${i} >
             <th class="thtd tth thColNsticky"  nowrap  > 
@@ -769,7 +801,6 @@ function showDataTable(ds, opt= {} ,def = TABLE_OPTS){
     if ( typeof(opt.div) == "string" ){
         var divn = (opt.div.startsWith("#")) ? opt.div : "#"+opt.div
         $(divn).html(list)
-
     } else {
         $(opt.div).html(list)
     }

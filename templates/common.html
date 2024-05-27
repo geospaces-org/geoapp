@@ -552,9 +552,19 @@ function doClassbasedInit() {
     $('[data-toggle="tooltip"]').tooltip()
 }
 
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 $(document).ready(function() {
     doClassbasedInit()
 })
 </script>
+
+<!-- 
+For web sockets include the following file
+
+    { % include "websock.html" % } 
+-->   
+
 <link href="/static/geoui/jquery-tabs.css" rel="stylesheet" />
 {% include "datatable.html" %}

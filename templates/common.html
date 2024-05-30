@@ -57,12 +57,11 @@ integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0
     overflow: auto;
 }
 .fcontainer .footer{
-    flex: 0 1 30px;
+    flex: 0 1 1px;
     background: #7e8aa0;
 }
 
 .input80{
-    width: 80%;
     text-align: left;
     min-height: 35px;
     padding: 10px;
@@ -505,8 +504,9 @@ function JS_error(responseTxt, statusTxt, xhr, showAlert=1, errorCB=null){
         responseTxt = responseTxt.responseText || responseTxt.toString()
     }
 
-    if(statusTxt && responseTxt && (statusTxt !== "success" ||
-        responseTxt.toLowerCase().startsWith("error") || responseTxt === "null" ) ){
+    if( (statusTxt && statusTxt !== "success") ||
+        (responseTxt && responseTxt.toLowerCase().startsWith("error")) ||
+        ( responseTxt === "null" ) ){
 
         salert("<i class='fas fa-skull-crossbones'></i>" + statusTxt + " : " + responseTxt, 'btn-danger');
         var rs = responseTxt || "";
@@ -552,9 +552,18 @@ function doClassbasedInit() {
     $('[data-toggle="tooltip"]').tooltip()
 }
 
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 $(document).ready(function() {
     doClassbasedInit()
 })
 </script>
+
+<!-- 
+For web sockets include the following file
+-->   
+{% include "websock.html" %} 
+
 <link href="/static/geoui/jquery-tabs.css" rel="stylesheet" />
 {% include "datatable.html" %}

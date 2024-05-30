@@ -15,7 +15,16 @@ function rec2Json(ds, i){
     }
     return j
 }
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// parseDate
+function parseDate(d) {
+    if (typeof(d) == "string" && d.startsWith('#'))
+        d = $(d).val()
 
+    var ntm = (typeof(d) === "number") ? d : d.replace('T', ' ') + " GMT"
+    var ret = new Date( ntm ).getTime()
+    return ret
+}
 /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 function geoui_setupMATHJAX(div){
@@ -220,16 +229,17 @@ function getOffset(el) {
 }
             
 function FillRemainingHeight(n = '#tabledd1'){
-    if ( !n.startsWith('#') )
-        n = '#' +n
+    if (  typeof(n) == "string" && !n.startsWith('#') ){
+        n = '#' + n
+    }
+    n = $(n).get(0)
     
     var h = window.innerHeight
-    var i = getOffset($(n).get(0)) // {top: 920, left: 0}
+    var i = getOffset(n) // {top: 920, left: 0}
     var ht = h - i.top - 15;
     $(n).height( ht )
     console.log(i, ht)
 }  
-
 // ---------------------------------------------------------------------------------
 // filename returns the filename 
 // Ex: input:  /tmp/hh/Dada.csv

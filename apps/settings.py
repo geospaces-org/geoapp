@@ -1,4 +1,5 @@
 DEFAULT_APP = "edu"
+
 '''
 You can include this in your html pages and refer to these variables:
 For example:
@@ -14,5 +15,3 @@ def appcontext(request):
     }
     
     return context
-
-

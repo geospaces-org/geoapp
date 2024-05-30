@@ -1,0 +1,59 @@
+<script>
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+let GEO_SOCKET;
+function showInChatWindow(url=window.location + "/chat/"){
+    window.open(url,'window','toolbar=no, menubar=no,resizable=yes');
+}
+
+function connectWebSocket(room="general") {
+    var url =  `ws://${window.location.host}/ws/chat/${room}/`
+    console.log("Websock Connecting to: ", url)
+    GEO_SOCKET = new WebSocket(url);
+
+    GEO_SOCKET.onmessage = function(e) {   // Handle incoming message
+        console.log(e.data)
+        BroadcastMessage(room, e.data)
+    };
+}
+function sendToWebSocket(message="Connect me: channel") {
+    if ( !GEO_SOCKET) {
+        console.log("Websock Not connected ")
+        return
+    }
+    try{
+        GEO_SOCKET.send(message);
+    } catch {
+        GEO_SOCKET = null;
+    }
+}
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+const _WEBSOCK_REGISTRANTS = {}
+
+function BroadcastMessage(room_name, msg) {
+    for (var e in _WEBSOCK_REGISTRANTS[room_name]) {
+        var item = _WEBSOCK_REGISTRANTS[room_name]
+        item.cb(args, msg)
+    }
+}
+
+function RegisterInterest(room_name, callback, args={}) {
+    if (!_WEBSOCK_REGISTRANTS[room_name] ) {
+        _WEBSOCK_REGISTRANTS[room_name] = []
+    }
+    var newentry = {cb: callback, args: args}
+    _WEBSOCK_REGISTRANTS[room_name].push( newentry )
+    return _WEBSOCK_REGISTRANTS[room_name]
+}
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+function popAlert(args, msg) {
+    salert(msg)
+}
+$(document).ready(function() {
+    //connectWebSocket("room_name")
+    connectWebSocket("general")
+    RegisterInterest("general", popAlert, msg)
+    console.log("CONNECTING to general channel")
+})
+</script>

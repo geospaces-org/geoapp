@@ -238,6 +238,7 @@ TEMPLATES = [
     },
 ]
 WSGI_APPLICATION = 'geoapp.wsgi.application'
+ASGI_APPLICATION = 'geoapp.asgi.application'
 
 def SQLLITE3DB():
     optdb= "/opt/data/geoapp/db/db.sqlite3"
@@ -305,3 +306,10 @@ EXP_SESSION = {}
 
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+INSTALLED_APPS += ['channels']
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}

@@ -28,5 +28,5 @@ django-proxy
 pyarrow
 exchangelib
 IPython
-colabext
+colabexts
 pyarrow

@@ -27,6 +27,5 @@ django-extensions
 django-proxy
 pyarrow
 exchangelib
-IPython
 colabexts
 pyarrow

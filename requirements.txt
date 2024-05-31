@@ -38,6 +38,6 @@ django-oauth-toolkit
 django-extensions
 django-proxy
 pyarrow
-#exchangelibIPython
+##exchangelibIPython
 colabext
 pyarrow

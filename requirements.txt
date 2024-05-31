@@ -29,3 +29,4 @@ pyarrow
 exchangelib
 colabexts
 pyarrow
+channels

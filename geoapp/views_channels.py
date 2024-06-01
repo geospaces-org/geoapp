@@ -87,7 +87,7 @@ def broadcast(request):
         print("No room name given")
         return HttpResponse("No room")
 
-    message = par.get( 'message', f"blank")
+    message = par.get( 'message', f"")[0]
     message = f"From: {user}\n\nTo: {room}\n\n{str(message)}"
 
     print(message)
@@ -98,6 +98,7 @@ def broadcast(request):
         {'type': 'handle_message', 'message': message}
     )
     return HttpResponse(f"OK Message:{message}")
+
 
 # -----------------------------------------------------------------------
 

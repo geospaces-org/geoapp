@@ -8,12 +8,12 @@ function showInChatWindow(url=window.location + "/chat/"){
 }
 
 function connectWebSocket(room="general") {
+    _WEBSOCK_REGISTRANTS[room] = []
     var url =  `ws://${window.location.host}/ws/chat/${room}/`
-    console.log("Websock Connecting to: ", url)
+    //console.log("Websock Connecting to: ", url)
     GEO_SOCKET = new WebSocket(url);
 
     GEO_SOCKET.onmessage = function(e) {   // Handle incoming message
-        console.log(e.data)
         BroadcastMessage(room, e.data)
     };
 }
@@ -32,15 +32,20 @@ function sendToWebSocket(message="Connect me: channel") {
 const _WEBSOCK_REGISTRANTS = {}
 
 function BroadcastMessage(room_name, msg) {
-    for (var e in _WEBSOCK_REGISTRANTS[room_name]) {
-        var item = _WEBSOCK_REGISTRANTS[room_name]
-        item.cb(args, msg)
+    items = _WEBSOCK_REGISTRANTS[room_name];
+    if ( !items ) {
+        console.log("No regitration for ", room_name, msg)
+        return;
+    }
+    for (var t in items) {
+        var it = items[t]
+        it.cb(it.args, msg)
     }
 }
 
 function RegisterInterest(room_name, callback, args={}) {
     if (!_WEBSOCK_REGISTRANTS[room_name] ) {
-        _WEBSOCK_REGISTRANTS[room_name] = []
+        alert("You must call connectWebSocket(room_name) first")
     }
     var newentry = {cb: callback, args: args}
     _WEBSOCK_REGISTRANTS[room_name].push( newentry )
@@ -51,9 +56,8 @@ function popAlert(args, msg) {
     salert(msg)
 }
 $(document).ready(function() {
-    //connectWebSocket("room_name")
-    connectWebSocket("general")
-    RegisterInterest("general", popAlert, msg)
-    console.log("CONNECTING to general channel")
+    //connectWebSocket("general")
+    //RegisterInterest("general", popAlert)
+    //console.log("CONNECTING to general channel")
 })
 </script>

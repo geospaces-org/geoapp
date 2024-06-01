@@ -139,6 +139,8 @@ function getSidebarHTML(omenu ) {
         t = os[0].replace(/^#*/,"").trim();
         ic= os[1] || ""; hr = os[2] || "#";  show = os[4] || 'collapse'; desc = os[5] ||"";
 
+        desc =  desc.replace(/--NL--/gm, "\n")
+
         a = os[3] || "";
         if (!a ) {
             a = `onclick="menuItemClicked('${t}', this)"`;
@@ -154,7 +156,8 @@ function getSidebarHTML(omenu ) {
         var nlvl = nextLevel(omenu, i);
 
         if ( i == omenu.length-1 || nlvl <= lvl ){
-            it = `<li><a title="${t} : ${desc}" href="${hr}" ${a}> ${ic} ${t}</a></li>`;
+            var tit = `${t}: ${desc}`
+            it = `<li><a title='${tit}' href="${hr}" ${a}> ${ic} ${t}</a></li>`;
             out += "\t".repeat(lvl) + it + "\n";
 
             while ( (i == omenu.length-1 || nlvl < lvl) && inside){

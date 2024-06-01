@@ -51,13 +51,14 @@ function callws_getIDs(formName="", ignore = callws_ignore) {
 //--------------------------------------------------------------------------------*/
 var CALLWS_LOG_EVENTS = 1
 function dumpformdata(formData) {
+    if ( !CALLWS_LOG_EVENTS ) 
+        return
+
     count =0 
     for (var p of formData.entries()) {
         if (p[0].startsWith("X_") || p[0].startsWith("csrf") || p[0].startsWith("auth"))
             continue;
-        if ( CALLWS_LOG_EVENTS ) {
-            console.log(count, p[0],  ': =>' + p[1]);
-        }
+        console.log(count, p[0],  ': =>' + p[1]);
         count += 1        
     } 
     //console.log(': =>', count," entries found");
@@ -230,7 +231,8 @@ async function callws( url="/ui/test/", formName="", callbacks=null, context={},
             var t1  = start.toTimeString().slice(0,8)
             var t2  = now.toTimeString().slice(0,8)
             var log =  url+ " =>:" + t1 + " - " + t2 + " : " + elp/1000 + " ms; =>" + data.slice(0,48) + "..."
-            console.log( log )
+            if ( CALLWS_LOG_EVENTS)
+                console.log( log )
         }
 
     });

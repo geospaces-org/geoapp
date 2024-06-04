@@ -1,4 +1,4 @@
-DEFAULT_APP = "example_app"
+DEFAULT_APP = "tseries"
 
 '''
 You can include this in your html pages and refer to these variables:

@@ -11,7 +11,11 @@ function connectWebSocket(room="general") {
     _WEBSOCK_REGISTRANTS[room] = []
     var url =  `ws://${window.location.host}/ws/chat/${room}/`
     //console.log("Websock Connecting to: ", url)
-    GEO_SOCKET = new WebSocket(url);
+    try {
+        GEO_SOCKET = new WebSocket(url);        
+    } catch(e) {
+        console.log(e)
+    }
 
     GEO_SOCKET.onmessage = function(e) {   // Handle incoming message
         BroadcastMessage(room, e.data)

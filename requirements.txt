@@ -29,4 +29,5 @@ pyarrow
 exchangelib
 colabexts
 pyarrow
-channels
+channels==2.3.1
+daphne==2.5.0

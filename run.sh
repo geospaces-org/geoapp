@@ -8,6 +8,11 @@ fi
 OPTS=' --cert /tmp/cert'
 
 if [ $# -lt 2 ]
+	daphne -b 0.0.0.0 -p ${PORT}  geoapp.asgi:application 
+fi
+return
+
+if [ $# -lt 2 ]
 then
     echo "RUNNING LOCAL server at ${PORT}"
     python manage.py runserver 0:${PORT} ${OPT}

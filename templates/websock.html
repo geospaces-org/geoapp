@@ -9,7 +9,11 @@ function showInChatWindow(url=window.location + "/chat/"){
 
 function connectWebSocket(room="general") {
     _WEBSOCK_REGISTRANTS[room] = []
-    var url =  `ws://${window.location.host}/ws/chat/${room}/`
+
+    var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+
+    var url = `${ws_scheme}://${window.location.host}/ws/chat/${room}/`
+
     //console.log("Websock Connecting to: ", url)
     try {
         GEO_SOCKET = new WebSocket(url);        

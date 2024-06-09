@@ -70,13 +70,17 @@
     <div id="chat_content" class='content'>
     </div>
     <div class="footer" >
-        <textarea id="chat_msg" style="width: 100%; min-height: 50px;" rows=2 onkeypress="handle(event)">?</textarea>
-        <a  style="position: absolute; right: 15; bottom: 4;"
-            onclick="sendChatMessage()" ><i class="fa fa-paper-plane" ></i> </a>
-        <a style="position: absolute; right: 40; bottom: 4;" 
-            onclick="clearChat()" ><i class="fa fa-eraser"></i></a>
-            <br/>
+        <div>
+        <textarea id="chat_msg" style="width: 100%; min-height: 50px;" rows=2 onkeypress="handle(event)" placeholder="Enter Message to Send"></textarea>
+        </div>
+        <div style="background: white; font-size: small; padding-right: 15px;;">
+            Press <span class="sbutt"> shift </span>+<span class="sbutt">enter</span> to insert new line </span>
 
+            <a  class=sbutt style="float: right;"  title="Send" onclick="sendChatMessage()" ><i class="fa fa-paper-plane" ></i> </a>
+            <a  class=sbutt style="float: right;"  title="Clear" onclick="clearChat()" ><i class="fa fa-eraser"></i> </a>
+            
+
+        </div>
     </div>
 </div>
 </div>
@@ -111,10 +115,14 @@ function clearChat() {
 
 }
 function sendChatMessage() {
+    var msgj2=  $('#chat_msg').val().replace(/\n/gm,"<br/>")
+    if (!msgj2) {
+        return
+    }
+
     var c = $('#chat_content').html()
     var ct= "<span class=chatstime> " + getCurrentTime() + "</span>"
-
-    var msgj2=  $('#chat_msg').val().replace(/\n/gm,"<br/>")
+    $('#chat_msg').val("")
 
     var nc = c + "<div class=schsend> » " + ct + "<br/> " + msgj2 + "</div>"
 

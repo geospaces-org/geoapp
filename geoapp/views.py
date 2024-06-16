@@ -1,17 +1,26 @@
 from django.http import HttpResponse
 from django.shortcuts import render
-import apps, json
-import datetime, geoapp, geoapp.utils
+import apps, json, datetime, geoapp, geoapp.utils
+import apps.settings
 from mangorest import mango
 
 APPNAME   ='geoapp'
+#------------------------------------------------------------------------------
+import logging
+logging.basicConfig( level=logging.INFO,
+        format='%(levelname)s:%(name)s %(asctime)s %(filename)s:%(lineno)s:%(funcName)s: %(message)s',
+        handlers=[ logging.FileHandler("/tmp/app.log"), logging.StreamHandler()],
+        #handlers=[ logging.StreamHandler()],
+)
+logger = logging.getLogger("geoapp")
 
 # -----------------------------------------------------------------------
 def index(request):
     try:
         def_app = apps.settings.DEFAULT_APP
-    except:
-        print("No default app - using index.html")
+    except Exception as e:
+        logger.exception(e)
+        logger.error("No default app - using index.html {e}")
         def_app = None
         
     if (not def_app ):

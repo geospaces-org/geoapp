@@ -5,3 +5,4 @@ echo ** To COMMIT YOUR IMAGE ***
 	echo docker commit stream1 streamdev
 	echo docker tag streamdev geospaces/test:streamdev 
 	echo docker push geospaces/test:streamdev 
+docker commit stream1 streamdev; docker tag streamdev geospaces/test:streamdev; docker push geospaces/test:streamdev

@@ -6,3 +6,8 @@ echo ** To COMMIT YOUR IMAGE ***
 	echo docker tag streamdev geospaces/test:streamdev 
 	echo docker push geospaces/test:streamdev 
 docker commit stream1 streamdev; docker tag streamdev geospaces/test:streamdev; docker push geospaces/test:streamdev
+
+
+#To run it on arm64 arch machines first install following:
+
+docker run --privileged --rm tonistiigi/binfmt --install all

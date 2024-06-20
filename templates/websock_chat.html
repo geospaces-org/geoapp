@@ -40,22 +40,24 @@
 }
 
 .schsend {
-    background: lightgrey;
+    background: aliceblue;
     width:90%;
     min-height: 40px;
     border-radius: 2px;
     padding: 4px;
     margin-top: 20px;
     float: left;
+    border-top-right-radius: 6px;
 }
 .schrecv {
-    background: lightblue;
+    background-color: yellowgreen;
     width:90%;
     min-height: 40px;
     border-radius: 2px;
     padding: 4px;;
     margin-top: 3px;
     float: right;
+    border-top-left-radius: 6px;
 }
 .chatstime {
     font-size: x-small;
@@ -114,38 +116,44 @@ function clearChat() {
     $('#chat_content').html("")
 
 }
+let SENT_MESSAGE = null
 function sendChatMessage() {
-    var msgj2=  $('#chat_msg').val().replace(/\n/gm,"<br/>")
-    if (!msgj2) {
+    var msg=  $('#chat_msg').val().replace(/\n/gm,"<br/>").trim()
+    if (!msg) {
         return
     }
+    $('#chat_msg').val("")
 
     var c = $('#chat_content').html()
     var ct= "<span class=chatstime> " + getCurrentTime() + "</span>"
-    $('#chat_msg').val("")
-
-    var nc = c + "<div class=schsend> » " + ct + "<br/> " + msgj2 + "</div>"
-
+    var nc = c + "<div class=schsend> » " + ct + "<br/> " + msg + "</div>"
     $('#chat_content').html(nc)
+    $('#chat_content')[0].scrollTop = $('#chat_content')[0].scrollHeight + 50;
 
-    var data= { room: "alert", message: $('#chat_msg').val()}
+    SENT_MESSAGE = msg
+    var data= { room: "alert", message: msg }
     callws('/broadcast/', "", null, data)
 }
 function receiveChatMessage(args="", msg) {
-    var c = $('#chat_content').html()
-    var ct= "<span class='chatstime'> " + getCurrentTime() + "</span>"
-
     var msgj = JSON.parse(msg).message.split("\n\n")
 
+    if ( !msgj[2] || msgj[2] == SENT_MESSAGE) {
+        SENT_MESSAGE = ""
+        return 
+    }
+
+
+    var c = $('#chat_content').html()
+    var ct= "<span class='chatstime'> " + getCurrentTime() + "</span>"
     var ct= ct + "<span class='chatstime'> " + msgj[0] + ":" + msgj[1] + "</span>"
 
     var msgj2= msgj[2].replace(/\n/gm,"<br/>")
     var rc = c + "<div class='schrecv'> " + ct + "<br/> " + msgj2 + "</div>"
 
     $('#chat_content').html(rc)
-    var nh = $('#chat_content').html()
-    if ( nh !== rc) 
-        $('#chat_content').html(rc)
+    //var nh = $('#chat_content').html()
+    //if ( nh !== rc) 
+    $('#chat_content').html(rc)
 
     $('#chat_content')[0].scrollTop = $('#chat_content')[0].scrollHeight + 50;
 

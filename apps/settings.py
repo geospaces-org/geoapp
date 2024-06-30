@@ -12,6 +12,7 @@ def appcontext(request):
     context = {
         "appname": "STREAM",
         "weburl" : "https://stream.geospaces.org/",
-        "top_url": "tseries/topbar.html"
+        "top_url": "tseries/topbar.html",
+		"SSO" : 1 # Set to 0 to disable SSO
     }    
     return context

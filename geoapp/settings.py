@@ -117,6 +117,9 @@ logging.config.dictConfig({
     },
 })
 #------------------------------------------------------------------------------
+for handler in logging.root.handlers[:]:
+    logging.root.removeHandler(handler)
+    
 import logging
 logging.basicConfig( level=logging.INFO,
         format='%(levelname)s:%(name)s %(asctime)s %(filename)s:%(lineno)s:%(funcName)s: %(message)s',

@@ -64,7 +64,7 @@ logging.config.dictConfig({
             # exact format is not important, this is the minimum information
             'format': '%(levelname)s:%(name)s %(asctime)-12s %(filename)s:%(lineno)s:%(funcName)s: %(message)s',
         },
-        'django.server': DEFAULT_LOGGING['formatters']['django.server'],
+        #'django.server': DEFAULT_LOGGING['formatters']['django.server'],
     },
     'handlers': {
         # console logs to stderr
@@ -107,6 +107,11 @@ logging.config.dictConfig({
             'handlers': ['console'  ],
             'propagate': False,
         },
+        'uvicorn': {
+            'level': 'WARNING',
+            'handlers': ['console'  ],
+            'propagate': False,
+        }
         # Default runserver request logging
         #'django.server': DEFAULT_LOGGING['loggers']['django.server'],
     },

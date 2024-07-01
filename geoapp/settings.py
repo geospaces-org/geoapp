@@ -54,7 +54,7 @@ from django.utils.log import DEFAULT_LOGGING
 # Disable Django's logging setup
 LOGGING_CONFIG = None
 
-LOGLEVEL = os.environ.get('LOGLEVEL', 'info').upper()
+LOGLEVEL = os.environ.get('LOGLEVEL', 'INFO').upper()
 
 logging.config.dictConfig({
     'version': 1,
@@ -62,7 +62,7 @@ logging.config.dictConfig({
     'formatters': {
         'default': {
             # exact format is not important, this is the minimum information
-            'format': '%(levelname)s:%(name)s %(asctime)s %(filename)s:%(lineno)s:%(funcName)s: %(message)s',
+            'format': '%(levelname)s:%(name)s %(asctime)-12s %(filename)s:%(lineno)s:%(funcName)s: %(message)s',
         },
         'django.server': DEFAULT_LOGGING['formatters']['django.server'],
     },
@@ -82,7 +82,7 @@ logging.config.dictConfig({
         # default for all undefined Python modules
         '': {
             'level': LOGLEVEL,
-            'handlers': ['console'],
+            'handlers': [], # ['console'],
             'propagate': False,
         },
         '.': {
@@ -102,19 +102,29 @@ logging.config.dictConfig({
             # Avoid double logging because of root logger
             'propagate': False,
         },
+        'django.server': {
+            'level': 'WARNING',
+            'handlers': ['console'  ],
+            'propagate': False,
+        },
         # Default runserver request logging
-        'django.server': DEFAULT_LOGGING['loggers']['django.server'],
+        #'django.server': DEFAULT_LOGGING['loggers']['django.server'],
     },
 })
+#------------------------------------------------------------------------------
+import logging
+logging.basicConfig( level=logging.INFO,
+        format='%(levelname)s:%(name)s %(asctime)s %(filename)s:%(lineno)s:%(funcName)s: %(message)s',
+        handlers=[ logging.FileHandler("/tmp/geoapp.log"), logging.StreamHandler()],
+        #handlers=[ logging.StreamHandler()],
+)
+logger = logging.getLogger("geoapp")
 
-logger = logging.getLogger( "app")
 LOGLEVELS = os.environ.get('LOGLEVELS', '')
 logger.info(f'''
-    Reading LOGLEVELS : you can set it with semicolon seperated
+    Reading environment $LOGLEVELS : you can set it with semicolon seperated
     ex: app.mango=DEBUG:app.tseries=WARNING;
-
-    FOUND=>: {LOGLEVELS}
-''')
+    FOUND=>: {LOGLEVELS}''')
 for l in LOGLEVELS.split(":"):
     nv = l.split("=")
 
@@ -163,14 +173,14 @@ DETECTED_URLS = []
 def detectInstalledApps(appslist):
     global DETECTED_URLS
 
-    print ("++ Searching for installed APPS ...", len(DETECTED_APPS), " PID:", os.getpid())
+    logger.info (f"++ Searching for APPS ... {len(DETECTED_APPS)} PID {os.getpid()}")
     appmenu = ""
     for file in glob.glob("**/apps.py"):
         app = os.path.basename(os.path.dirname(file))
         if app in appslist:
             continue
 
-        print("FOUND **", file, app)
+        logger.info("FOUND ** {file} {app}")
         DETECTED_APPS.append(app) 
         
         index_template = f'{app}/templates/{app}/index.html'
@@ -193,7 +203,7 @@ def detectInstalledApps(appslist):
     with open("apps/templates/appmenu.html", "w+" ) as f:
         f.write(appmenu)
     
-    print (f"-- Detected {len(DETECTED_APPS)} apps: {DETECTED_APPS}")
+    logger.debug (f"-- Detected {len(DETECTED_APPS)} apps: {DETECTED_APPS}")
     return DETECTED_APPS;
 
 if ( DETECT_INSTALLED_APPS ):
@@ -201,7 +211,7 @@ if ( DETECT_INSTALLED_APPS ):
 # -----------------------------------------------------------------------------------------
 INSTALLED_APPS = INSTALLED_APPS + DETECTED_APPS 
 
-print ("INSTALLED_APPS:", INSTALLED_APPS)
+logger.debug(f"INSTALLED_APPS:  {INSTALLED_APPS}")
 SITE_ID = 1
 
 # Provider specific settings
@@ -295,7 +305,7 @@ STATIC_INSTALL_DIRS = [ f'{BASE_DIR}/{c}/static/'  for c in DETECTED_APPS
                             if os.path.exists(f'{BASE_DIR}/{c}/static/') ]
 
 STATICFILES_DIRS = [ os.path.join(BASE_DIR, 'static'), "/" ] + STATIC_INSTALL_DIRS
-print ("STATICFILES_DIRS:", STATICFILES_DIRS)
+logger.debug (f"STATICFILES_DIRS: {STATICFILES_DIRS}")
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
@@ -307,7 +317,7 @@ EXP_SESSION = {}
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-INSTALLED_APPS += ['channels']
+#INSTALLED_APPS += ['channels']
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels.layers.InMemoryChannelLayer',

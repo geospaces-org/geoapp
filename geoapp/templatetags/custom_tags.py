@@ -7,7 +7,7 @@ logger = logging.getLogger( "app.custom_tags")
 @register.filter(name='has_group')
 def has_group(user, group_name):
     
-    logger.debug(f"User: {user}, Group: {group_name} isSuper=> {user.is_superuser}")
+    #logger.debug(f"User: {user}, Group: {group_name} isSuper=> {user.is_superuser}")
     
     if ( user.is_superuser ):
             return 1

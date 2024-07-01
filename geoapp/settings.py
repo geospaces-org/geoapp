@@ -76,7 +76,7 @@ logging.config.dictConfig({
             "class": "logging.FileHandler",
             "filename": "/tmp/geoapp.log",
         },
-        'django.server': DEFAULT_LOGGING['handlers']['django.server'],
+        #'django.server': DEFAULT_LOGGING['handlers']['django.server'],
     },
     'loggers': {
         # default for all undefined Python modules
@@ -118,7 +118,7 @@ logging.basicConfig( level=logging.INFO,
         handlers=[ logging.FileHandler("/tmp/geoapp.log"), logging.StreamHandler()],
         #handlers=[ logging.StreamHandler()],
 )
-logger = logging.getLogger("geoapp")
+logger = logging.getLogger("app")
 
 LOGLEVELS = os.environ.get('LOGLEVELS', '')
 logger.info(f'''

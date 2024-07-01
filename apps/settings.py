@@ -20,14 +20,9 @@ fh.setFormatter(fmt)
 #loga.addHandler(sh)
 loga.addHandler(fh)
 
-loga.info(f"#time,user,uri,REQUEST_METHOD,REMOTE_ADDR,REMOTE_HOST,SERVER_NAME")
+loga.info(f"#time,user,uri,method,REMOTE_ADDR")
 def analytics(r):
-    #out  = r.user + .username if r.user.is_authenticated() else '' 
-    #out += "," + r.getRequestURI() + ","
-    out = f"{r.user},{r.build_absolute_uri()}"
-    for c in ['REQUEST_METHOD','REMOTE_ADDR', 'REMOTE_HOST','SERVER_NAME']:
-        out += r.META[c] + ","
-
+    out = f"{r.user},{r.build_absolute_uri()},{r.META['REQUEST_METHOD']},{r.META['REMOTE_ADDR']}"
     loga.info(f"{out}")
 #---------------------------------------------------------------------------------
 def appcontext(request):

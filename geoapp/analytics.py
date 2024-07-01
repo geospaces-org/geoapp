@@ -23,7 +23,7 @@ if __ADD_STREAM__:
     sh.setFormatter(fmt) 
     loga.addHandler(sh)
 
-loga.info(f"#time,user,uri,method,REMOTE_ADDR")
+loga.info(f"#user,uri,method,REMOTE_ADDR,time")
 
 def analytics(r):
     global loga

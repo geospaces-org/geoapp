@@ -9,7 +9,9 @@ let _charts_defaults = {
     type    :   "spline",
     title   :   "",
     data    :  [],
-    onclick : null
+    onclick : null,
+    xAxis   : { ordinal:true, crosshair: true, type: 'datetime' },
+    legend  : { enabled: false }
 }
 function _getChart( popt=_charts_defaults){
     opts = $.extend( {}, _charts_defaults, popt );
@@ -20,9 +22,9 @@ function _getChart( popt=_charts_defaults){
     var hopts={
         title:      {  text:  opts.title, align: 'left'},
         credits:    {  enabled: false       },
-        legend:     {  enabled: true       },
+        legend:     opts.legend, 
         exporting:  {  enabled: true        },
-        xAxis:      {  ordinal:true, crosshair: true, type: 'datetime'     },
+        xAxis:      opts.xAxis,
         chart: {  
             type:  opts.type, zoomType: 'x',  parallelCoordinates: false, parallelAxes: { lineWidth: 1 }
         },

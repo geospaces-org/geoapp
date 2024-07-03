@@ -1,17 +1,18 @@
 from django.http import HttpResponse
 from django.shortcuts import render
-import apps, json, datetime, geoapp, geoapp.utils
+import apps, json, datetime, geoapp, geoapp.utils, logging
 import apps.settings
 from mangorest import mango
 
 APPNAME   ='geoapp'
 #------------------------------------------------------------------------------
-import logging
+'''import logging
 logging.basicConfig( level=logging.INFO,
         format='%(levelname)s:%(name)s %(asctime)s %(filename)s:%(lineno)s:%(funcName)s: %(message)s',
         handlers=[ logging.FileHandler("/tmp/app.log"), logging.StreamHandler()],
         #handlers=[ logging.StreamHandler()],
 )
+'''
 logger = logging.getLogger("geoapp")
 
 # -----------------------------------------------------------------------
@@ -145,3 +146,14 @@ allauth.account.views.password_reset = myPasswordResetView.as_view()
 print( f"===> {allauth.account.views.password_reset}")
 
 # -----------------------------------------------------------------------
+from django.contrib.auth.signals import user_logged_in
+def postLoggedIn(sender, user, request, **kwargs):
+    if ( not request.path_info.startswith("/oidc/") ):
+        return
+    print(f'''***OIDC username: {user.username}, email: {user.email} ***''')
+    if ( not user.email.startswith(user.username)):
+        print("******** UPDATING USERNAME")
+        user.username=user.email.split("@")[0]
+        user.save()
+    
+user_logged_in.connect(postLoggedIn)

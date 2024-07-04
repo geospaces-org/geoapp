@@ -56,10 +56,11 @@ function _getChart( popt=_charts_defaults){
             }
         },
         series: opts.data,
+
         plotOptions: { 
             series: {
                 turboThreshold: 50000,
-                point: { events: { click: opts.onclick } },
+                point: { events: { click: opts.onclick, mouseOut: function() { this.series.chart.tooltip.hide();} } },
                 lineWidth: 0.8,
                 borderRadius: 5,
                 dataLabels: [
@@ -70,11 +71,15 @@ function _getChart( popt=_charts_defaults){
                         style:  { fontSize: '0.9em',  textOutline: 'none'    }
                     }
                 ],
+                marker:{ enabled: true, radius: 2, },
                 fillColor: { linearGradient: {x1: 0,y1: 0,x2: 0,y2: 0.9 },
                     stops: [
                         [0, fcolor],
                         [1, Highcharts.color(fcolor).setOpacity(0).get('rgba')]
                     ]
+                },
+                events:{
+                    mouseOut: function (event) {this.chart.tooltip.hide() }
                 },
             }
         },

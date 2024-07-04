@@ -3,7 +3,7 @@
     GENERATED FROM geoapp/notebooks/analytics.ipynb
 '''
 ##---------------------------------------------------------------------
-import logging, sys
+import os, logging, sys
 import colabexts.utils as colabexts_utils
 
 loga  = logging.getLogger( "stream.analytics")
@@ -11,8 +11,12 @@ for handler in loga.handlers:
     loga.removeHandler(handler)
 loga.handlers.clear()
 
+file  = "/opt/data/tseries/data/_ANALYTICS/analytics.log"
+if  not os.path.exists(os.path.dirname(file)) :
+    os.makedirs(os.path.dirname(file))
+    
 fmt   = logging.Formatter(fmt='%(message)s,%(asctime)-12s', datefmt='%Y-%m-%dT%H:%M:%S' )
-fileh = logging.FileHandler("/tmp/stream_analytics.log")
+fileh = logging.FileHandler(file)
 fileh.setFormatter(fmt)
 loga.addHandler(fileh)
 loga.propagate = False

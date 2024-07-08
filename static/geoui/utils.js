@@ -197,7 +197,8 @@ function getTableColumn(tableID, col=0, parse=0){
     });
     return data;
 }
-function saveTable(tableID = '#tabledd', name = "/tmp/__test__.csv", skipCols=0, skipRows=-1) {
+// NOTE this use to be saveTable
+function _saveDataTable(tableID = '#tabledd', name = "/tmp/__test__.csv", skipCols=0, skipRows=-1) {
     var ttab = $(tableID);
     var out = "";
     var row, col;

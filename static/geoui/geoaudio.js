@@ -59,29 +59,42 @@ class GeoAudio {
         console.log("pauseButton clicked rec.recording=", this.rec.recording );
         if (this.rec.recording){
             this.rec.stop();
+            this.exportRecording()
         }else{
             this.rec.record()
         }
     }
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     stopRecording() {
-        if ( !this.rec.recording ) {
-            console.log("Not recording ...")
+        if ( !this.rec ) {
+            console.log("Recording may not have started...")
             return
         }
         console.log("Stopping the recording ...")
+        this.exportRecording()
+        this.gumStream.getAudioTracks()[0].stop();
+        this.callBack("stopped", this.bblob)
+        this.rec.stop();
+    }
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    async exportRecording() {
+        if ( !this.rec ) {
+            console.log("Recording may not have started...")
+            return
+        }
         var myself = this
         async function SetLink(blob) {
             myself.bblob   = blob;
             myself.url = URL.createObjectURL(blob);
             myself.faudio.src = myself.url
-            myself.rec.stop();
-            myself.callBack("stopped", blob)
-        }
+            //console.log("===>2", myself.bblob.size)
+    }
 
-        this.rec.exportWAV(SetLink);
-        this.gumStream.getAudioTracks()[0].stop();
+        await this.rec.exportWAV(SetLink);
+        this.callBack("exported", this.bblob)
+        //console.log("===>1", this.bblob.size)
+        return this.bblob
     }
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     *  SOME SPECIAL UTILITY FUNCTIONS HERE
@@ -103,8 +116,8 @@ class GeoAudio {
         var ab32=new Uint32Array(abbb.slice(0,44))
 
         // multiply by 32000 to get index assuming 16000 rate
-        start = start || parseFloat($('#start').val()) *32000
-        end   = end   || parseFloat($('#end').val())*32000
+        start = start != null || parseFloat($('#start').val()) *32000
+        end   = end   != null || parseFloat($('#end').val())*32000
 
         start = Math.floor(start)
         end   = Math.ceil(end)

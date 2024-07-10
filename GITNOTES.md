@@ -1,6 +1,9 @@
 # Intro
 
-We have many branches that serves for many applications. Here are some git commands to merge changes.
 
-To see changes in master and not in branch.
+MERGE *ALL* changes from branch names 'test' to master
 ------------------------------------------
+git checkout master
+git pull origin master
+git merge test
+git push origin master

@@ -1,4 +1,4 @@
-DEFAULT_APP = "tseries"
+DEFAULT_APP = "example_app"
 
 '''
 You can include this in your html pages and refer to these variables:
@@ -7,14 +7,11 @@ For example:
 	{{ appname }}
 
 '''
-import geoapp.analytics
 #---------------------------------------------------------------------------------
 def appcontext(request):
     context = {
         "appname": "STREAM",
         "weburl" : "https://stream.geospaces.org/",
-        "top_url": "tseries/topbar.html",
-		"SSO" : 1 # Set to 0 to disable SSO
-    }
-    geoapp.analytics.analytics(request)
+        "top_url": "tseries/topbar.html"
+    }    
     return context

@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 import sys, os, json
 from mangorest import mango
-sys.path.append("/opt/utils/")
+sys.path.append("/opt/utils/geo_utils/")
 from services.gen.DBBase import DBBase
 from services.gen.DBSQLAlchemy import DBSQLAlchemy
 

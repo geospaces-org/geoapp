@@ -57,7 +57,6 @@ class GeoAsyncConsumer(WebsocketConsumer):
             self.groupsend("Hello: " + text_data)
         #self.send(text_data = "Sent: " + text_data)
 
-
     def groupsend(self, message):
         self.user = self.scope['user']
 
@@ -73,12 +72,16 @@ class GeoAsyncConsumer(WebsocketConsumer):
 # -----------------------------------------------------------------------
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from django.views.decorators.csrf import csrf_exempt
 
-def broadcast(request):
+@csrf_exempt
+def broadcast(request, requireUser=False):
     from django.http import HttpResponse
-    if not request.user.is_authenticated:
+
+    if requireUser and not request.user.is_authenticated:
         print("?: User not authenticated")
-        return 
+        return  HttpResponse("?: User not authenticated")
+
     user = request.user.username
     par = dict(request.GET)
     par.update(request.POST)
@@ -87,7 +90,7 @@ def broadcast(request):
         print("No room name given")
         return HttpResponse("No room")
 
-    message = par.get( 'message', f"")[0]
+    message = par.get( 'message', [""])[0]
     message = f"From: {user}\n\nTo: {room}\n\n{str(message)}"
 
     print(message)
@@ -98,13 +101,9 @@ def broadcast(request):
         {'type': 'handle_message', 'message': message}
     )
     return HttpResponse(f"OK Message:{message}")
-
-
 # -----------------------------------------------------------------------
-
 websocket_urlpatterns = [
-    re_path(r'ws/chat/1/$', ChatConsumer.as_asgi()),
-    re_path(r'ws/chat/2/$', GeoAsyncConsumer.as_asgi()),
+    #re_path(r'ws/chat/1/$', ChatConsumer.as_asgi()),
+    #re_path(r'ws/chat/2/$', GeoAsyncConsumer.as_asgi()),
     re_path(r'ws/chat/(?P<room_name>\w+)/$', GeoAsyncConsumer.as_asgi()),
-
 ]

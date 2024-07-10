@@ -197,7 +197,8 @@ function getTableColumn(tableID, col=0, parse=0){
     });
     return data;
 }
-function saveTable(tableID = '#tabledd', name = "/tmp/__test__.csv", skipCols=0, skipRows=-1) {
+// NOTE this use to be saveTable
+function _saveDataTable(tableID = '#tabledd', name = "/tmp/__test__.csv", skipCols=0, skipRows=-1) {
     var ttab = $(tableID);
     var out = "";
     var row, col;
@@ -238,7 +239,7 @@ function FillRemainingHeight(n = '#tabledd1'){
     var i = getOffset(n) // {top: 920, left: 0}
     var ht = h - i.top - 15;
     $(n).height( ht )
-    console.log(i, ht)
+    //console.log(i, ht)
 }  
 // ---------------------------------------------------------------------------------
 // filename returns the filename 

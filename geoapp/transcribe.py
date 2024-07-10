@@ -18,19 +18,20 @@ def getModel():
     global whisperModel
     if ( whisperModel is None):
         import whisper
-        whisperModel.DecodingOptions(fp16 = True) 
-        model = whisperModel.load_model("base")
+        whisperModel = whisper.load_model("base")
+        #whisperModel.DecodingOptions(fp16 = True) 
     return whisperModel
 
 @webapi("/geoaudio/transcribe/")
-def transcribe(request=None, file="/tmp/test.wav", offset=0, duration=None,**kwargs): 
+def transcribe(request=None, file="/tmp/test.wav", offset=0, duration=None, save="", **kwargs): 
     if ( request and request.FILES.getlist('file')):
         for f in request.FILES.getlist('file'):
-            filename = '/tmp/test.wav'
-            logger.info(f'GOT FILE will save to {filename} and transcribe')
             file = f.read()
-            with open (f"{filename}", "wb") as ff:
-                ff.write(file)
+            if ( save ):
+                filename = save or '/tmp/test.wav'
+                logger.info(f'GOT FILE will save to {filename} and transcribe')
+                with open (f"{filename}", "wb") as ff:
+                    ff.write(file)
             break;
 
     if (type(file) == str):

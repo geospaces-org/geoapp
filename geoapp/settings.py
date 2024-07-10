@@ -174,9 +174,9 @@ INSTALLED_APPS = [
     #'allauth.socialaccount.providers.github',
     # MY_APPLICATIONS
     'django_extensions',
-    #'example_app',
+    'example_app',
     'geoapp',
-    #'users',
+    'users',
  ]  
 
 DETECT_INSTALLED_APPS = True

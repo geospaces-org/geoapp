@@ -54,6 +54,7 @@ def userscount( request=None, **kwargs):
 
     ret = {
         "name" : "accesscount",
+        'index': [c for c in dfp.index],
         'columns': [c for c in dfp.columns],
         'values' : dfp.values.tolist()        
     }
@@ -73,6 +74,7 @@ def uuserscount( request=None, **kwargs):
 
     ret = {
         "name" : "accesscount",
+        'index': [c for c in dfp.index],
         'columns': [c for c in dfp.columns],
         'values' : dfp.values.tolist()        
     }

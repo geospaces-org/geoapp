@@ -87,3 +87,4 @@ def uploadFiles(request, savein="/tmp/myapp", maxsize=100*1024*1024, **kwargs):
 def getListOfFiles(dir="/tmp/myapp", pattern='*', maxlen=20*1024, **kwargs):
     flist = glob.glob(dir + "/**/"+pattern, recursive=True)
     return flist
+

@@ -7,6 +7,7 @@ For example:
 	{{ appname }}
 
 '''
+import geoapp.analytics as analytics
 #---------------------------------------------------------------------------------
 def appcontext(request):
     context = {
@@ -15,4 +16,5 @@ def appcontext(request):
         "top_url": "tseries/topbar.html",
 		"SSO": 1
     }    
+    analytics.loganalytics(request)
     return context

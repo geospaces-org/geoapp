@@ -6,10 +6,7 @@
 import os, logging, sys
 import colabexts.utils as colabexts_utils
 
-loga  = logging.getLogger( "stream.analytics")
-for handler in loga.handlers: 
-    loga.removeHandler(handler)
-loga.handlers.clear()
+loga  = logging.getLogger( "app.analytics")
 
 file  = "/opt/data/tseries/data/_ANALYTICS/analytics.log"
 if  not os.path.exists(os.path.dirname(file)) :
@@ -29,8 +26,7 @@ if __ADD_STREAM__:
 
 loga.info(f"#user,uri,method,REMOTE_ADDR,time")
 
-def analytics(r):
-    global loga
+def loganalytics(r):
     try:
         uri,reqm,remt = r.build_absolute_uri(), r.META.get('REQUEST_METHOD',''), \
                         r.META.get('REMOTE_ADDR','')
@@ -39,7 +35,7 @@ def analytics(r):
         pass
 
     out = f"{r.user},{uri},{reqm},{remt}"
-    loga.info(f"{out}")
+    loga.error(f"{out}")
 
 if __name__ == '__main__' or colabexts_utils.inJupyter():
     pass

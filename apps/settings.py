@@ -16,5 +16,6 @@ def appcontext(request):
         "top_url": "tseries/topbar.html",
 		"SSO": 1
     }    
-    analytics.loganalytics(request)
+    analytics.loganalytics(request);
+    
     return context

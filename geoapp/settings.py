@@ -169,9 +169,9 @@ INSTALLED_APPS = [
     # 'corsheaders',
     'allauth',
     'allauth.account',
-    'allauth.socialaccount.providers.google',
+    #'allauth.socialaccount.providers.google',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.github',
+    #'allauth.socialaccount.providers.github',
     # MY_APPLICATIONS
     'django_extensions',
     'example_app',
@@ -210,13 +210,15 @@ def detectInstalledApps(appslist):
         if ( os.path.exists(index_template) ):
             index = index_template.replace("/templates/", "/")
             appmenu += f'''<a class="dropdown-item" href="/{index}" > {app} </a>\n '''
+
+    logger.debug(f"-======>DETECTED:  {DETECTED_APPS}")
+    if ( len(DETECTED_APPS) > 0): 
+        DETECTED_URLS = [ path(f'{a}/', include(f'{a}.urls'), name=a) for a in DETECTED_APPS ]
         
-    DETECTED_URLS = [ path(f'{a}/', include(f'{a}.urls'), name=a) for a in DETECTED_APPS ]
-    
-    with open("apps/templates/appmenu.html", "w+" ) as f:
-        f.write(appmenu)
-    
-    logger.debug (f"-- Detected {len(DETECTED_APPS)} apps: {DETECTED_APPS}")
+        with open("apps/templates/appmenu.html", "w+" ) as f:
+            f.write(appmenu)
+        
+        logger.debug (f"-- Detected {len(DETECTED_APPS)} apps: {DETECTED_APPS}")
     return DETECTED_APPS;
 
 if ( DETECT_INSTALLED_APPS ):
@@ -224,7 +226,7 @@ if ( DETECT_INSTALLED_APPS ):
 # -----------------------------------------------------------------------------------------
 INSTALLED_APPS = INSTALLED_APPS + DETECTED_APPS 
 
-logger.debug(f"INSTALLED_APPS:  {INSTALLED_APPS}")
+logger.info(f"-======>INSTALLED_APPS:  {INSTALLED_APPS}")
 SITE_ID = 1
 
 # Provider specific settings
@@ -330,7 +332,7 @@ EXP_SESSION = {}
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-#INSTALLED_APPS += ['channels']
+INSTALLED_APPS += ['channels']
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels.layers.InMemoryChannelLayer',

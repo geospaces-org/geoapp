@@ -1,4 +1,4 @@
-DEFAULT_APP = "tseries"
+DEFAULT_APP = "example_app"
 
 '''
 You can include this in your html pages and refer to these variables:
@@ -11,9 +11,9 @@ import geoapp.analytics as analytics
 #---------------------------------------------------------------------------------
 def appcontext(request):
     context = {
-        "appname": "STREAM",
-        "weburl" : "https://stream.geospaces.org/",
-        "top_url": "tseries/topbar.html",
+        "appname": "ExAmPlE",
+        "weburl" : "https://www.geospaces.org/",
+        "top_url": "example_app/topbar.html",
 		"SSO": 1
     }    
     analytics.loganalytics(request);

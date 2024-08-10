@@ -1,0 +1,64 @@
+<style>
+    #footer a {
+        color: #bdbdbd;
+    }
+</style>
+ <footer id="footer" style="padding-left:50px; background: #3c4043 !important;position: relative; bottom:0; width:100%;">
+    <br />
+    <div class="row">
+        <div class="col-md-3">
+            <div class="widget1">
+                <h5 class="widgetheading">Contact</h5>
+                <address>Phone (XXX) XXX-5151 </address>
+                <i class="icon-phone"></i> <br>
+                <i class="icon-envelope-alt"></i> sadananda.narayanappa AT @du.edu
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="widget">
+                <h5 class="widgetheading"> University links</h5>
+                <ul class="link-list">
+                    <li><a href="https://my.du.edu">MY DU</a></li>
+                    <li><a href="https://udenver.zoom.us/j/5604762750#success">zoom</a></li>
+                    <li><a target="new" href="https://2du.ritchieonline.du.edu/">2DU</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="widget">
+                <h5 class="widgetheading">External training</h5>
+                <ul class="link-list">
+                    <li><a href="/blogs/blogs/view_article.html?viewid=terms.md">Terms and conditions</a></li>
+                    <li><a href="/blogs/blogs/view_article.html?viewid=privacy.md">Privacy policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="widget">
+                <h5 class="widgetheading">Links</h5>
+                <li><a href="/users/secured/users/index.html">Privacy policy</a></li>
+                <ul class="link-list">
+                </ul>
+            </div>
+        </div>
+    </div>
+ </footer>
+
+<script>
+    function footerPosition() {
+        //if ( $(document).height() < $(window).height() )
+        //    $('#footer').css('position', 'absolute')
+        //var ft = $('#footer').position().top + $('#footer').height()
+        //if ( $('#pagecontent').height() + 150 > $(window).height() ){
+        console.log(document.body.clientHeight, $(window).height())
+        if ((document.body.clientHeight) <= $(window).height()) {
+            $('#footer').css('position', 'fixed')
+        } else {
+            $('#footer').css('position', 'relative')
+        }
+
+    }
+    $(document).ready(
+        footerPosition()
+    );
+</script>

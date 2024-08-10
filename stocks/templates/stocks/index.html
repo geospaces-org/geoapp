@@ -1,0 +1,319 @@
+{% extends "common.html" %}
+{% load custom_tags %}
+{% block content %}
+<script src="/static/geoui/splitter.js"></script>
+<link href="/static/geoui/jquery-tabs.css" rel="stylesheet" />
+<script src="/static/bc/highcharts/highstock.js"></script>
+{% include "multicharts1.html" %}
+<!-- ---------------------------------------------------
+    SIDEBAR STYLE
+----------------------------------------------------- -->
+<style>
+.tab-details {
+    background-color: white;
+    border-radius: 4px 4px 0 0 ;
+    border: 0px solid rgba(50, 50, 93, 0.1);
+
+    height: fit-content;
+    padding: 20px;
+    text-align: left;
+}
+.tab-content {
+    text-align: initial;
+    max-width: 10240px;
+    display: contents;
+}
+
+.leftpane {
+    width: 330px;
+    height: 95vh;
+    background: #f5f5f5;
+}
+
+@media only screen and (max-width: 600px) {
+    .nmenu {
+        width: 50px !important;
+    }
+}
+td{
+   font-size: small;
+}
+#sort td{
+    height: 60px;
+    border-bottom: 1px solid #e0e0e0;
+    border-top:    1px solid #e0e0e0;
+}
+
+.bt {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: black;
+}
+.red {
+    font-weight: bold;
+    padding: 3px;
+    color: white;
+    background-color: #dc3545;
+    border-radius: 4px;
+}
+
+.green {
+    font-weight: bold;
+    padding: 3px;
+    color: white;
+    background-color: #5cb85c;
+    border-radius: 4px;
+}
+
+</style>
+<div id="workspace">
+<div id="leftPane" class="leftpane scroller ">
+<div style="padding: 3px;" class="input-group mt-8" >
+    <a href=# onclick="getFileNames()" class="input-group-text spanhw" data-container="body" data-toggle="tooltip"
+       title= "Search for ticker" >
+        <i class="fa fa-search"></i> </a>
+    <input id="filter"  type=text class="form-control border-right-0 inputhw" placeholder="filter " value="">
+</div>
+<div style="padding:4px;" >
+</div>
+
+    <table id="sort" style="width: 100%;">
+    <tbody>
+    <tr><td><div class="bt"> HMMM </div>Apple</td><td></td><td></td></tr>
+    </tbody>
+</table>
+
+</div>
+<div id="rightPane" style="padding: 0px; margin: 0px;">
+    <div id="tabs" class=tabs style="border: 0px; border-left: 1px solid #f7f7f7">
+        <ul>
+            <li><a href="#tabs-overview"  >Overview</a></li>
+            <li><a href="#tabs-data"      >News</a></li>
+        </ul>
+        <div class="tab-details scroller" style="height: 100vh; width: 100%;" >
+            <div id="tabs-data" class="tab-content" >Data News</div>
+
+            <div id="tabs-overview" class="tab-content">
+            <div id="details_head" ></div>
+            <div id="container" style="height: 390px; min-width: 310px; border: 1px solid #ececec; border-radius: 5px;"></div>
+            <div id="stats" style="border: 1px solid #ececec; border-radius: 5px;">
+               <table style="width: 100%; border-top: 0px solid #ececec;">
+               <tr><td></td><td></td><td rowspan=10 style="width: 30px; border-left: 1px solid whitesmoke"></td>
+                   <td></td><td></td><td rowspan=10 style="width: 30px; border-left: 1px solid whitesmoke"></td>
+                   <td></td><td></td><td rowspan=10 style="width: 30px; border-left: 1px solid whitesmoke"></td>
+               </tr>
+               <tr>
+               <td>open </td><th><span id="open"          >36,421</span></th>
+               <td>Vol  </td><th><span id="vol"           >117.8M</span></th>
+               <td>52W H</td><th><span id="52WeekHigh"    >36,551</span></th>
+               <td>Yield</td><th><span id="DividendYield" > --- </span></th>
+               </tr>
+               <tr>
+               <td>High </td><th><span id="high">36,421</span></th>
+               <td>P/E  </td><th><span id="PERatio"  >117.8M</span></th>
+               <td>52W L</td><th><span id="52WeekLow">36,551</span></th>
+               <td>Beta </td><th><span id="Beta"> ---  </span></th>
+               </tr>
+               <tr>
+               <td>Low  </td><th><span id="low"  >36,421</span></th>
+               <td>M cap</td><th><span id="MarketCapitalization" >117.8M</span></th>
+               <td>Tgt P</td><th><span id="AnalystTargetPrice" >36,551</span></th>
+               <td>EPS  </td><th><span id="EPS"  > ---  </span></th>
+               </tr>
+               </table>
+            </div>
+            <hr/>
+            <div style="font-size: small; border: 1px solid #ececec; border-radius: 5px;">
+            <b>Address: </b> <span id="Address" ></span> <u>Sector:</u> <span id="Sector" ></span> <br/>
+            <span id="Description" ></span>
+            </div>
+            <hr/>
+            <div class="scroller" style="hheight: 50vh" id="news">NEWS</div>
+            </div>
+        </div>
+    </div>
+</div>
+  </div>
+</div>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    SCRIPTS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<script>
+// ------------------------------------------------------------------------------------
+// Setup filter and rearranging table etc.
+//
+setupFilter('#filter', '#sort')
+var fixHelperModified = function(e, tr) {
+    var $originals = tr.children();
+    var $helper = tr.clone();
+    $helper.children().each(function(index) {
+        $(this).width($originals.eq(index).width())
+    });
+    return $helper;
+},
+updateIndex = function(e, ui) {
+    $('td.index', ui.item.parent()).each(function (i) {
+        $(this).html(i + 1);
+    });
+};
+
+$("#sort tbody").sortable({
+    helper: fixHelperModified,
+    stop: updateIndex
+}).disableSelection();
+/* ------------------------------------------------------------------------------------
+This expects the return to get in this order
+symbol,name,open,high,low,price,vol,percent_change,trend
+* */
+function sidebarCB(responseTxt, statusTxt, xhr){
+    if (JS_error(responseTxt, statusTxt, xhr, true) ) {
+        return;
+    }
+    var ret1 = JSON.parse(responseTxt);
+    var ret  = ret1.values;
+    tbody= ''
+    for (var i=0; i < ret.length; i++ ) {
+        var r   = ret[i]
+        var pchg= r[r.length-2].toFixed(2)
+        var chg = ( pchg < 0) ? 'red': 'green'
+
+        var tr = `<tr onclick="showDetails('${r[0]}', '${r[1]}')" ><td>&nbsp</td>
+<td><div class="bt"> ${r[0]} </div>${r[1]}</td><td><img width=48 src='${r[r.length-1]}'> </td>
+<td><div  class="bt" style="width:60%;text-align: right;">${r[5].toFixed(2)}</div>
+    <div class="${chg}" style="width:80%;text-align: center"> ${pchg}% </div>
+</td>
+</tr>`
+        tbody += tr
+    }
+    $('#sort tbody').html(tbody);
+    //console.log(tbody)
+}
+function getSidebar(){
+    const URL1  = `/stocks/getsymbols/?user={{user.get_username}}`
+    callws(URL1, "", sidebarCB)
+}
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+chart = null;
+function showChartCB(ds,  trend=0, container="container"){
+    var lcolor = (trend > 0) ? 'rgb(0, 255, 0, 0.7)' : 'rgb(255, 0, 0, 0.7)'
+    var fcolor = (trend > 0) ? '#5cb85c' : "#dc3545"
+
+    var dsv= ds.values;
+    var data=[]
+    for (i=0; i < dsv.length; i++) {
+        tt = new Date(dsv[i][0].replace(' ', 'T'))
+        data.push([tt.getTime(),dsv[i][1] ])
+    }
+    if ( data[0][0] > data[data.length-1][0])
+        data = data.reverse()
+
+    chart = Highcharts.stockChart(container, {
+        credits: false,
+        rangeSelector: {  selected: 0,
+            buttons: [
+                {type: 'day',   count: 1,  text: '1D' },
+                {type: 'day',   count: 5,  text: '5D' },
+                {type: 'month', count: 1,  text: '1m' },
+                {type: 'month', count: 3,  text: '3m' },
+                {type: 'month', count: 6,  text: '6m' },
+                {type: 'ytd',   text: 'YTD'           },
+                {type: 'year',  count: 1,  text: '1y' },
+                {type: 'all',   text: 'All'           }
+            ]
+        },
+        title:         { text: '' },
+        tooltip: {
+            valueDecimals: 3
+        },
+        series: [{
+            name: null,
+            data: data,
+            type: 'area',
+            color: lcolor,
+            lineWidth: 0.5,
+            threshold: null,
+            fillColor: { linearGradient: {x1: 0,y1: 0,x2: 0,y2: 0.9 },
+                stops: [
+                [0, fcolor],
+                [1, Highcharts.color(fcolor).setOpacity(0).get('rgba')]
+                ]
+            },
+            events:{
+                mouseOut: function (event) {
+                    chart.tooltip.hide()
+                },
+            }
+        }]
+    });
+    return chart
+}
+function convert (labelValue, fixed=2) {
+    // Nine Zeroes for Billions
+    val =
+        Math.abs(Number(labelValue)) >= 1.0e+12
+            ? (Math.abs(Number(labelValue)) / 1.0e+12).toFixed(fixed) + "T"
+        :Math.abs(Number(labelValue)) >= 1.0e+9
+            ? (Math.abs(Number(labelValue)) / 1.0e+9).toFixed(fixed) + "B"
+        : Math.abs(Number(labelValue)) >= 1.0e+6
+            ? (Math.abs(Number(labelValue)) / 1.0e+6).toFixed(fixed) + "M"
+    //    : Math.abs(Number(labelValue)) >= 1.0e+3
+    //        ? (Math.abs(Number(labelValue)) / 1.0e+3).toFixed(2) + "K"
+        : Math.abs(Number(labelValue).toFixed(fixed));
+
+    return val.toLocaleString()
+}
+
+function showDetailsCB(responseTxt, statusTxt, xhr){
+    if (JS_error(responseTxt, statusTxt, xhr, true) ) {
+        return;
+    }
+    var ret1 = JSON.parse(responseTxt);
+    var ret  = ret1.values;
+
+    $('#news').html(ret1.news + "<br/><br/><br/><br/><br/><br/>")
+    $('#tabs-data').html(ret1.news)
+    var stats = JSON.parse(ret1.stats)
+
+    ids = "open  vol 52WeekHigh DividendYield high PERatio 52WeekLow Beta low MarketCapitalization" +
+          " AnalystTargetPrice EPS Address Sector Description"
+    idt = ids.split(/[ ,\n]+/)
+
+    for ( k of idt ) {
+        //$('#'+k).text(stats[k].toLocaleString("en-US"))
+        var t = stats[k] || "--"
+        if ($.isNumeric(t))
+            t = convert(t)
+        $('#'+k).text(t)
+    }
+    showChartCB(ret1, stats.percent_change)
+}
+function showDetails(symbol, descr){
+    symbol = symbol || 'Dow Jones'
+    descr  = descr  || 'Dow Jones industrial Avg'
+    $('#details_head').html(`<span class="bt">${symbol}</span> ${descr}` )
+
+    const URL1  = `/stocks/getDetails/?q=${symbol}`
+    callws(URL1, "", showDetailsCB )
+}
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+$(function () {
+    $("#workspace").splitter({
+        orientation: "horizontal",
+        limit: 50,
+        barwidth: 2,
+    });
+    /*
+    $("#rightPane").splitter({
+        orientation: "vertical",
+        limit: 200,
+        barwidth: 2,
+    }); */
+});
+$(document).ready(function() {
+    $(window).resize()
+    getSidebar();
+    var urlp = new URL(window.location.href)
+    //showDetails( urlp.searchParams.get('q') )
+})
+</script>
+{% endblock %}

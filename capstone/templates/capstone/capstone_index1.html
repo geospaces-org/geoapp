@@ -1,0 +1,173 @@
+{% extends "common.html" %}
+{% block content %}
+<script src="/static/geoui/splitter.js"></script>
+<link href="/static/geoui/slidermenu.css" rel="stylesheet" />
+<script src="/static/geoui/slidermenu.js"></script>
+
+<script>
+function togglediv(d){
+    if (parseInt($(d).css('width')) > 70 ){
+        $(d).css('width', "50px")
+    } else{
+        $(d).css('width', "200px")
+    }
+    $(window).resize()
+}
+</script>
+<style>
+div.scroll {
+    overflow-y: auto;
+    text-align:justify;
+    top:50px;
+    bottom: 0;
+    position: relative;
+    box-sizing: border-box;
+    ppadding-right: 17px;
+    margin: 0 auto;
+}
+div.scroll:hover{
+    ppadding-right: 0px;
+    overflow-y: auto;
+}
+.scroll::-webkit-scrollbar {
+display: none;
+}
+</style>
+<!-- ---------------------------------------------------
+    SIDEBAR STYLE
+----------------------------------------------------- -->
+<div id="workspace">
+<div id="leftPane" class="noscrollbars" style="width: 180px;height: 90%; overflow-y: auto;overflow-x:scroll;">
+<h4 style="display: inline;"> &nbsp;&nbsp;Projects </h4><br/><hr/>
+    <div style="text-align: left; padding-left: 20px; display: inline-flex">
+     &nbsp;<a onclick="togglediv('#leftPane')" >
+    <i class="fas fa-bars"></i></a>
+    </div>
+    <nav id="sidebar" ><ul class="list-unstyled components">
+            <li >
+                <a data-target="-" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle collapsed">
+                    <i class="fa fa-home" ></i>Home</a>
+                    <ul class="collapse list-unstyled" id="homeSubmenu">
+                        <li><a href="#">Home 1</a></li>
+                        <li><a href="#">Home 2</a></li>
+                        <li><a href="#">Home 3</a></li>
+                    </ul>
+            </li>
+            <li><a href="#" ><i class="fas fa-biking"></i>Snacks</a></li>
+            <li ><a href="#"><i class="fas fa-book-reader"></i>About</a></li>
+            <li >
+                <a data-target="-" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle collapsed">
+                    <i class="fa fa-hammer" ></i>Gear</a>
+                    <ul class="collapse list-unstyled" id="homeSubmenu1">
+                        <li>
+                            <a data-target="-" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle collapsed">
+                                 Ice</a>
+                                <ul class="collapse list-unstyled" id="homeSubmenu2">
+                                    <li><a data-target="-" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle show">Home 1</a>
+                                           <ul class="show list-unstyled" id="homeSubmenu3">
+                                                <li><a href="#">Home 1</a></li>
+                                                <li><a href="#">Home 2</a></li>
+                                                <li><a href="#">Home 3</a></li>
+                                            </ul>
+
+                                    </li>
+                                    <li><a href="#">Home 2</a></li>
+                                    <li><a href="#">Home 3</a></li>
+                                </ul>
+                        </li>
+                        <li><a href="#">Home 2</a></li>
+                        <li><a href="#">Home 3</a></li>
+                    </ul>
+            </li>
+            <hr/>
+            <li><a href="#"> <i class="fas fa-paint-brush"></i>  Portfolio</a></li>
+            <li><a href="#"><i class="fas fa-cocktail"></i> Contact</a></li>
+        </ul>
+        </nav>
+    <div
+        style="background: #f9f9f9; font-variant-caps: small-caps; text-align: center;font-size:small; height: 30px;
+            border-bottom: 1px solid silver; border-top: 1px solid silver; width: 100%;
+            display: table;vertical-align: middle !important;">
+    <div1 style="width:100%; display: table-cell;vertical-align: middle !important;">
+        MY MENU
+    </div1>
+    </div>
+
+    <ss id="newmenu" >
+//==>My MENU
+#  Home    ;  fa fa-home            ;   #    ; onclick="" ;
+## Home1   ;
+## Home2   ;
+## Home3   ;
+
+# Snacks   ; fas fa-blank
+
+# About    ; fas fa-book-reader
+---
+#   Gear   ; fas fa-Hammer
+##  Ice    ;  ""
+### Home11  ;  ""                      ; #     ;              ; show
+#### Home111   ;
+#### Home112   ;
+#### Home113   ;
+### Home2  ;  ""
+### Home3  ;  ""
+---
+# Portfolio; fas fa-paint-brush
+# Contact  ; fas fa-cocktail
+    </ss>
+</div>
+  <div id="rightPane" style="padding: 0px; margin: 0px;">
+    <div id="topPane" style="width: 100%; height:100px;">
+      <br/><p>Right Top</p>
+    </div>
+    <div id="bottomPane" style="width: 100%; height:100%; background: #f9f9f9;padding: 30px;">
+      <p>Right Bottom</p>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="customSwitch1" checked>
+          <label class="custom-control-label" for="customSwitch1">Google Search</label>
+        </div>
+        <textarea id=menutextarea style="width:80%" rows="30">
+            Menu
+        </textarea>
+    </div>
+  </div>
+</div>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    SCRIPTS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<script>
+var mine = null;
+function getchild(a) {
+    mine = a
+    a.dataset.target = "#"+mine.parentElement.children[1].id
+}
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+$(function () {
+    $("#workspace").splitter({
+        orientation: "horizontal",
+        limit: 50,
+        barwidth: 2,
+    });
+    $("#rightPane").splitter({
+        orientation: "vertical",
+        limit: 100,
+        barwidth: 2,
+    });
+});
+$(document).ready(function() {
+    restoreZZValues()
+    $(window).resize()
+
+    getmenu(null, '#newmenu')
+    // --- set target
+    $('.dropdown-toggle').each(function(i, obj) {
+        if ("target" in obj.dataset && obj.dataset.target == "-" ){
+            var sid  = "#" + obj.parentElement.children[1].id
+            //console.log("==>"+obj.dataset.target, " == ", sid)
+            obj.dataset.target = sid
+        }
+    });
+})
+</script>
+{% endblock %}

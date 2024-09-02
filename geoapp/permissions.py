@@ -1,5 +1,3 @@
-#sys.path.append("/opt/utils")
-
 import utils
 from utils import *
 

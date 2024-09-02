@@ -45,7 +45,7 @@ def read_csv(file):
     }
     return df, ret
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-def demail(subject="hello", msg="hello", to="sada@geospaces.org", dfrom="", **kwargs):
+def demail(subject="hello", msg="hello", to="geo1@geospaces.org", dfrom="", **kwargs):
     r = [f.strip() for f in to.split(",")]
     try:
         ret = send_mail( subject=subject,
@@ -87,3 +87,4 @@ def uploadFiles(request, savein="/tmp/myapp", maxsize=100*1024*1024, **kwargs):
 def getListOfFiles(dir="/tmp/myapp", pattern='*', maxlen=20*1024, **kwargs):
     flist = glob.glob(dir + "/**/"+pattern, recursive=True)
     return flist
+

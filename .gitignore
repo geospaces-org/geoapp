@@ -1,4 +1,8 @@
 # Byte-compiled / optimized / DLL files
+mxgraph-js
+SCHAS
+mangorest
+site-packages
 apps/templates/appmenu.html
 *appmenu.hml
 temp
@@ -15,6 +19,7 @@ no-git
 __pycache__/
 *.py[cod]
 *$py.class
+*.swp
 
 # C extensions
 *.so

@@ -1,12 +1,13 @@
 from django import template
-import os
+import os, logging
 
 register = template.Library()
+logger = logging.getLogger( "app.custom_tags")
 
 @register.filter(name='has_group')
 def has_group(user, group_name):
     
-    print(f"(debug) From: custom_tags.has_group: User: {user} => Group: {group_name} isSuper=> {user.is_superuser}")
+    #logger.debug(f"User: {user}, Group: {group_name} isSuper=> {user.is_superuser}")
     
     if ( user.is_superuser ):
             return 1

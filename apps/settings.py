@@ -1,4 +1,4 @@
-DEFAULT_APP = "example_app"
+DEFAULT_APP = "geospaces"
 
 '''
 You can include this in your html pages and refer to these variables:
@@ -11,10 +11,12 @@ import geoapp.analytics as analytics
 #---------------------------------------------------------------------------------
 def appcontext(request):
     context = {
-        "appname": "ExAmPlE",
+        "appname": "Geo Spaces",
         "weburl" : "https://www.geospaces.org/",
-        "top_url": "example_app/topbar.html",
-		"SSO": 1
+        "top_url": "geospaces/topbar.html",
+		"SSO": 0,
+        "NO_LOGIN_MENU": 1,
+        "NO_APP_MENU" : 1
     }    
     analytics.loganalytics(request);
     

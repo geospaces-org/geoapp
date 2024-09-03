@@ -1,0 +1,242 @@
+{% extends "common.html" %}
+{% block content %}
+
+<section id="content">
+<style>
+.mborder {
+    border-radius: 10px;
+    background-color: #f0f0f0;
+    font-weight: bold;
+    width: 100%;
+    text-align: center;
+    overflow: hidden;
+    padding: 10px;
+    height: 160px;
+    vertical-align: middle;
+}
+.mborder:hover {
+    box-shadow: 0 10px 10px 0 silver;
+}
+.bs{
+border-bottom: 0px solid #e0e0e0;  padding: 20px; padding-bottom: 0px; 
+}
+
+.dbut{
+    display: inline-block;
+    padding: 15px 30px;
+    border-radius: 25px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 16px;
+    text-transform: capitalize;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#screen8 {
+    background: #000;
+    text-align: center;
+    padding: 80px 0;
+    color: white;
+}
+h1{
+    font-size: 3.5vw;
+    font-family: "open sans";
+
+}
+h2{
+    font-size: 3.0vw;
+    font-family: "open sans";
+}
+h5{
+    font-weight: 600;
+    font-family: "open sans";
+}
+
+div{
+    font-family: "open sans";
+}
+</style>
+
+<div style="padding:0px; width: 100%;">
+
+<div style="padding: 0px; text-align: left; width: 100%; background: #1c1c1c; color: white;">
+    <div class="row">
+        <div class="col-md-7" style="padding: 50px;">
+            <br/>
+            <h2>Sequence Analysis & Forecasting Framework</h2>
+            <h3> Smart Connected Monitoring & Alerting Systems</h3>
+            <a href="https://www.youtube.com/watch?v=y29Qk4Sw0lA" target="demo"></a>
+            <font style="font-style: oblique; font-size: small;"></font>
+            <br/>
+            <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <div class="row">
+                <div class="col-md-6">
+                    <a class="btn btn-primary dbut" href="#" onclick="$('#demorequest').fadeToggle()"> Request Demo </a>
+                </div>
+                <div id="demorequest" class="col-md-6" style="display: inline;display: none;">
+                    <form id=requestdemoform t>
+                        {% csrf_token %}
+                        <input id=remail name=remail type="email" class=input1 placeholder="Your email" required>
+                        <input id=rphone name=rphone class=input1 placeholder="Your Phone" >
+                        <a class="btn btn-primary dbut" href="#" onclick="sendEmail()"> Send Request </a>
+                    </form>
+            </div>
+            </div>
+            <br/>
+            <br/>
+        </div>
+        <div class="col-md-5" style="background-color: #e0e0e0;border-radius: 6px; padding: 50px;">
+            <div class="" style="background-color: #e0e0e0;border-radius: 6px; width:100%; height: 80%;">
+                <iframe style="background-color: #e0e0e0;border-radius: 6px; width:100%; height: 100%;" src="https://www.youtube.com/embed/y29Qk4Sw0lA" title="Artificial Intelligence | What is AI | Introduction to Artificial Intelligence | Edureka" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; " ></iframe>
+            </div>            
+            </div>
+
+        </div>
+</div>
+</div>
+
+<div class="btn-primary" style="padding:0px; width: 100%; height: 30px;"></div>
+
+<div class=container style="max-width: 1280px;">
+    <div class="row" style="background-color: #f0f0f0;  ;"  >
+    <div class=col-md-7  style="text-align: center; vertical-align: middle;margin: auto;">
+        <br/>
+        <img align="center" src="/static/imgs/stream/seqdata.png" style="margin: inherit;width: 80%; height: auto;" />
+        <br/>
+        <br/>
+        <h5> Monitor 100% of your business data in real time, getting the insights you need the moment you need them. 
+        </h5>
+    </div>
+
+    <div class=col-md-5 style="text-align: justify;background-color: #fefefe;border-radius: 6px; margin: auto; padding: 60px">
+        <img width="20vw" align=center src="/static/imgs/stream/stream.png" style="margin: inherit;"/>  <b>Stream,</b> a scalable comprehensive sequence time series analysis for IoT and operational applications that makes it easy to manage data 1,000 times faster and at as little as 1/10th the cost of humans. 
+        <br/>
+        <br/>
+        The power of AI is leveraged across your entire enterprise, and with a trusted partner to gain the resources to expand its abilities at scale across  internal operations.
+        Stream saves you time and cost in managing the lifecycle of sequence data. It is purpose-built AI engine to help you identify trends and patterns in your data in near real-time. 
+        <br/>
+    </div>
+    
+</div>
+</div>
+
+
+<div class="" style="padding:10px; width: 100%; height: 20px; background-color: #e0e0e0;"></div>
+<br/>
+
+
+<div class=container style="max-width: 1280px;">
+<div class="row bs" padding: 20px;">
+<div class="col-md-4 card"  style="padding: 20px;">
+    <h5 > High performance at low cost </h5>
+    <br/>
+    <p  style="text-align: justify;">
+    <b>Stream is designed to enable interactive and affordable real-time analytics.</b>
+    <br/>
+    With a focus on driving speed and efficiency of system diagnostics, its artificial intelligence (AI) and machine learning (ML) capabilities across product lifecycles  - 
+    positively impacts design, production, testing, and operations.  
+    <br/>
+
+    </p>
+
+</div>
+    
+<div class="col-md-4 card"  style="padding: 20px;">
+    <h5> Purpose-built for sequence data</h5> <br/>
+It is built with AI that learns hidden patterns 
+    <br/>
+    It's simply impossible for a humans to analyze the enormous volume of data produced during development and testing quickly enough to pinpoint issues and potential dangers in time. 
+    <br/>
+    Stream will analyze data and offers (a) system dynamics (b) patterns and behaviours (c) unsupervised lerning and evolution.    
+</div>
+    
+<div class="col-md-4 card"  style="padding: 20px;">
+        <h5> Scalable and applicable </h5>
+    <br/>
+    Stream will sclae to thousands of sensors and offers extensive algorithms using simple 4 step process.
+    <br/>
+  Stream will help you derive faster and more affordable insights from your data so you can continue to make more data driven business decisions.
+ 
+
+</div>
+</div>
+</div>
+<br/>
+<br/>
+
+    
+<div class="bs" style="text-align:center;" >
+    <h3 > I N D U S T R Y </h3>
+    <br/>
+    <div class="row" style="font-size: 0.8em;">
+    <div class="col-4" style="" >
+    <b>Aerospace & Defense</b> <br/><br/>
+        <li> Anomaly Detection/Investigation/Resolution/
+        <li> Cyber Security Real time fraud detection <br/>
+    </div>
+    <div class="col-4"  >
+    <b>Automotive</b><br/><br/>
+        <li> Find relationships
+        <li> Predictive Maintenance
+    </div>
+    <div class="col-4" style="" >
+    <b>Web, Internet</b> <br/><br/>
+        <li> Monitor load
+        <li> Log analytics
+    </div>
+    </div>
+    <br/>
+    <br/>
+
+
+</div>
+<br/>
+<br/>
+<br/>
+<div id="screen8">
+    <h1>Ready to get started?</h1>
+    <br/>
+    <div >
+    <a class="btn btn-primary dbut" href="https://www.geospaces.org/geospaces/geospaces/contact.html" >Request an Evaluation</a>
+
+    </div>
+</div>
+
+
+
+{% include "geospaces/footer.html" %}
+
+</section>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    SCRIPTS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<script>
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+function sendEmailCB(responseTxt) {
+    salert(responseTxt)
+    $('#demorequest').fadeToggle()
+}
+function sendEmail() {
+    var remail= $('#remail').val()
+    var rphone= $('#rphone').val()
+    data = {
+        email: remail, phone: rphone
+    }
+    callws("/tseries/requestDemo/", "requestdemoform", sendEmailCB, data, true) 
+
+}
+
+$(document).ready(function() {
+    setTimeout( function (){$("#tabs").tabs("option", "active", 1)}, 200);
+    //restoreZZValues();
+})
+</script>
+<link href="/static/geoui/jquery-tabs.css" rel="stylesheet" />
+<link  href="/static/geoui/splitter1.css" rel="stylesheet" />
+<script src="/static/geoui/splitter1.js"></script>
+
+
+
+{% endblock %}

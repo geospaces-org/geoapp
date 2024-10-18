@@ -14,7 +14,9 @@ def appcontext(request):
         "appname": "ExAmPlE",
         "weburl" : "https://www.geospaces.org/",
         "top_url": "example_app/topbar.html",
-		"SSO": 1
+		"SSO": 0,
+        "NO_LOGIN_MENU": 1,
+        "NO_APP_MENU" : 1
     }    
     analytics.loganalytics(request);
     
